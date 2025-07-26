@@ -415,47 +415,47 @@ const DatasetPlatform = () => {
   if (currentPage === 'landing') {
     return (
       <div className="min-h-screen bg-white" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, sans-serif' }}>
-        <header className="px-6 py-8">
+        <header className="px-4 sm:px-6 py-6 sm:py-8">
           <div className="max-w-6xl mx-auto flex items-center justify-between">
-            <h1 className="text-2xl font-semibold text-black">23 Bulbs</h1>
+            <h1 className="text-xl sm:text-2xl font-semibold text-black">23 Bulbs</h1>
             <button 
               onClick={() => setCurrentPage('generation')}
-              className="bg-black text-white px-6 py-2.5 rounded-full text-sm font-medium hover:bg-gray-800 transition-colors"
+              className="bg-black text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-medium hover:bg-gray-800 transition-colors"
             >
               Custom Generation
             </button>
           </div>
         </header>
 
-        <main className="px-6 pt-24 pb-32">
+        <main className="px-4 sm:px-6 pt-12 sm:pt-24 pb-16 sm:pb-32">
           <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-6xl font-bold text-black mb-8 leading-tight tracking-tight">
+            <h2 className="text-4xl sm:text-6xl font-bold text-black mb-6 sm:mb-8 leading-tight tracking-tight">
               Real-Time Datasets<br />
               for AI Training
             </h2>
             
-            <p className="text-xl text-gray-600 mb-16 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-lg sm:text-xl text-gray-600 mb-12 sm:mb-16 max-w-2xl mx-auto leading-relaxed px-4">
               Generate unlimited physics-accurate datasets with our breakthrough 
               real-time simulation engine built for AI video generation.
             </p>
 
-            <div className="flex items-center justify-center space-x-3">
+            <div className="flex flex-col sm:flex-row items-center justify-center space-y-3 sm:space-y-0 sm:space-x-3 px-4">
               <button 
                 onClick={() => setCurrentPage('generation')}
-                className="bg-blue-600 text-white w-52 py-3.5 rounded-full text-base font-semibold hover:bg-blue-700 transition-all duration-200 inline-flex items-center justify-center space-x-2 shadow-sm"
+                className="bg-blue-600 text-white w-full sm:w-52 py-3.5 rounded-full text-base font-semibold hover:bg-blue-700 transition-all duration-200 inline-flex items-center justify-center space-x-2 shadow-sm"
               >
                 <span>Custom Generation</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
               <button 
                 onClick={() => setCurrentPage('marketplace')}
-                className="bg-black text-white w-52 py-3.5 rounded-full text-base font-semibold hover:bg-gray-800 transition-all duration-200 shadow-sm"
+                className="bg-black text-white w-full sm:w-52 py-3.5 rounded-full text-base font-semibold hover:bg-gray-800 transition-all duration-200 shadow-sm"
               >
                 Browse Datasets
               </button>
               <button 
                 onClick={() => setCurrentPage('technology')}
-                className="bg-gray-100 text-gray-900 w-52 py-3.5 rounded-full text-base font-semibold hover:bg-gray-200 transition-all duration-200 shadow-sm"
+                className="bg-gray-100 text-gray-900 w-full sm:w-52 py-3.5 rounded-full text-base font-semibold hover:bg-gray-200 transition-all duration-200 shadow-sm"
               >
                 Technology
               </button>
@@ -463,19 +463,19 @@ const DatasetPlatform = () => {
           </div>
         </main>
 
-        <div className="px-6 pb-16">
+        <div className="px-4 sm:px-6 pb-8 sm:pb-16">
           <div className="max-w-4xl mx-auto text-center">
-            <div className="grid grid-cols-3 gap-12">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-12">
               <div>
-                <div className="text-4xl font-bold text-black mb-2">Real-time</div>
+                <div className="text-2xl sm:text-4xl font-bold text-black mb-2">Real-time</div>
                 <div className="text-gray-600">Generation</div>
               </div>
               <div>
-                <div className="text-4xl font-bold text-black mb-2">100%</div>
+                <div className="text-2xl sm:text-4xl font-bold text-black mb-2">100%</div>
                 <div className="text-gray-600">Accurate</div>
               </div>
               <div>
-                <div className="text-4xl font-bold text-black mb-2">Unlimited</div>
+                <div className="text-2xl sm:text-4xl font-bold text-black mb-2">Unlimited</div>
                 <div className="text-gray-600">Scale</div>
               </div>
             </div>
@@ -674,33 +674,33 @@ const DatasetPlatform = () => {
         </div>
       </header>
 
-      <div className="px-6 py-16">
+      <div className="px-4 sm:px-6 py-8 sm:py-16">
         <div className="max-w-2xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-black mb-4 tracking-tight">
+          <div className="text-center mb-8 sm:mb-16">
+            <h2 className="text-3xl sm:text-4xl font-bold text-black mb-4 tracking-tight">
               Generate Dataset
             </h2>
-            <p className="text-xl text-gray-600">
+            <p className="text-lg sm:text-xl text-gray-600">
               Describe what you need
             </p>
           </div>
 
-          <div className="mb-12">
+          <div className="mb-8 sm:mb-12">
             <div className="relative">
               <input
                 type="text"
                 value={promptValue}
                 onChange={(e) => setPromptValue(e.target.value)}
                 placeholder="Pants"
-                className="w-full px-6 py-6 text-2xl border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder-gray-400 bg-white"
+                className="w-full px-4 sm:px-6 py-4 sm:py-6 text-xl sm:text-2xl border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder-gray-400 bg-white"
                 onKeyPress={(e) => e.key === 'Enter' && handlePromptSubmit()}
               />
               <button
                 onClick={handlePromptSubmit}
                 disabled={!promptValue.trim()}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-blue-600 text-white rounded-xl flex items-center justify-center hover:bg-blue-700 disabled:bg-gray-200 disabled:cursor-not-allowed transition-colors"
+                className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 bg-blue-600 text-white rounded-xl flex items-center justify-center hover:bg-blue-700 disabled:bg-gray-200 disabled:cursor-not-allowed transition-colors"
               >
-                <ArrowRight className="w-5 h-5" />
+                <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
               </button>
             </div>
           </div>
