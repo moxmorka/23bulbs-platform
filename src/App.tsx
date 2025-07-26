@@ -10,6 +10,9 @@ const DatasetPlatform = () => {
   const [collapsedCategories, setCollapsedCategories] = useState({});
   const [generatedDataset, setGeneratedDataset] = useState(null);
 
+  const [selectedDataType, setSelectedDataType] = useState('All');
+  const [selectedCategory, setSelectedCategory] = useState('All');
+
   const datasetCategories = [
     { 
       id: 'lights', 
@@ -151,15 +154,117 @@ const DatasetPlatform = () => {
     }));
   };
 
-  const handleBuyNow = (dataset) => {
-    setGeneratedDataset({
-      name: dataset.name,
-      categories: dataset.categories,
-      samples: parseInt(dataset.items.replace(/[^\d]/g, '')),
-      size: `${(Math.random() * 5 + 1).toFixed(1)}GB`,
-      price: dataset.price
+  // Filter projects based on category selection
+  const getFilteredProjects = () => {
+    const allProjects = [
+      { 
+        id: 'pants', 
+        name: 'Garment Physics Simulation', 
+        category: 'Garments', 
+        type: 'Video', 
+        prompt: 'Pants', 
+        gradient: 'from-gray-800 to-black', 
+        description: 'Generate realistic clothing movement with wind, gravity, and collision physics', 
+        tags: ['Video', 'Physics'],
+        shape: 'rectangle'
+      },
+      { 
+        id: 'dress', 
+        name: 'Flowing Fabric Dynamics', 
+        category: 'Garments', 
+        type: 'Video', 
+        prompt: 'Dress', 
+        gradient: 'from-gray-700 to-gray-900', 
+        description: 'Train models on dresses, skirts with complex draping and flow physics', 
+        tags: ['Video', 'Flow Dynamics'],
+        shape: 'triangle'
+      },
+      { 
+        id: 'hair', 
+        name: 'Hair Physics & Dynamics', 
+        category: 'Human Body', 
+        type: 'Video', 
+        prompt: 'Hair', 
+        gradient: 'from-gray-600 to-gray-800', 
+        description: 'Realistic hair movement, wind effects, and strand-level physics simulation', 
+        tags: ['Video', 'Hair Dynamics'],
+        shape: 'waves'
+      },
+      { 
+        id: 'body', 
+        name: 'Human Body Spatial Integrity', 
+        category: 'Human Body', 
+        type: 'Video', 
+        prompt: 'Human Body', 
+        gradient: 'from-gray-700 to-black', 
+        description: 'Full body motion capture with anatomically correct movement and posing', 
+        tags: ['Video', 'Motion Capture'],
+        shape: 'circle'
+      },
+      { 
+        id: 'horse', 
+        name: 'Animal Rigging & Motion', 
+        category: 'Animals', 
+        type: 'Video', 
+        prompt: 'Horse', 
+        gradient: 'from-gray-800 to-gray-900', 
+        description: 'Horses with realistic gait patterns, anatomy, and movement dynamics', 
+        tags: ['Video', 'Animal Rigging'],
+        shape: 'diamond'
+      },
+      { 
+        id: 'dog', 
+        name: 'Pet Animation & Behavior', 
+        category: 'Animals', 
+        type: 'Video', 
+        prompt: 'Dog', 
+        gradient: 'from-black to-gray-800', 
+        description: 'Dogs and cats with natural movement patterns, fur dynamics, and behaviors', 
+        tags: ['Video', 'Pet Behavior'],
+        shape: 'hexagon'
+      }
+    ];
+
+    return allProjects.filter(project => {
+      const matchesDataType = selectedDataType === 'All' || project.type === selectedDataType;
+      const matchesCategory = selectedCategory === 'All' || project.category === selectedCategory;
+      return matchesDataType && matchesCategory;
     });
-    setCurrentPage('checkout');
+  };
+
+  const renderShape = (shape) => {
+    const shapeClasses = "w-8 h-8 bg-white bg-opacity-90";
+    
+    switch (shape) {
+      case 'rectangle':
+        return <div className={`${shapeClasses} rounded-sm`}></div>;
+      case 'triangle':
+        return (
+          <div className="w-0 h-0 border-l-4 border-r-4 border-b-8 border-l-transparent border-r-transparent border-b-white opacity-90"></div>
+        );
+      case 'circle':
+        return <div className={`${shapeClasses} rounded-full`}></div>;
+      case 'diamond':
+        return <div className={`${shapeClasses} rotate-45 rounded-sm`}></div>;
+      case 'hexagon':
+        return (
+          <div className="relative w-8 h-8">
+            <div className="absolute inset-0 bg-white opacity-90 transform rotate-0" style={{
+              clipPath: 'polygon(30% 0%, 70% 0%, 100% 50%, 70% 100%, 30% 100%, 0% 50%)'
+            }}></div>
+          </div>
+        );
+      case 'waves':
+        return (
+          <div className="w-8 h-8 flex flex-col justify-center space-y-1">
+            <div className="h-0.5 bg-white opacity-90 rounded-full w-6"></div>
+            <div className="h-0.5 bg-white opacity-90 rounded-full w-8"></div>
+            <div className="h-0.5 bg-white opacity-90 rounded-full w-4"></div>
+          </div>
+        );
+      default:
+        return <div className={`${shapeClasses} rounded-sm`}></div>;
+    }
   };
 
   const generateDataset = () => {
@@ -175,243 +280,6 @@ const DatasetPlatform = () => {
     setCurrentPage('checkout');
   };
 
-  if (currentPage === 'marketplace') {
-    return (
-      <div className="min-h-screen bg-white" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, sans-serif' }}>
-        <header className="px-6 py-8 border-b border-gray-100">
-          <div className="max-w-6xl mx-auto flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <button 
-                onClick={() => setCurrentPage('landing')}
-                className="text-gray-500 hover:text-black p-2 hover:bg-gray-50 rounded-full transition-colors"
-              >
-                <ArrowLeft className="w-5 h-5" />
-              </button>
-              <h1 className="text-2xl font-semibold text-black">23 Bulbs</h1>
-            </div>
-            <button 
-              onClick={() => setCurrentPage('generation')}
-              className="bg-blue-600 text-white px-6 py-2.5 rounded-full text-sm font-medium hover:bg-blue-700 transition-colors"
-            >
-              Custom Generation
-            </button>
-          </div>
-        </header>
-
-        <div className="px-6 py-16">
-          <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold text-black mb-4 tracking-tight">
-                Pre-Built Datasets
-              </h2>
-              <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                Ready-to-use datasets optimized for common AI training scenarios
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {[
-                { 
-                  name: 'Pants', 
-                  items: '85K frames', 
-                  specs: ['4K • 8 angles • 3 fits', 'Cotton, Denim, Wool', 'Wind, Drape, Collision'],
-                  price: '$55,000', 
-                  popular: false 
-                },
-                { 
-                  name: 'Dress', 
-                  items: '120K frames', 
-                  specs: ['4K • 12 angles • Flow physics', 'Silk, Chiffon, Satin', '15 colors • Walk, Sway, Static'],
-                  price: '$75,000', 
-                  popular: true 
-                },
-                { 
-                  name: 'Jacket', 
-                  items: '90K frames', 
-                  specs: ['4K • 6 angles • Heavy materials', 'Leather, Wool, Cotton', 'Indoor/Outdoor • 3 fits'],
-                  price: '$60,000', 
-                  popular: false 
-                },
-                { 
-                  name: 'Shirt', 
-                  items: '70K frames', 
-                  specs: ['4K • 8 angles • Studio lighting', 'Cotton, Linen, Polyester', 'Slim, Regular, Loose'],
-                  price: '$45,000', 
-                  popular: false 
-                },
-                { 
-                  name: 'Skirt', 
-                  items: '95K frames', 
-                  specs: ['4K • 10 angles • Spin physics', 'Wool, Cotton, Polyester', 'A-line, Pencil, Pleated'],
-                  price: '$58,000', 
-                  popular: false 
-                },
-                { 
-                  name: 'Sweater', 
-                  items: '80K frames', 
-                  specs: ['4K • 6 angles • Knit textures', 'Wool, Cashmere, Cotton', 'Cable, Ribbed, Smooth'],
-                  price: '$52,000', 
-                  popular: false 
-                }
-              ].map((dataset, index) => (
-                <div key={index} className="bg-white border border-gray-200 rounded-2xl p-6 hover:border-gray-300 transition-colors relative">
-                  {dataset.popular && (
-                    <div className="absolute -top-3 left-6 bg-blue-600 text-white px-3 py-1 rounded-full text-xs font-medium">
-                      Most Popular
-                    </div>
-                  )}
-                  <h3 className="text-xl font-semibold text-black mb-2">{dataset.name}</h3>
-                  <p className="text-gray-600 text-sm mb-4">{dataset.items}</p>
-                  <div className="mb-6">
-                    <div className="space-y-2">
-                      {dataset.specs.map((spec, i) => (
-                        <div key={i} className="text-xs text-gray-600 font-medium">
-                          {spec}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-2xl font-bold text-black">{dataset.price}</span>
-                    <button 
-                      onClick={() => handleBuyNow(dataset)}
-                      className="bg-black text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-gray-800 transition-colors"
-                    >
-                      Buy Now
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="text-center mt-16">
-              <p className="text-gray-600 mb-6">Need something custom?</p>
-              <button 
-                onClick={() => setCurrentPage('generation')}
-                className="bg-blue-600 text-white px-8 py-4 rounded-full text-lg font-medium hover:bg-blue-700 transition-colors inline-flex items-center space-x-2"
-              >
-                <span>Create Custom Dataset</span>
-                <ArrowRight className="w-5 h-5" />
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (currentPage === 'technology') {
-    return (
-      <div className="min-h-screen bg-white" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, sans-serif' }}>
-        <header className="px-6 py-8 border-b border-gray-100">
-          <div className="max-w-6xl mx-auto flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <button 
-                onClick={() => setCurrentPage('landing')}
-                className="text-gray-500 hover:text-black p-2 hover:bg-gray-50 rounded-full transition-colors"
-              >
-                <ArrowLeft className="w-5 h-5" />
-              </button>
-              <h1 className="text-2xl font-semibold text-black">23 Bulbs</h1>
-            </div>
-          </div>
-        </header>
-
-        <div className="px-6 py-16">
-          <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold text-black mb-4 tracking-tight">
-                Real-Time Technology
-              </h2>
-              <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                Our proprietary simulation engine processes physics calculations 
-                in real-time to generate unlimited datasets at unprecedented speed.
-              </p>
-            </div>
-
-            <div className="relative mb-16 bg-white p-20">
-              <div className="flex items-center justify-center">
-                <svg width="900" height="300" viewBox="0 0 900 300">
-                  <g>
-                    {Array.from({ length: 20 }).map((_, i) => (
-                      <circle
-                        key={i}
-                        cx={100 + (i % 5) * 20}
-                        cy={120 + Math.floor(i / 5) * 20}
-                        r="3"
-                        fill="#666"
-                        opacity="0.6"
-                      >
-                        <animate
-                          attributeName="opacity"
-                          values="0.3;0.8;0.3"
-                          dur={`${2 + (i * 0.1)}s`}
-                          repeatCount="indefinite"
-                        />
-                      </circle>
-                    ))}
-                  </g>
-
-                  <g>
-                    <line x1="400" y1="130" x2="500" y2="130" stroke="#666" strokeWidth="3"/>
-                    <line x1="400" y1="170" x2="500" y2="170" stroke="#666" strokeWidth="3"/>
-                  </g>
-
-                  <g transform="translate(700, 150)">
-                    <rect x="-20" y="-15" width="40" height="30" rx="4" fill="none" stroke="#333" strokeWidth="2"/>
-                    <circle cx="-10" cy="-8" r="1.5" fill="#333"/>
-                    <circle cx="-5" cy="-8" r="1.5" fill="#333"/>
-                    <circle cx="0" cy="-8" r="1.5" fill="#333"/>
-                    <path d="M-8 2 L-12 6 L-8 10" fill="none" stroke="#333" strokeWidth="2"/>
-                    <path d="M8 2 L12 6 L8 10" fill="none" stroke="#333" strokeWidth="2"/>
-                  </g>
-                </svg>
-              </div>
-
-              <div className="grid grid-cols-3 gap-8 mt-12 text-center">
-                <div>
-                  <h3 className="text-xl font-medium text-black mb-2">Real-Time Simulation</h3>
-                  <p className="text-gray-600 text-sm">
-                    Physics calculations<br/>
-                    3D cloth dynamics
-                  </p>
-                </div>
-                <div>
-                  <h3 className="text-xl font-medium text-black mb-2">Processing Pipeline</h3>
-                  <p className="text-gray-600 text-sm">
-                    Real-time data transformation
-                  </p>
-                </div>
-                <div>
-                  <h3 className="text-xl font-medium text-black mb-2">API</h3>
-                  <p className="text-gray-600 text-sm">
-                    Ready for AI training<br/>
-                    Instant access
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-3 gap-8 text-center">
-              <div>
-                <div className="text-3xl font-bold text-black mb-2">{'< 1ms'}</div>
-                <div className="text-gray-600">Processing Latency</div>
-              </div>
-              <div>
-                <div className="text-3xl font-bold text-black mb-2">CPU + GPU</div>
-                <div className="text-gray-600">Hybrid Computing</div>
-              </div>
-              <div>
-                <div className="text-3xl font-bold text-black mb-2">∞</div>
-                <div className="text-gray-600">Scalability</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   if (currentPage === 'landing') {
     return (
       <div className="min-h-screen bg-white" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, sans-serif' }}>
@@ -422,7 +290,7 @@ const DatasetPlatform = () => {
               onClick={() => setCurrentPage('generation')}
               className="bg-black text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-medium hover:bg-gray-800 transition-colors"
             >
-              Custom Generation
+              Sign In
             </button>
           </div>
         </header>
@@ -444,7 +312,7 @@ const DatasetPlatform = () => {
                 onClick={() => setCurrentPage('generation')}
                 className="bg-blue-600 text-white w-full sm:w-52 py-3.5 rounded-full text-base font-semibold hover:bg-blue-700 transition-all duration-200 inline-flex items-center justify-center space-x-2 shadow-sm"
               >
-                <span>Custom Generation</span>
+                <span>Sign In</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
               <button 
@@ -462,206 +330,15 @@ const DatasetPlatform = () => {
             </div>
           </div>
         </main>
-
-        <div className="px-4 sm:px-6 pb-8 sm:pb-16">
-          <div className="max-w-4xl mx-auto text-center">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-12">
-              <div>
-                <div className="text-2xl sm:text-4xl font-bold text-black mb-2">Real-time</div>
-                <div className="text-gray-600">Generation</div>
-              </div>
-              <div>
-                <div className="text-2xl sm:text-4xl font-bold text-black mb-2">100%</div>
-                <div className="text-gray-600">Accurate</div>
-              </div>
-              <div>
-                <div className="text-2xl sm:text-4xl font-bold text-black mb-2">Unlimited</div>
-                <div className="text-gray-600">Scale</div>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     );
   }
 
-  if (currentPage === 'checkout' && generatedDataset) {
-    return (
-      <div className="min-h-screen bg-white" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, sans-serif' }}>
-        <header className="px-6 py-8 border-b border-gray-100">
-          <div className="max-w-4xl mx-auto flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <button 
-                onClick={() => setCurrentPage('generation')}
-                className="text-gray-500 hover:text-black p-2 hover:bg-gray-50 rounded-full transition-colors"
-              >
-                <ArrowLeft className="w-5 h-5" />
-              </button>
-              <h1 className="text-2xl font-semibold text-black">23 Bulbs</h1>
-            </div>
-          </div>
-        </header>
-
-        <div className="px-6 py-16">
-          <div className="max-w-2xl mx-auto">
-            <div className="text-center mb-12">
-              <h2 className="text-4xl font-bold text-black mb-4 tracking-tight">
-                Your Dataset is Ready
-              </h2>
-              <p className="text-xl text-gray-600">
-                Complete purchase to access your API
-              </p>
-            </div>
-
-            <div className="bg-gray-50 rounded-2xl p-8 mb-8">
-              <h3 className="text-2xl font-bold text-black mb-6">{generatedDataset.name}</h3>
-              <div className="grid grid-cols-2 gap-6 mb-6">
-                <div>
-                  <div className="text-sm text-gray-600 mb-1">Categories</div>
-                  <div className="font-medium text-black">
-                    {Array.isArray(generatedDataset.categories) 
-                      ? `${generatedDataset.categories.length} selected`
-                      : generatedDataset.categories
-                    }
-                  </div>
-                </div>
-                <div>
-                  <div className="text-sm text-gray-600 mb-1">Samples</div>
-                  <div className="font-medium text-black">{generatedDataset.samples.toLocaleString()}</div>
-                </div>
-                <div>
-                  <div className="text-sm text-gray-600 mb-1">Size</div>
-                  <div className="font-medium text-black">{generatedDataset.size}</div>
-                </div>
-                <div>
-                  <div className="text-sm text-gray-600 mb-1">Format</div>
-                  <div className="font-medium text-black">API + Download</div>
-                </div>
-              </div>
-              
-              <div className="border-t border-gray-200 pt-6 space-y-3">
-                {typeof generatedDataset.price === 'string' ? (
-                  <>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-gray-600">Dataset license</span>
-                      <span className="text-black">{generatedDataset.price}</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-gray-600">API access (annual)</span>
-                      <span className="text-black">$15,000</span>
-                    </div>
-                    <div className="border-t border-gray-200 pt-3 mt-4">
-                      <div className="flex items-center justify-between">
-                        <span className="text-2xl font-bold text-black">Total</span>
-                        <span className="text-2xl font-bold text-black">
-                          ${(parseInt(generatedDataset.price.replace(/[^\d]/g, '')) + 15000).toLocaleString()}
-                        </span>
-                      </div>
-                      <p className="text-xs text-gray-500 mt-1">One-time dataset license • Annual API access • Commercial usage rights</p>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-gray-600">Real-time simulation engine setup</span>
-                      <span className="text-black">$150,000</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-gray-600">Advanced configurations ({Array.isArray(generatedDataset.categories) ? generatedDataset.categories.length : 0} categories)</span>
-                      <span className="text-black">${(Array.isArray(generatedDataset.categories) ? generatedDataset.categories.length * 25000 : 0).toLocaleString()}</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-gray-600">Real-time API infrastructure (monthly)</span>
-                      <span className="text-black font-semibold text-red-600">$2,500,000</span>
-                    </div>
-                    <div className="border-t border-gray-200 pt-3 mt-4">
-                      <div className="flex items-center justify-between">
-                        <span className="text-2xl font-bold text-black">Total</span>
-                        <span className="text-2xl font-bold text-black">
-                          ${(150000 + (Array.isArray(generatedDataset.categories) ? generatedDataset.categories.length * 25000 : 0) + 2500000).toLocaleString()}
-                        </span>
-                      </div>
-                      <p className="text-xs text-gray-500 mt-1">Enterprise contract • Real-time GPU cluster access • Dedicated infrastructure</p>
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              <button 
-                onClick={() => setCurrentPage('success')}
-                className="w-full bg-blue-600 text-white px-8 py-4 rounded-full text-lg font-medium hover:bg-blue-700 transition-colors"
-              >
-                Purchase & Get API Key
-              </button>
-              <p className="text-center text-sm text-gray-500">
-                Enterprise contract • Dedicated GPU clusters• Real-time infrastructure • Premium support
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (currentPage === 'success') {
-    return (
-      <div className="min-h-screen bg-white" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, sans-serif' }}>
-        <header className="px-6 py-8 border-b border-gray-100">
-          <div className="max-w-4xl mx-auto">
-            <h1 className="text-2xl font-semibold text-black">23 Bulbs</h1>
-          </div>
-        </header>
-
-        <div className="px-6 py-16">
-          <div className="max-w-2xl mx-auto text-center">
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-8">
-              <Check className="w-8 h-8 text-green-600" />
-            </div>
-            
-            <h2 className="text-4xl font-bold text-black mb-4 tracking-tight">
-              Dataset Ready
-            </h2>
-            <p className="text-xl text-gray-600 mb-12">
-              Your API key and dataset download are ready
-            </p>
-
-            <div className="bg-gray-50 rounded-2xl p-8 mb-8">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-semibold text-black">API Key</h3>
-                <Key className="w-5 h-5 text-gray-400" />
-              </div>
-              <div className="bg-white rounded-xl p-4 font-mono text-sm text-gray-800 border border-gray-200 mb-4">
-                23b_sk_live_abc123def456ghi789jkl012mno345
-              </div>
-              <button className="text-blue-600 hover:text-blue-700 text-sm font-medium">
-                Copy to clipboard
-              </button>
-            </div>
-
-            <div className="space-y-4">
-              <button className="w-full bg-black text-white px-8 py-4 rounded-full text-lg font-medium hover:bg-gray-800 transition-colors inline-flex items-center justify-center space-x-2">
-                <Download className="w-5 h-5" />
-                <span>Download Dataset</span>
-              </button>
-              <button 
-                onClick={() => setCurrentPage('landing')}
-                className="w-full border border-gray-300 text-black px-8 py-4 rounded-full text-lg font-medium hover:border-gray-400 hover:bg-gray-50 transition-colors"
-              >
-                Generate Another Dataset
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
+  // THIS IS THE MAIN DASHBOARD - Scale AI Style Project Templates
   return (
     <div className="min-h-screen bg-white" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, sans-serif' }}>
       <header className="px-6 py-8 border-b border-gray-100">
-        <div className="max-w-4xl mx-auto flex items-center justify-between">
+        <div className="max-w-6xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <button 
               onClick={() => setCurrentPage('landing')}
@@ -671,64 +348,169 @@ const DatasetPlatform = () => {
             </button>
             <h1 className="text-2xl font-semibold text-black">23 Bulbs</h1>
           </div>
+          <div className="flex items-center space-x-4">
+            <button 
+              onClick={() => setCurrentPage('marketplace')}
+              className="text-gray-600 hover:text-black px-4 py-2 text-sm font-medium transition-colors"
+            >
+              Browse Datasets
+            </button>
+            <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
+              <span className="text-xs font-medium text-gray-600">JD</span>
+            </div>
+          </div>
         </div>
       </header>
 
       <div className="px-4 sm:px-6 py-8 sm:py-16">
-        <div className="max-w-2xl mx-auto">
-          <div className="text-center mb-8 sm:mb-16">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-8 sm:mb-12">
+            <div className="flex items-center justify-center space-x-2 mb-4">
+              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+              <span className="text-sm text-gray-600">Signed in as John Doe</span>
+            </div>
             <h2 className="text-3xl sm:text-4xl font-bold text-black mb-4 tracking-tight">
-              Generate Dataset
+              Create New Project
             </h2>
             <p className="text-lg sm:text-xl text-gray-600">
-              Describe what you need
+              Choose a use case to get started with your dataset generation
             </p>
           </div>
 
-          <div className="mb-8 sm:mb-12">
-            <div className="relative">
-              <input
-                type="text"
-                value={promptValue}
-                onChange={(e) => setPromptValue(e.target.value)}
-                placeholder="Pants"
-                className="w-full px-4 sm:px-6 py-4 sm:py-6 text-xl sm:text-2xl border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder-gray-400 bg-white"
-                onKeyPress={(e) => e.key === 'Enter' && handlePromptSubmit()}
-              />
-              <button
-                onClick={handlePromptSubmit}
-                disabled={!promptValue.trim()}
-                className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 bg-blue-600 text-white rounded-xl flex items-center justify-center hover:bg-blue-700 disabled:bg-gray-200 disabled:cursor-not-allowed transition-colors"
+          {/* Filter Section */}
+          <div className="flex flex-wrap items-center gap-4 mb-8">
+            <div className="flex items-center space-x-2">
+              <span className="text-sm font-medium text-gray-700">Data Type:</span>
+              <button 
+                onClick={() => setSelectedDataType('All')}
+                className={`px-3 py-1 rounded-full text-sm font-medium ${selectedDataType === 'All' ? 'bg-blue-100 text-blue-700' : 'text-gray-600 hover:bg-gray-100'}`}
               >
-                <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
+                All
+              </button>
+              <button 
+                onClick={() => setSelectedDataType('Video')}
+                className={`px-3 py-1 rounded-full text-sm ${selectedDataType === 'Video' ? 'bg-blue-100 text-blue-700 font-medium' : 'text-gray-600 hover:bg-gray-100'}`}
+              >
+                Video
+              </button>
+              <button 
+                onClick={() => setSelectedDataType('Image')}
+                className={`px-3 py-1 rounded-full text-sm ${selectedDataType === 'Image' ? 'bg-blue-100 text-blue-700 font-medium' : 'text-gray-600 hover:bg-gray-100'}`}
+              >
+                Image
+              </button>
+            </div>
+            <div className="flex items-center space-x-2">
+              <span className="text-sm font-medium text-gray-700">Category:</span>
+              <button 
+                onClick={() => setSelectedCategory('All')}
+                className={`px-3 py-1 rounded-full text-sm font-medium ${selectedCategory === 'All' ? 'bg-blue-100 text-blue-700' : 'text-gray-600 hover:bg-gray-100'}`}
+              >
+                All
+              </button>
+              <button 
+                onClick={() => setSelectedCategory('Garments')}
+                className={`px-3 py-1 rounded-full text-sm ${selectedCategory === 'Garments' ? 'bg-blue-100 text-blue-700 font-medium' : 'text-gray-600 hover:bg-gray-100'}`}
+              >
+                Garments
+              </button>
+              <button 
+                onClick={() => setSelectedCategory('Human Body')}
+                className={`px-3 py-1 rounded-full text-sm ${selectedCategory === 'Human Body' ? 'bg-blue-100 text-blue-700 font-medium' : 'text-gray-600 hover:bg-gray-100'}`}
+              >
+                Human Body
+              </button>
+              <button 
+                onClick={() => setSelectedCategory('Animals')}
+                className={`px-3 py-1 rounded-full text-sm ${selectedCategory === 'Animals' ? 'bg-blue-100 text-blue-700 font-medium' : 'text-gray-600 hover:bg-gray-100'}`}
+              >
+                Animals
               </button>
             </div>
           </div>
 
-          <div className="mb-4">
-            <p className="text-sm text-gray-500 mb-3">Popular suggestions:</p>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              {[
-                'Pants', 'Dress', 'Jacket', 'Shirt', 
-                'Skirt', 'Sweater', 'Coat', 'Blouse',
-                'Jeans', 'T-Shirt', 'Hoodie', 'Blazer',
-                'Shorts', 'Cardigan', 'Vest', 'Scarf'
-              ].map((example) => (
-                <button
-                  key={example}
-                  onClick={() => setPromptValue(example)}
-                  className="p-3 text-sm text-center border border-gray-200 rounded-xl hover:border-gray-300 hover:bg-gray-50 transition-all"
+          {/* Project Templates Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+            {getFilteredProjects().map((project) => (
+              <div 
+                key={project.id}
+                onClick={() => {
+                  setPromptValue(project.prompt);
+                  setShowModal(true);
+                }}
+                className="bg-white border border-gray-200 rounded-xl overflow-hidden hover:border-blue-300 hover:shadow-lg transition-all cursor-pointer group"
+              >
+                <div className={`h-48 bg-gradient-to-br ${project.gradient} relative overflow-hidden`}>
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-16 h-16 bg-white bg-opacity-10 rounded-xl flex items-center justify-center">
+                      {renderShape(project.shape)}
+                    </div>
+                  </div>
+                  <div className="absolute top-4 left-4">
+                    <span className="px-3 py-1 bg-black bg-opacity-40 text-white text-xs font-medium rounded-full">{project.type}</span>
+                  </div>
+                </div>
+                <div className="p-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">{project.name}</h3>
+                  <p className="text-sm text-gray-600 mb-4 leading-relaxed">{project.description}</p>
+                  <div className="flex flex-wrap gap-2">
+                    {project.tags.map((tag, index) => (
+                      <span key={index} className="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded-full">{tag}</span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+
+            {/* Custom Project */}
+            <div 
+              onClick={() => setShowModal(true)}
+              className="bg-white border-2 border-dashed border-gray-300 rounded-xl overflow-hidden hover:border-gray-400 hover:bg-gray-50 transition-all cursor-pointer group"
+            >
+              <div className="h-48 bg-gray-100 relative overflow-hidden flex items-center justify-center">
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-gray-300 rounded-xl flex items-center justify-center mx-auto mb-4">
+                    <div className="w-6 h-6 border-2 border-gray-500 rounded-lg border-dashed"></div>
+                  </div>
+                  <span className="text-gray-600 font-medium">Custom Project</span>
+                </div>
+              </div>
+              <div className="p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Create Custom Dataset</h3>
+                <p className="text-sm text-gray-600 mb-4 leading-relaxed">Configure your own dataset with advanced parameters and specifications</p>
+                <div className="flex flex-wrap gap-2">
+                  <span className="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded-full">Advanced</span>
+                  <span className="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded-full">Custom</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          {/* Need Help Section */}
+          <div className="bg-gray-100 border border-gray-200 rounded-xl p-6">
+            <div className="flex items-start space-x-4">
+              <div className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center flex-shrink-0">
+                <div className="w-4 h-4 border-2 border-white rounded-full border-dashed"></div>
+              </div>
+              <div>
+                <h3 className="font-semibold text-gray-900 mb-2">Need help starting a project?</h3>
+                <p className="text-gray-600 text-sm mb-4 leading-relaxed">Our team can guide you through the best dataset configuration for your specific AI training needs.</p>
+                <a 
+                  href="mailto:support@23bulbs.com?subject=Project Configuration Help&body=Hi, I need help choosing the right dataset configuration for my AI training project."
+                  className="inline-flex items-center space-x-2 bg-gray-800 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-black transition-colors"
                 >
-                  <div className="font-medium text-black">{example}</div>
-                </button>
-              ))}
+                  <span>Get Started</span>
+                  <ArrowRight className="w-4 h-4" />
+                </a>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-20 flex items-center justify-center p-6 z-50">
+        <div className="fixed inset-0 bg-black bg-opacity-20 flex items-center justify-center p-4 sm:p-6 z-50">
           <style jsx>{`
             .modal-scroll::-webkit-scrollbar {
               width: 12px;
@@ -750,24 +532,24 @@ const DatasetPlatform = () => {
               background: #64748b;
             }
           `}</style>
-          <div className="bg-white rounded-3xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl">
-            <div className="p-8 border-b border-gray-100 flex-shrink-0">
+          <div className="bg-white rounded-2xl sm:rounded-3xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl">
+            <div className="p-4 sm:p-8 border-b border-gray-100 flex-shrink-0">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-2xl font-bold text-black">Configure Dataset</h3>
-                  <p className="text-gray-600 mt-1">"{promptValue}"</p>
+                  <h3 className="text-xl sm:text-2xl font-bold text-black">Configure Dataset</h3>
+                  <p className="text-gray-600 mt-1 text-sm sm:text-base">"{promptValue}"</p>
                 </div>
                 <button
                   onClick={() => setShowModal(false)}
                   className="text-gray-400 hover:text-gray-600 p-2 hover:bg-gray-50 rounded-full transition-all"
                 >
-                  <X className="w-6 h-6" />
+                  <X className="w-5 h-5 sm:w-6 sm:h-6" />
                 </button>
               </div>
             </div>
             
             <div 
-              className="flex-1 overflow-y-scroll p-8 modal-scroll" 
+              className="flex-1 overflow-y-scroll p-4 sm:p-8 modal-scroll" 
               style={{ 
                 scrollbarWidth: 'auto', 
                 scrollbarColor: '#CBD5E1 #F1F5F9',
@@ -775,7 +557,7 @@ const DatasetPlatform = () => {
                 minHeight: '400px'
               }}
             >
-              <div className="grid grid-cols-2 gap-3 mb-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6 sm:mb-8">
                 {datasetCategories.map((category) => (
                   <button
                     key={category.id}
@@ -827,8 +609,8 @@ const DatasetPlatform = () => {
                           </button>
                           
                           {!isCollapsed && (
-                            <div className="px-6 pb-6">
-                              <div className="grid grid-cols-2 gap-4">
+                            <div className="px-4 sm:px-6 pb-4 sm:pb-6">
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 {category.options.map(option => (
                                   <div key={option.id} className="space-y-2">
                                     <label className="text-sm font-medium text-gray-700">
@@ -881,21 +663,21 @@ const DatasetPlatform = () => {
               )}
             </div>
               
-            <div className="flex items-center justify-between p-8 border-t border-gray-100 flex-shrink-0">
-              <span className="text-gray-600">
+            <div className="flex flex-col sm:flex-row items-center justify-between p-4 sm:p-8 border-t border-gray-100 flex-shrink-0 space-y-3 sm:space-y-0">
+              <span className="text-gray-600 text-sm sm:text-base">
                 {selectedCategories.length} selected
               </span>
-              <div className="flex space-x-3">
+              <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3 w-full sm:w-auto">
                 <button
                   onClick={() => setShowModal(false)}
-                  className="px-6 py-2.5 text-gray-600 hover:text-black font-medium transition-colors"
+                  className="w-full sm:w-auto px-6 py-2.5 text-gray-600 hover:text-black font-medium transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={generateDataset}
                   disabled={selectedCategories.length === 0}
-                  className="px-6 py-2.5 bg-blue-600 text-white font-medium rounded-full hover:bg-blue-700 disabled:bg-gray-200 disabled:cursor-not-allowed transition-colors"
+                  className="w-full sm:w-auto px-6 py-2.5 bg-blue-600 text-white font-medium rounded-full hover:bg-blue-700 disabled:bg-gray-200 disabled:cursor-not-allowed transition-colors"
                 >
                   Generate
                 </button>
