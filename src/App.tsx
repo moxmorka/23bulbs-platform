@@ -19,23 +19,31 @@ const DatasetPlatform = () => {
       options: [
         { id: 'angle', name: 'Light Angle', type: 'range', min: 0, max: 360, default: 45, unit: '°' },
         { id: 'count', name: 'Number of Lights', type: 'range', min: 1, max: 8, default: 3, unit: 'lights' },
-        { id: 'intensity', name: 'Light Intensity', type: 'range', min: 0.1, max: 2.0, default: 1.0, unit: 'lux', step: 0.1 }
+        { id: 'intensity', name: 'Light Intensity', type: 'range', min: 0.1, max: 2.0, default: 1.0, unit: 'lux', step: 0.1 },
+        { id: 'color_temp', name: 'Color Temperature', type: 'range', min: 2700, max: 6500, default: 5000, unit: 'K' },
+        { id: 'hdri', name: 'HDRI Environment', type: 'select', options: ['Studio', 'Outdoor', 'Warehouse', 'Sunset'], default: 'Studio' }
       ]
     },
     { 
       id: 'materials', 
-      name: 'Materials',
+      name: 'Materials & Textures',
       options: [
-        { id: 'fabric_type', name: 'Fabric Type', type: 'select', options: ['Cotton', 'Denim', 'Silk', 'Polyester'], default: 'Cotton' },
-        { id: 'roughness', name: 'Surface Roughness', type: 'range', min: 0.0, max: 1.0, default: 0.5, step: 0.1 }
+        { id: 'fabric_type', name: 'Fabric Type', type: 'select', options: ['Cotton', 'Denim', 'Silk', 'Polyester', 'Wool', 'Leather'], default: 'Cotton' },
+        { id: 'roughness', name: 'Surface Roughness', type: 'range', min: 0.0, max: 1.0, default: 0.5, step: 0.1 },
+        { id: 'metallic', name: 'Metallic', type: 'range', min: 0.0, max: 1.0, default: 0.0, step: 0.1 },
+        { id: 'subsurface', name: 'Subsurface Scattering', type: 'range', min: 0.0, max: 1.0, default: 0.2, step: 0.1 },
+        { id: 'normal_strength', name: 'Normal Map Strength', type: 'range', min: 0.0, max: 2.0, default: 1.0, step: 0.1 }
       ]
     },
     { 
       id: 'camera', 
-      name: 'Camera',
+      name: 'Camera Setup',
       options: [
-        { id: 'angles', name: 'Camera Angles', type: 'range', min: 1, max: 16, default: 8, unit: 'angles' },
-        { id: 'resolution', name: 'Resolution', type: 'select', options: ['HD', '4K', '8K'], default: '4K' }
+        { id: 'angles', name: 'Camera Angles', type: 'range', min: 1, max: 36, default: 8, unit: 'angles' },
+        { id: 'resolution', name: 'Resolution', type: 'select', options: ['HD', '4K', '8K'], default: '4K' },
+        { id: 'focal_length', name: 'Focal Length', type: 'range', min: 24, max: 200, default: 50, unit: 'mm' },
+        { id: 'depth_of_field', name: 'Depth of Field', type: 'range', min: 0.0, max: 5.0, default: 2.8, step: 0.1, unit: 'f' },
+        { id: 'motion_blur', name: 'Motion Blur', type: 'range', min: 0.0, max: 1.0, default: 0.5, step: 0.1 }
       ]
     },
     { 
@@ -43,7 +51,50 @@ const DatasetPlatform = () => {
       name: 'Physics Forces',
       options: [
         { id: 'wind_strength', name: 'Wind Strength', type: 'range', min: 0.0, max: 10.0, default: 2.0, unit: 'm/s', step: 0.5 },
-        { id: 'gravity', name: 'Gravity Strength', type: 'range', min: 0.5, max: 2.0, default: 1.0, unit: 'g', step: 0.1 }
+        { id: 'wind_direction', name: 'Wind Direction', type: 'range', min: 0, max: 360, default: 45, unit: '°' },
+        { id: 'gravity', name: 'Gravity Strength', type: 'range', min: 0.5, max: 2.0, default: 1.0, unit: 'g', step: 0.1 },
+        { id: 'air_density', name: 'Air Density', type: 'range', min: 0.5, max: 1.5, default: 1.0, step: 0.1 },
+        { id: 'collision_margin', name: 'Collision Margin', type: 'range', min: 0.001, max: 0.1, default: 0.02, step: 0.001, unit: 'm' }
+      ]
+    },
+    { 
+      id: 'thickness', 
+      name: 'Material Thickness',
+      options: [
+        { id: 'fabric_thickness', name: 'Fabric Thickness', type: 'range', min: 0.1, max: 5.0, default: 1.2, unit: 'mm', step: 0.1 },
+        { id: 'thread_density', name: 'Thread Density', type: 'range', min: 50, max: 300, default: 150, unit: 'threads/inch' },
+        { id: 'weave_pattern', name: 'Weave Pattern', type: 'select', options: ['Plain', 'Twill', 'Satin', 'Jersey'], default: 'Plain' },
+        { id: 'elasticity', name: 'Elasticity', type: 'range', min: 0.0, max: 1.0, default: 0.3, step: 0.1 }
+      ]
+    },
+    { 
+      id: 'colors', 
+      name: 'Colors & Patterns',
+      options: [
+        { id: 'base_color', name: 'Base Color', type: 'select', options: ['Black', 'White', 'Navy', 'Charcoal', 'Brown', 'Blue'], default: 'Navy' },
+        { id: 'saturation', name: 'Color Saturation', type: 'range', min: 0.0, max: 2.0, default: 1.0, step: 0.1 },
+        { id: 'pattern', name: 'Pattern Type', type: 'select', options: ['Solid', 'Stripes', 'Plaid', 'Dots', 'Geometric'], default: 'Solid' },
+        { id: 'pattern_scale', name: 'Pattern Scale', type: 'range', min: 0.1, max: 3.0, default: 1.0, step: 0.1 }
+      ]
+    },
+    { 
+      id: 'environment', 
+      name: 'Environment',
+      options: [
+        { id: 'temperature', name: 'Temperature', type: 'range', min: -10, max: 40, default: 20, unit: '°C' },
+        { id: 'humidity', name: 'Humidity', type: 'range', min: 20, max: 90, default: 50, unit: '%' },
+        { id: 'background', name: 'Background', type: 'select', options: ['Studio White', 'Natural', 'Urban', 'Abstract'], default: 'Studio White' },
+        { id: 'floor_material', name: 'Floor Material', type: 'select', options: ['Concrete', 'Wood', 'Tile', 'Fabric'], default: 'Concrete' }
+      ]
+    },
+    { 
+      id: 'animation', 
+      name: 'Animation States',
+      options: [
+        { id: 'movement_type', name: 'Movement Type', type: 'select', options: ['Walk', 'Run', 'Dance', 'Static Pose'], default: 'Walk' },
+        { id: 'speed', name: 'Animation Speed', type: 'range', min: 0.1, max: 2.0, default: 1.0, step: 0.1, unit: 'x' },
+        { id: 'frame_rate', name: 'Frame Rate', type: 'select', options: ['24fps', '30fps', '60fps'], default: '60fps' },
+        { id: 'duration', name: 'Duration', type: 'range', min: 1, max: 10, default: 3, unit: 'sec' }
       ]
     }
   ];
@@ -723,11 +774,12 @@ const DatasetPlatform = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {[
                 { 
-                  name: 'Pants', 
-                  items: '2.6K videos • 45TB', 
+                  name: 'Pants Demo', 
+                  items: 'Interactive Demo • 50 samples', 
                   specs: ['8K • 60fps • 36 cameras', 'AOV render passes', 'Wind physics: No wind → Storm', 'Materials: Matte → High specular'],
-                  gradient: 'from-gray-800 to-black',
-                  shape: 'rectangle'
+                  gradient: 'from-blue-600 to-blue-800',
+                  shape: 'rectangle',
+                  isDemo: true
                 },
                 { 
                   name: 'Dresses', 
@@ -773,7 +825,9 @@ const DatasetPlatform = () => {
                       </div>
                     </div>
                     <div className="absolute top-4 left-4">
-                      <span className="px-3 py-1 bg-black bg-opacity-40 text-white text-xs font-medium rounded-full">Video</span>
+                      <span className={`px-3 py-1 text-white text-xs font-medium rounded-full ${dataset.isDemo ? 'bg-blue-600' : 'bg-black bg-opacity-40'}`}>
+                        {dataset.isDemo ? 'Demo' : 'Video'}
+                      </span>
                     </div>
                   </div>
                   <div className="p-6">
@@ -788,13 +842,31 @@ const DatasetPlatform = () => {
                       ))}
                     </ul>
                     <div className="text-center">
-                      <p className="text-lg font-semibold text-gray-900 mb-4">Enterprise Pricing</p>
-                      <a 
-                        href={`mailto:sales@23bulbs.com?subject=Dataset Inquiry - ${dataset.name}&body=Hi, I'm interested in learning more about the ${dataset.name} dataset (2.6K videos, 45TB). Please contact me to discuss pricing and requirements.`}
-                        className="w-full bg-black text-white py-3 rounded-full font-medium hover:bg-gray-800 transition-colors inline-block"
-                      >
-                        Contact Sales
-                      </a>
+                      {dataset.isDemo ? (
+                        <>
+                          <p className="text-lg font-semibold text-blue-600 mb-4">Try Interactive Demo</p>
+                          <button 
+                            onClick={() => {
+                              setPromptValue('Pants');
+                              setCurrentPage('generation');
+                              setShowModal(true);
+                            }}
+                            className="w-full bg-blue-600 text-white py-3 rounded-full font-medium hover:bg-blue-700 transition-colors"
+                          >
+                            Launch Demo
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <p className="text-lg font-semibold text-gray-900 mb-4">Enterprise Pricing</p>
+                          <a 
+                            href={`mailto:sales@23bulbs.com?subject=Dataset Inquiry - ${dataset.name}&body=Hi, I'm interested in learning more about the ${dataset.name} dataset (2.6K videos, 45TB). Please contact me to discuss pricing and requirements.`}
+                            className="w-full bg-black text-white py-3 rounded-full font-medium hover:bg-gray-800 transition-colors inline-block"
+                          >
+                            Contact Sales
+                          </a>
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -962,11 +1034,7 @@ const DatasetPlatform = () => {
             {getFilteredProjects().map((project) => (
               <div 
                 key={project.id}
-                onClick={() => {
-                  setPromptValue(project.prompt);
-                  setShowModal(true);
-                }}
-                className="bg-white border border-gray-200 rounded-xl overflow-hidden hover:border-blue-300 hover:shadow-lg transition-all cursor-pointer group"
+                className="bg-white border border-gray-200 rounded-xl overflow-hidden hover:border-blue-300 hover:shadow-lg transition-all"
               >
                 <div className={`h-48 bg-gradient-to-br ${project.gradient} relative overflow-hidden`}>
                   <div className="absolute inset-0 flex items-center justify-center">
@@ -981,19 +1049,25 @@ const DatasetPlatform = () => {
                 <div className="p-6">
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">{project.name}</h3>
                   <p className="text-sm text-gray-600 mb-4 leading-relaxed">{project.description}</p>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-2 mb-4">
                     {project.tags.map((tag, index) => (
                       <span key={index} className="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded-full">{tag}</span>
                     ))}
+                  </div>
+                  <div className="text-center">
+                    <p className="text-sm text-gray-600 mb-3">Contact sales for enterprise pricing</p>
+                    <a 
+                      href={`mailto:sales@23bulbs.com?subject=Project Inquiry - ${project.name}&body=Hi, I'm interested in the ${project.name} project. Please contact me to discuss pricing and requirements.`}
+                      className="w-full bg-gray-800 text-white py-2.5 rounded-lg font-medium hover:bg-black transition-colors inline-block text-sm"
+                    >
+                      Contact Sales
+                    </a>
                   </div>
                 </div>
               </div>
             ))}
 
-            <div 
-              onClick={() => setShowModal(true)}
-              className="bg-white border-2 border-dashed border-gray-300 rounded-xl overflow-hidden hover:border-gray-400 hover:bg-gray-50 transition-all cursor-pointer group"
-            >
+            <div className="bg-white border-2 border-dashed border-gray-300 rounded-xl overflow-hidden hover:border-gray-400 hover:bg-gray-50 transition-all">
               <div className="h-48 bg-gray-100 relative overflow-hidden flex items-center justify-center">
                 <div className="text-center">
                   <div className="w-16 h-16 bg-gray-300 rounded-xl flex items-center justify-center mx-auto mb-4">
@@ -1005,9 +1079,18 @@ const DatasetPlatform = () => {
               <div className="p-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">Create Custom Dataset</h3>
                 <p className="text-sm text-gray-600 mb-4 leading-relaxed">Configure your own dataset with advanced parameters and specifications</p>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2 mb-4">
                   <span className="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded-full">Advanced</span>
                   <span className="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded-full">Custom</span>
+                </div>
+                <div className="text-center">
+                  <p className="text-sm text-gray-600 mb-3">Contact sales for custom solutions</p>
+                  <a 
+                    href="mailto:sales@23bulbs.com?subject=Custom Dataset Inquiry&body=Hi, I'm interested in creating a custom dataset. Please contact me to discuss requirements and pricing."
+                    className="w-full bg-gray-800 text-white py-2.5 rounded-lg font-medium hover:bg-black transition-colors inline-block text-sm"
+                  >
+                    Contact Sales
+                  </a>
                 </div>
               </div>
             </div>
@@ -1052,7 +1135,7 @@ const DatasetPlatform = () => {
               </div>
             </div>
             
-            <div className="flex-1 overflow-y-scroll p-4 sm:p-8">
+            <div className="flex-1 overflow-y-auto p-4 sm:p-8" style={{ maxHeight: 'calc(90vh - 200px)' }}>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6 sm:mb-8">
                 {datasetCategories.map((category) => (
                   <button
@@ -1065,7 +1148,7 @@ const DatasetPlatform = () => {
                     }`}
                   >
                     <div className="flex items-center justify-between">
-                      <span className="font-medium text-black">{category.name}</span>
+                      <span className="font-medium text-black text-sm sm:text-base">{category.name}</span>
                       <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
                         selectedCategories.includes(category.id)
                           ? 'border-blue-500 bg-blue-500'
@@ -1083,7 +1166,7 @@ const DatasetPlatform = () => {
               {selectedCategories.length > 0 && (
                 <div className="mb-8 border-t border-gray-100 pt-8">
                   <h4 className="text-lg font-semibold text-black mb-6">Configuration Options</h4>
-                  <div className="space-y-4">
+                  <div className="space-y-6">
                     {selectedCategories.map(categoryId => {
                       const category = datasetCategories.find(cat => cat.id === categoryId);
                       const config = categoryConfigs[categoryId] || {};
@@ -1098,6 +1181,7 @@ const DatasetPlatform = () => {
                             <div className="flex items-center">
                               <div className="w-3 h-3 bg-blue-500 rounded-full mr-3"></div>
                               <h5 className="font-medium text-black">{category.name}</h5>
+                              <span className="ml-2 text-sm text-gray-500">({category.options.length} parameters)</span>
                             </div>
                             <ChevronDown className={`w-5 h-5 text-gray-500 transition-transform ${
                               isCollapsed ? '-rotate-90' : 'rotate-0'
@@ -1105,17 +1189,17 @@ const DatasetPlatform = () => {
                           </button>
                           
                           {!isCollapsed && (
-                            <div className="px-4 sm:px-6 pb-4 sm:pb-6">
-                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div className="px-4 sm:px-6 pb-6">
+                              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                                 {category.options.map(option => (
-                                  <div key={option.id} className="space-y-2">
-                                    <label className="text-sm font-medium text-gray-700">
+                                  <div key={option.id} className="space-y-3">
+                                    <label className="text-sm font-medium text-gray-700 block">
                                       {option.name}
                                       {option.unit && <span className="text-gray-500 ml-1">({option.unit})</span>}
                                     </label>
                                     
                                     {option.type === 'range' && (
-                                      <div className="space-y-1">
+                                      <div className="space-y-2">
                                         <input
                                           type="range"
                                           min={option.min}
@@ -1123,14 +1207,17 @@ const DatasetPlatform = () => {
                                           step={option.step || 1}
                                           value={config[option.id] || option.default}
                                           onChange={(e) => updateCategoryConfig(categoryId, option.id, parseFloat(e.target.value))}
-                                          className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                                          className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+                                          style={{
+                                            background: `linear-gradient(to right, #3B82F6 0%, #3B82F6 ${((config[option.id] || option.default) - option.min) / (option.max - option.min) * 100}%, #E5E7EB ${((config[option.id] || option.default) - option.min) / (option.max - option.min) * 100}%, #E5E7EB 100%)`
+                                          }}
                                         />
                                         <div className="flex justify-between text-xs text-gray-500">
-                                          <span>{option.min}{option.unit}</span>
-                                          <span className="font-medium text-black">
-                                            {config[option.id] || option.default}{option.unit}
+                                          <span>{option.min}{option.unit || ''}</span>
+                                          <span className="font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded">
+                                            {config[option.id] || option.default}{option.unit || ''}
                                           </span>
-                                          <span>{option.max}{option.unit}</span>
+                                          <span>{option.max}{option.unit || ''}</span>
                                         </div>
                                       </div>
                                     )}
@@ -1139,7 +1226,7 @@ const DatasetPlatform = () => {
                                       <select
                                         value={config[option.id] || option.default}
                                         onChange={(e) => updateCategoryConfig(categoryId, option.id, e.target.value)}
-                                        className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                                        className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none bg-white"
                                       >
                                         {option.options.map(optValue => (
                                           <option key={optValue} value={optValue}>{optValue}</option>
