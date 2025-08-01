@@ -457,13 +457,13 @@ const DatasetPlatform = () => {
 
   if (currentPage === 'technology') {
     return (
-      <div className="min-h-screen bg-white" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, sans-serif' }}>
-        <header className="px-4 sm:px-6 py-6 sm:py-8">
+      <div className="min-h-screen bg-gray-50" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, sans-serif' }}>
+        <header className="px-4 sm:px-6 py-6 sm:py-8 bg-white border-b border-gray-200">
           <div className="max-w-6xl mx-auto flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <button 
                 onClick={() => setCurrentPage('landing')}
-                className="text-gray-500 hover:text-black p-2 hover:bg-gray-50 rounded-full transition-colors"
+                className="text-gray-500 hover:text-black p-2 hover:bg-gray-100 rounded-lg transition-colors"
               >
                 <ArrowLeft className="w-5 h-5" />
               </button>
@@ -471,111 +471,211 @@ const DatasetPlatform = () => {
             </div>
             <button 
               onClick={() => setCurrentPage('signin')}
-              className="bg-black text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-medium hover:bg-gray-800 transition-colors"
+              className="bg-blue-600 text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm font-medium hover:bg-blue-700 transition-colors"
             >
               Sign In
             </button>
           </div>
         </header>
 
-        <main className="px-4 sm:px-6 py-12 sm:py-24">
-          <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl sm:text-5xl font-bold text-black mb-6 tracking-tight">
-                Physics-Aware Training Data for GenAI
-              </h2>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-                Current GenAI models are unusable for enterprise - they're unstable, unpredictable, and ethically risky. 
-                We deliver real-world simulation through API at scale, unlocking GenAI for enterprise use.
+        <main className="px-4 sm:px-6 py-12 sm:py-20">
+          <div className="max-w-5xl mx-auto">
+            
+            {/* Hero Section */}
+            <div className="text-center mb-20">
+              <h1 className="text-5xl sm:text-6xl font-bold text-black mb-8 tracking-tight leading-none">
+                Physics-Aware Training Data
+              </h1>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed font-normal">
+                Current GenAI models are unusable for enterprise. We deliver real-world simulation 
+                through API at scale, unlocking GenAI for enterprise use.
               </p>
             </div>
 
-            <div className="bg-red-50 border border-red-200 rounded-3xl p-8 sm:p-12 mb-16">
-              <h3 className="text-2xl font-bold text-black mb-6">Problem: GenAI is Broken for Business</h3>
-              <p className="text-lg text-gray-700 mb-8">
-                <strong>Current GenAI models are unusable for enterprise.</strong> They're unstable, unpredictable, and ethically risky - costing 
-                companies millions in failed deployment attempts. Without real-world, physics-aware data, <strong>GenAI is stuck in the lab.</strong>
-              </p>
+            {/* Technical Pipeline Diagram */}
+            <div className="bg-white rounded-2xl p-8 sm:p-12 mb-20 shadow-sm border border-gray-200">
+              <h2 className="text-2xl font-bold text-black mb-8 text-center">How It Works</h2>
               
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-white border border-red-200 rounded-xl p-6">
-                  <h4 className="font-bold text-black mb-3">Unstable, Unusable, Unpredictable</h4>
-                  <p className="text-sm text-gray-600">Enterprises have poured money into GenAI only to abandon it - video melts after seconds, outputs lack consistency, and hallucinations damage brand trust.</p>
+              <div className="flex flex-col lg:flex-row items-center justify-between space-y-8 lg:space-y-0 lg:space-x-8">
+                
+                {/* Step 1 */}
+                <div className="flex flex-col items-center text-center flex-1">
+                  <div className="w-20 h-20 bg-blue-100 rounded-2xl flex items-center justify-center mb-4">
+                    <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                      <div className="w-6 h-6 border-2 border-white rounded"></div>
+                    </div>
+                  </div>
+                  <h3 className="text-lg font-semibold text-black mb-2">3D Models</h3>
+                  <p className="text-sm text-gray-600 leading-relaxed">High-fidelity garments and bodies with accurate materials</p>
                 </div>
-                <div className="bg-white border border-red-200 rounded-xl p-6">
-                  <h4 className="font-bold text-black mb-3">Lost Revenue, Blocked Adoption</h4>
-                  <p className="text-sm text-gray-600">Sectors like fashion, gaming, and retail can't deploy GenAI at scale. Legacy workflows dominate because AI outputs can't be trusted - keeping productivity gains locked.</p>
+
+                {/* Arrow */}
+                <div className="hidden lg:block">
+                  <ArrowRight className="w-6 h-6 text-gray-400" />
                 </div>
-                <div className="bg-white border border-red-200 rounded-xl p-6">
-                  <h4 className="font-bold text-black mb-3">Legal & Ethical Minefield</h4>
-                  <p className="text-sm text-gray-600">Most training data is scraped, infringing copyright and raising massive legal liability. A wave of litigation is coming - and brands don't want to be the test case.</p>
+                <div className="lg:hidden">
+                  <div className="w-0.5 h-8 bg-gray-300"></div>
+                </div>
+
+                {/* Step 2 */}
+                <div className="flex flex-col items-center text-center flex-1">
+                  <div className="w-20 h-20 bg-green-100 rounded-2xl flex items-center justify-center mb-4">
+                    <div className="w-10 h-10 bg-green-600 rounded-lg flex items-center justify-center">
+                      <div className="w-0 h-0 border-l-3 border-r-3 border-b-4 border-l-transparent border-r-transparent border-b-white"></div>
+                    </div>
+                  </div>
+                  <h3 className="text-lg font-semibold text-black mb-2">Physics Engine</h3>
+                  <p className="text-sm text-gray-600 leading-relaxed">Real-time cloth simulation with 20+ configurable parameters</p>
+                </div>
+
+                {/* Arrow */}
+                <div className="hidden lg:block">
+                  <ArrowRight className="w-6 h-6 text-gray-400" />
+                </div>
+                <div className="lg:hidden">
+                  <div className="w-0.5 h-8 bg-gray-300"></div>
+                </div>
+
+                {/* Step 3 */}
+                <div className="flex flex-col items-center text-center flex-1">
+                  <div className="w-20 h-20 bg-purple-100 rounded-2xl flex items-center justify-center mb-4">
+                    <div className="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center">
+                      <div className="w-6 h-6 bg-white rounded-full"></div>
+                    </div>
+                  </div>
+                  <h3 className="text-lg font-semibold text-black mb-2">Multi-Camera Render</h3>
+                  <p className="text-sm text-gray-600 leading-relaxed">36-camera setup capturing 8K video at 60fps with AOV passes</p>
+                </div>
+
+                {/* Arrow */}
+                <div className="hidden lg:block">
+                  <ArrowRight className="w-6 h-6 text-gray-400" />
+                </div>
+                <div className="lg:hidden">
+                  <div className="w-0.5 h-8 bg-gray-300"></div>
+                </div>
+
+                {/* Step 4 */}
+                <div className="flex flex-col items-center text-center flex-1">
+                  <div className="w-20 h-20 bg-orange-100 rounded-2xl flex items-center justify-center mb-4">
+                    <div className="w-10 h-10 bg-orange-600 rounded-lg flex items-center justify-center">
+                      <div className="w-6 h-6 bg-white rounded transform rotate-45"></div>
+                    </div>
+                  </div>
+                  <h3 className="text-lg font-semibold text-black mb-2">Training Data</h3>
+                  <p className="text-sm text-gray-600 leading-relaxed">Tagged, physics-accurate datasets ready for AI model training</p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-green-50 border border-green-200 rounded-3xl p-8 sm:p-12 mb-16">
-              <h3 className="text-2xl font-bold text-black mb-6">Solution: Physics-Aware Training Data</h3>
-              <p className="text-lg text-gray-700 mb-8">
-                <strong>We deliver real-world simulation through API - at scale.</strong> 23Bulbs delivers tagged, physics-accurate training data via a powerful 
-                simulation engine. Our cloth and motion data cut training time, lower computing costs, and unlock GenAI for enterprise use.
-              </p>
+            {/* Problem Section */}
+            <div className="bg-white rounded-2xl p-8 sm:p-12 mb-16 shadow-sm border border-gray-200">
+              <div className="text-center mb-12">
+                <h2 className="text-3xl font-bold text-black mb-4">The Problem</h2>
+                <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                  Current GenAI models are unusable for enterprise applications
+                </p>
+              </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="bg-white border border-green-200 rounded-xl p-6">
-                  <h4 className="font-bold text-black mb-4">FEATURES</h4>
-                  <div className="space-y-4">
-                    <div>
-                      <h5 className="font-semibold text-black">Physics-Accurate Simulation Engine</h5>
-                      <p className="text-sm text-gray-600">Real-time cloth and motion simulation, customizable through 20+ parameters (e.g., fabric, force, movement type).</p>
-                    </div>
-                    <div>
-                      <h5 className="font-semibold text-black">On-Demand API with Scalable UI</h5>
-                      <p className="text-sm text-gray-600">Self-serve platform for enterprises to request and receive high-fidelity video training data with seamless API integration.</p>
-                    </div>
-                    <div>
-                      <h5 className="font-semibold text-black">Multi-Engine Platform</h5>
-                      <p className="text-sm text-gray-600">Beyond ClothTrain - a growing suite of engines for human motion, sensor data, and dynamic environments, building a data flywheel.</p>
-                    </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-red-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                    <X className="w-8 h-8 text-red-600" />
                   </div>
+                  <h3 className="text-lg font-semibold text-black mb-3">Unstable Output</h3>
+                  <p className="text-gray-600 leading-relaxed">Video melts after seconds, outputs lack consistency, hallucinations damage brand trust</p>
                 </div>
-                <div className="bg-white border border-green-200 rounded-xl p-6">
-                  <h4 className="font-bold text-black mb-4">BENEFITS</h4>
-                  <div className="space-y-4">
-                    <div>
-                      <h5 className="font-semibold text-black">Faster, Cheaper AI Training</h5>
-                      <p className="text-sm text-gray-600">Specific, tagged data reduces training time and compute load - from 500M to just 500 frames per use case.</p>
-                    </div>
-                    <div>
-                      <h5 className="font-semibold text-black">Enterprise-Ready Performance</h5>
-                      <p className="text-sm text-gray-600">Extends video generation beyond the 4-8 second collapse point of current GenAI; stable, predictable, brand-safe.</p>
-                    </div>
-                    <div>
-                      <h5 className="font-semibold text-black">Massive Revenue & Moat</h5>
-                      <p className="text-sm text-gray-600">Recurring revenue from API + per-garment pricing; proprietary tech years in the making that giants like Meta & Snap couldn't build.</p>
-                    </div>
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-red-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                    <X className="w-8 h-8 text-red-600" />
                   </div>
+                  <h3 className="text-lg font-semibold text-black mb-3">Blocked Adoption</h3>
+                  <p className="text-gray-600 leading-relaxed">Fashion, gaming, and retail can't deploy GenAI at scale due to reliability issues</p>
+                </div>
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-red-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                    <X className="w-8 h-8 text-red-600" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-black mb-3">Legal Risk</h3>
+                  <p className="text-gray-600 leading-relaxed">Scraped training data creates massive copyright liability and litigation exposure</p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-black text-white rounded-3xl p-8 sm:p-12 text-center">
-              <h3 className="text-2xl font-bold mb-8">Performance Metrics</h3>
+            {/* Solution Section */}
+            <div className="bg-white rounded-2xl p-8 sm:p-12 mb-16 shadow-sm border border-gray-200">
+              <div className="text-center mb-12">
+                <h2 className="text-3xl font-bold text-black mb-4">Our Solution</h2>
+                <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                  Physics-aware training data that unlocks GenAI for enterprise use
+                </p>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                    <Check className="w-8 h-8 text-blue-600" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-black mb-3">Real-Time Physics</h3>
+                  <p className="text-gray-600 leading-relaxed">Accurate cloth and motion simulation with 20+ configurable parameters</p>
+                </div>
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                    <Check className="w-8 h-8 text-green-600" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-black mb-3">Multi-Camera Array</h3>
+                  <p className="text-gray-600 leading-relaxed">36-camera setup capturing 8K resolution at 60fps with AOV render passes</p>
+                </div>
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-purple-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                    <Check className="w-8 h-8 text-purple-600" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-black mb-3">Material Accuracy</h3>
+                  <p className="text-gray-600 leading-relaxed">Physically-based materials from cotton to leather with accurate properties</p>
+                </div>
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                    <Check className="w-8 h-8 text-orange-600" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-black mb-3">Scalable Pipeline</h3>
+                  <p className="text-gray-600 leading-relaxed">On-demand API platform for enterprise dataset generation and delivery</p>
+                </div>
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-teal-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                    <Check className="w-8 h-8 text-teal-600" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-black mb-3">Tagged Data</h3>
+                  <p className="text-gray-600 leading-relaxed">Comprehensive metadata and labels for optimized AI model training</p>
+                </div>
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-indigo-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                    <Check className="w-8 h-8 text-indigo-600" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-black mb-3">AI-Ready Output</h3>
+                  <p className="text-gray-600 leading-relaxed">Training datasets optimized for enterprise GenAI applications</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Performance Metrics */}
+            <div className="bg-black text-white rounded-2xl p-8 sm:p-12 text-center">
+              <h2 className="text-3xl font-bold mb-12">Performance Impact</h2>
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
                 <div>
-                  <div className="text-3xl font-bold mb-2">500M → 500</div>
-                  <div className="text-gray-300 text-sm">Frames Reduced</div>
+                  <div className="text-4xl font-bold mb-3 text-blue-400">500M → 500</div>
+                  <div className="text-gray-300 text-sm font-medium">Training Frames</div>
                 </div>
                 <div>
-                  <div className="text-3xl font-bold mb-2">45TB</div>
-                  <div className="text-gray-300 text-sm">Data Volume</div>
+                  <div className="text-4xl font-bold mb-3 text-green-400">45TB</div>
+                  <div className="text-gray-300 text-sm font-medium">Dataset Volume</div>
                 </div>
                 <div>
-                  <div className="text-3xl font-bold mb-2">8K</div>
-                  <div className="text-gray-300 text-sm">Resolution @ 60fps</div>
+                  <div className="text-4xl font-bold mb-3 text-purple-400">8K@60fps</div>
+                  <div className="text-gray-300 text-sm font-medium">Video Quality</div>
                 </div>
                 <div>
-                  <div className="text-3xl font-bold mb-2">4 Years</div>
-                  <div className="text-gray-300 text-sm">Technical Moat</div>
+                  <div className="text-4xl font-bold mb-3 text-orange-400">4 Years</div>
+                  <div className="text-gray-300 text-sm font-medium">Technical Moat</div>
                 </div>
               </div>
             </div>
