@@ -19,31 +19,23 @@ const DatasetPlatform = () => {
       options: [
         { id: 'angle', name: 'Light Angle', type: 'range', min: 0, max: 360, default: 45, unit: '°' },
         { id: 'count', name: 'Number of Lights', type: 'range', min: 1, max: 8, default: 3, unit: 'lights' },
-        { id: 'intensity', name: 'Light Intensity', type: 'range', min: 0.1, max: 2.0, default: 1.0, unit: 'lux', step: 0.1 },
-        { id: 'color_temp', name: 'Color Temperature', type: 'range', min: 2700, max: 6500, default: 5000, unit: 'K' },
-        { id: 'hdri', name: 'HDRI Environment', type: 'select', options: ['Studio', 'Outdoor', 'Warehouse', 'Sunset'], default: 'Studio' }
+        { id: 'intensity', name: 'Light Intensity', type: 'range', min: 0.1, max: 2.0, default: 1.0, unit: 'lux', step: 0.1 }
       ]
     },
     { 
       id: 'materials', 
-      name: 'Materials & Textures',
+      name: 'Materials',
       options: [
-        { id: 'fabric_type', name: 'Fabric Type', type: 'select', options: ['Cotton', 'Denim', 'Silk', 'Polyester', 'Wool', 'Leather'], default: 'Cotton' },
-        { id: 'roughness', name: 'Surface Roughness', type: 'range', min: 0.0, max: 1.0, default: 0.5, step: 0.1 },
-        { id: 'metallic', name: 'Metallic', type: 'range', min: 0.0, max: 1.0, default: 0.0, step: 0.1 },
-        { id: 'subsurface', name: 'Subsurface Scattering', type: 'range', min: 0.0, max: 1.0, default: 0.2, step: 0.1 },
-        { id: 'normal_strength', name: 'Normal Map Strength', type: 'range', min: 0.0, max: 2.0, default: 1.0, step: 0.1 }
+        { id: 'fabric_type', name: 'Fabric Type', type: 'select', options: ['Cotton', 'Denim', 'Silk', 'Polyester'], default: 'Cotton' },
+        { id: 'roughness', name: 'Surface Roughness', type: 'range', min: 0.0, max: 1.0, default: 0.5, step: 0.1 }
       ]
     },
     { 
       id: 'camera', 
-      name: 'Camera Setup',
+      name: 'Camera',
       options: [
-        { id: 'angles', name: 'Camera Angles', type: 'range', min: 1, max: 36, default: 8, unit: 'angles' },
-        { id: 'resolution', name: 'Resolution', type: 'select', options: ['HD', '4K', '8K'], default: '4K' },
-        { id: 'focal_length', name: 'Focal Length', type: 'range', min: 24, max: 200, default: 50, unit: 'mm' },
-        { id: 'depth_of_field', name: 'Depth of Field', type: 'range', min: 0.0, max: 5.0, default: 2.8, step: 0.1, unit: 'f' },
-        { id: 'motion_blur', name: 'Motion Blur', type: 'range', min: 0.0, max: 1.0, default: 0.5, step: 0.1 }
+        { id: 'angles', name: 'Camera Angles', type: 'range', min: 1, max: 16, default: 8, unit: 'angles' },
+        { id: 'resolution', name: 'Resolution', type: 'select', options: ['HD', '4K', '8K'], default: '4K' }
       ]
     },
     { 
@@ -51,50 +43,7 @@ const DatasetPlatform = () => {
       name: 'Physics Forces',
       options: [
         { id: 'wind_strength', name: 'Wind Strength', type: 'range', min: 0.0, max: 10.0, default: 2.0, unit: 'm/s', step: 0.5 },
-        { id: 'wind_direction', name: 'Wind Direction', type: 'range', min: 0, max: 360, default: 45, unit: '°' },
-        { id: 'gravity', name: 'Gravity Strength', type: 'range', min: 0.5, max: 2.0, default: 1.0, unit: 'g', step: 0.1 },
-        { id: 'air_density', name: 'Air Density', type: 'range', min: 0.5, max: 1.5, default: 1.0, step: 0.1 },
-        { id: 'collision_margin', name: 'Collision Margin', type: 'range', min: 0.001, max: 0.1, default: 0.02, step: 0.001, unit: 'm' }
-      ]
-    },
-    { 
-      id: 'thickness', 
-      name: 'Material Thickness',
-      options: [
-        { id: 'fabric_thickness', name: 'Fabric Thickness', type: 'range', min: 0.1, max: 5.0, default: 1.2, unit: 'mm', step: 0.1 },
-        { id: 'thread_density', name: 'Thread Density', type: 'range', min: 50, max: 300, default: 150, unit: 'threads/inch' },
-        { id: 'weave_pattern', name: 'Weave Pattern', type: 'select', options: ['Plain', 'Twill', 'Satin', 'Jersey'], default: 'Plain' },
-        { id: 'elasticity', name: 'Elasticity', type: 'range', min: 0.0, max: 1.0, default: 0.3, step: 0.1 }
-      ]
-    },
-    { 
-      id: 'colors', 
-      name: 'Colors & Patterns',
-      options: [
-        { id: 'base_color', name: 'Base Color', type: 'select', options: ['Black', 'White', 'Navy', 'Charcoal', 'Brown', 'Blue'], default: 'Navy' },
-        { id: 'saturation', name: 'Color Saturation', type: 'range', min: 0.0, max: 2.0, default: 1.0, step: 0.1 },
-        { id: 'pattern', name: 'Pattern Type', type: 'select', options: ['Solid', 'Stripes', 'Plaid', 'Dots', 'Geometric'], default: 'Solid' },
-        { id: 'pattern_scale', name: 'Pattern Scale', type: 'range', min: 0.1, max: 3.0, default: 1.0, step: 0.1 }
-      ]
-    },
-    { 
-      id: 'environment', 
-      name: 'Environment',
-      options: [
-        { id: 'temperature', name: 'Temperature', type: 'range', min: -10, max: 40, default: 20, unit: '°C' },
-        { id: 'humidity', name: 'Humidity', type: 'range', min: 20, max: 90, default: 50, unit: '%' },
-        { id: 'background', name: 'Background', type: 'select', options: ['Studio White', 'Natural', 'Urban', 'Abstract'], default: 'Studio White' },
-        { id: 'floor_material', name: 'Floor Material', type: 'select', options: ['Concrete', 'Wood', 'Tile', 'Fabric'], default: 'Concrete' }
-      ]
-    },
-    { 
-      id: 'animation', 
-      name: 'Animation States',
-      options: [
-        { id: 'movement_type', name: 'Movement Type', type: 'select', options: ['Walk', 'Run', 'Dance', 'Static Pose'], default: 'Walk' },
-        { id: 'speed', name: 'Animation Speed', type: 'range', min: 0.1, max: 2.0, default: 1.0, step: 0.1, unit: 'x' },
-        { id: 'frame_rate', name: 'Frame Rate', type: 'select', options: ['24fps', '30fps', '60fps'], default: '60fps' },
-        { id: 'duration', name: 'Duration', type: 'range', min: 1, max: 10, default: 3, unit: 'sec' }
+        { id: 'gravity', name: 'Gravity Strength', type: 'range', min: 0.5, max: 2.0, default: 1.0, unit: 'g', step: 0.1 }
       ]
     }
   ];
@@ -508,13 +457,13 @@ const DatasetPlatform = () => {
 
   if (currentPage === 'technology') {
     return (
-      <div className="min-h-screen bg-gray-50" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, sans-serif' }}>
-        <header className="px-4 sm:px-6 py-6 sm:py-8 bg-white border-b border-gray-200">
+      <div className="min-h-screen bg-white" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, sans-serif' }}>
+        <header className="px-4 sm:px-6 py-6 sm:py-8">
           <div className="max-w-6xl mx-auto flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <button 
                 onClick={() => setCurrentPage('landing')}
-                className="text-gray-500 hover:text-black p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                className="text-gray-500 hover:text-black p-2 hover:bg-gray-50 rounded-full transition-colors"
               >
                 <ArrowLeft className="w-5 h-5" />
               </button>
@@ -522,211 +471,138 @@ const DatasetPlatform = () => {
             </div>
             <button 
               onClick={() => setCurrentPage('signin')}
-              className="bg-blue-600 text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm font-medium hover:bg-blue-700 transition-colors"
+              className="bg-gray-900 text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-medium hover:bg-gray-800 transition-colors"
             >
               Sign In
             </button>
           </div>
         </header>
 
-        <main className="px-4 sm:px-6 py-12 sm:py-20">
-          <div className="max-w-5xl mx-auto">
-            
-            {/* Hero Section */}
-            <div className="text-center mb-20">
-              <h1 className="text-5xl sm:text-6xl font-bold text-black mb-8 tracking-tight leading-none">
-                Physics-Aware Training Data
-              </h1>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed font-normal">
-                Current GenAI models are unusable for enterprise. We deliver real-world simulation 
-                through API at scale, unlocking GenAI for enterprise use.
+        <main className="px-4 sm:px-6 py-12 sm:py-24">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl sm:text-5xl font-bold text-black mb-6 tracking-tight">
+                Physics-Aware Training Data for GenAI
+              </h2>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                Current GenAI models are unusable for enterprise - they're unstable, unpredictable, and ethically risky. 
+                We deliver real-world simulation through API at scale, unlocking GenAI for enterprise use.
               </p>
             </div>
 
-            {/* Technical Pipeline Diagram */}
-            <div className="bg-white rounded-2xl p-8 sm:p-12 mb-20 shadow-sm border border-gray-200">
-              <h2 className="text-2xl font-bold text-black mb-8 text-center">How It Works</h2>
+            <div className="bg-gray-100 border border-gray-200 rounded-3xl p-8 sm:p-12 mb-16">
+              <h3 className="text-2xl font-bold text-black mb-6">Problem: GenAI is Broken for Business</h3>
+              <p className="text-lg text-gray-700 mb-8">
+                <strong>Current GenAI models are unusable for enterprise.</strong> They're unstable, unpredictable, and ethically risky - costing 
+                companies millions in failed deployment attempts. Without real-world, physics-aware data, <strong>GenAI is stuck in the lab.</strong>
+              </p>
               
-              <div className="flex flex-col lg:flex-row items-center justify-between space-y-8 lg:space-y-0 lg:space-x-8">
-                
-                {/* Step 1 */}
-                <div className="flex flex-col items-center text-center flex-1">
-                  <div className="w-20 h-20 bg-blue-100 rounded-2xl flex items-center justify-center mb-4">
-                    <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-                      <div className="w-6 h-6 border-2 border-white rounded"></div>
-                    </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="bg-white border border-gray-300 rounded-xl p-6">
+                  <div className="flex items-center mb-3">
+                    <X className="w-5 h-5 text-gray-600 mr-2" />
+                    <h4 className="font-bold text-black">Unstable, Unusable, Unpredictable</h4>
                   </div>
-                  <h3 className="text-lg font-semibold text-black mb-2">3D Models</h3>
-                  <p className="text-sm text-gray-600 leading-relaxed">High-fidelity garments and bodies with accurate materials</p>
+                  <p className="text-sm text-gray-600">Enterprises have poured money into GenAI only to abandon it - video melts after seconds, outputs lack consistency, and hallucinations damage brand trust.</p>
                 </div>
-
-                {/* Arrow */}
-                <div className="hidden lg:block">
-                  <ArrowRight className="w-6 h-6 text-gray-400" />
-                </div>
-                <div className="lg:hidden">
-                  <div className="w-0.5 h-8 bg-gray-300"></div>
-                </div>
-
-                {/* Step 2 */}
-                <div className="flex flex-col items-center text-center flex-1">
-                  <div className="w-20 h-20 bg-green-100 rounded-2xl flex items-center justify-center mb-4">
-                    <div className="w-10 h-10 bg-green-600 rounded-lg flex items-center justify-center">
-                      <div className="w-0 h-0 border-l-3 border-r-3 border-b-4 border-l-transparent border-r-transparent border-b-white"></div>
-                    </div>
+                <div className="bg-white border border-gray-300 rounded-xl p-6">
+                  <div className="flex items-center mb-3">
+                    <X className="w-5 h-5 text-gray-600 mr-2" />
+                    <h4 className="font-bold text-black">Lost Revenue, Blocked Adoption</h4>
                   </div>
-                  <h3 className="text-lg font-semibold text-black mb-2">Physics Engine</h3>
-                  <p className="text-sm text-gray-600 leading-relaxed">Real-time cloth simulation with 20+ configurable parameters</p>
+                  <p className="text-sm text-gray-600">Sectors like fashion, gaming, and retail can't deploy GenAI at scale. Legacy workflows dominate because AI outputs can't be trusted - keeping productivity gains locked.</p>
                 </div>
-
-                {/* Arrow */}
-                <div className="hidden lg:block">
-                  <ArrowRight className="w-6 h-6 text-gray-400" />
-                </div>
-                <div className="lg:hidden">
-                  <div className="w-0.5 h-8 bg-gray-300"></div>
-                </div>
-
-                {/* Step 3 */}
-                <div className="flex flex-col items-center text-center flex-1">
-                  <div className="w-20 h-20 bg-purple-100 rounded-2xl flex items-center justify-center mb-4">
-                    <div className="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center">
-                      <div className="w-6 h-6 bg-white rounded-full"></div>
-                    </div>
+                <div className="bg-white border border-gray-300 rounded-xl p-6">
+                  <div className="flex items-center mb-3">
+                    <X className="w-5 h-5 text-gray-600 mr-2" />
+                    <h4 className="font-bold text-black">Legal & Ethical Minefield</h4>
                   </div>
-                  <h3 className="text-lg font-semibold text-black mb-2">Multi-Camera Render</h3>
-                  <p className="text-sm text-gray-600 leading-relaxed">36-camera setup capturing 8K video at 60fps with AOV passes</p>
-                </div>
-
-                {/* Arrow */}
-                <div className="hidden lg:block">
-                  <ArrowRight className="w-6 h-6 text-gray-400" />
-                </div>
-                <div className="lg:hidden">
-                  <div className="w-0.5 h-8 bg-gray-300"></div>
-                </div>
-
-                {/* Step 4 */}
-                <div className="flex flex-col items-center text-center flex-1">
-                  <div className="w-20 h-20 bg-orange-100 rounded-2xl flex items-center justify-center mb-4">
-                    <div className="w-10 h-10 bg-orange-600 rounded-lg flex items-center justify-center">
-                      <div className="w-6 h-6 bg-white rounded transform rotate-45"></div>
-                    </div>
-                  </div>
-                  <h3 className="text-lg font-semibold text-black mb-2">Training Data</h3>
-                  <p className="text-sm text-gray-600 leading-relaxed">Tagged, physics-accurate datasets ready for AI model training</p>
+                  <p className="text-sm text-gray-600">Most training data is scraped, infringing copyright and raising massive legal liability. A wave of litigation is coming - and brands don't want to be the test case.</p>
                 </div>
               </div>
             </div>
 
-            {/* Problem Section */}
-            <div className="bg-white rounded-2xl p-8 sm:p-12 mb-16 shadow-sm border border-gray-200">
-              <div className="text-center mb-12">
-                <h2 className="text-3xl font-bold text-black mb-4">The Problem</h2>
-                <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                  Current GenAI models are unusable for enterprise applications
-                </p>
-              </div>
+            <div className="bg-gray-100 border border-gray-200 rounded-3xl p-8 sm:p-12 mb-16">
+              <h3 className="text-2xl font-bold text-black mb-6">Solution: Physics-Aware Training Data</h3>
+              <p className="text-lg text-gray-700 mb-8">
+                <strong>We deliver real-world simulation through API - at scale.</strong> 23Bulbs delivers tagged, physics-accurate training data via a powerful 
+                simulation engine. Our cloth and motion data cut training time, lower computing costs, and unlock GenAI for enterprise use.
+              </p>
               
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div className="text-center">
-                  <div className="w-16 h-16 bg-red-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                    <X className="w-8 h-8 text-red-600" />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="bg-white border border-gray-300 rounded-xl p-6">
+                  <h4 className="font-bold text-black mb-4">FEATURES</h4>
+                  <div className="space-y-4">
+                    <div className="flex items-start">
+                      <Check className="w-5 h-5 text-blue-900 mr-3 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <h5 className="font-semibold text-black">Physics-Accurate Simulation Engine</h5>
+                        <p className="text-sm text-gray-600">Real-time cloth and motion simulation, customizable through 20+ parameters (e.g., fabric, force, movement type).</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start">
+                      <Check className="w-5 h-5 text-blue-900 mr-3 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <h5 className="font-semibold text-black">On-Demand API with Scalable UI</h5>
+                        <p className="text-sm text-gray-600">Self-serve platform for enterprises to request and receive high-fidelity video training data with seamless API integration.</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start">
+                      <Check className="w-5 h-5 text-blue-900 mr-3 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <h5 className="font-semibold text-black">Multi-Engine Platform</h5>
+                        <p className="text-sm text-gray-600">Beyond ClothTrain - a growing suite of engines for human motion, sensor data, and dynamic environments, building a data flywheel.</p>
+                      </div>
+                    </div>
                   </div>
-                  <h3 className="text-lg font-semibold text-black mb-3">Unstable Output</h3>
-                  <p className="text-gray-600 leading-relaxed">Video melts after seconds, outputs lack consistency, hallucinations damage brand trust</p>
                 </div>
-                <div className="text-center">
-                  <div className="w-16 h-16 bg-red-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                    <X className="w-8 h-8 text-red-600" />
+                <div className="bg-white border border-gray-300 rounded-xl p-6">
+                  <h4 className="font-bold text-black mb-4">BENEFITS</h4>
+                  <div className="space-y-4">
+                    <div className="flex items-start">
+                      <Check className="w-5 h-5 text-blue-900 mr-3 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <h5 className="font-semibold text-black">Faster, Cheaper AI Training</h5>
+                        <p className="text-sm text-gray-600">Specific, tagged data reduces training time and compute load - from 500M to just 500 frames per use case.</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start">
+                      <Check className="w-5 h-5 text-blue-900 mr-3 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <h5 className="font-semibold text-black">Enterprise-Ready Performance</h5>
+                        <p className="text-sm text-gray-600">Extends video generation beyond the 4-8 second collapse point of current GenAI; stable, predictable, brand-safe.</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start">
+                      <Check className="w-5 h-5 text-blue-900 mr-3 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <h5 className="font-semibold text-black">Massive Revenue & Moat</h5>
+                        <p className="text-sm text-gray-600">Recurring revenue from API + per-garment pricing; proprietary tech years in the making that giants like Meta & Snap couldn't build.</p>
+                      </div>
+                    </div>
                   </div>
-                  <h3 className="text-lg font-semibold text-black mb-3">Blocked Adoption</h3>
-                  <p className="text-gray-600 leading-relaxed">Fashion, gaming, and retail can't deploy GenAI at scale due to reliability issues</p>
-                </div>
-                <div className="text-center">
-                  <div className="w-16 h-16 bg-red-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                    <X className="w-8 h-8 text-red-600" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-black mb-3">Legal Risk</h3>
-                  <p className="text-gray-600 leading-relaxed">Scraped training data creates massive copyright liability and litigation exposure</p>
                 </div>
               </div>
             </div>
 
-            {/* Solution Section */}
-            <div className="bg-white rounded-2xl p-8 sm:p-12 mb-16 shadow-sm border border-gray-200">
-              <div className="text-center mb-12">
-                <h2 className="text-3xl font-bold text-black mb-4">Our Solution</h2>
-                <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                  Physics-aware training data that unlocks GenAI for enterprise use
-                </p>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div className="text-center">
-                  <div className="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                    <Check className="w-8 h-8 text-blue-600" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-black mb-3">Real-Time Physics</h3>
-                  <p className="text-gray-600 leading-relaxed">Accurate cloth and motion simulation with 20+ configurable parameters</p>
-                </div>
-                <div className="text-center">
-                  <div className="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                    <Check className="w-8 h-8 text-green-600" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-black mb-3">Multi-Camera Array</h3>
-                  <p className="text-gray-600 leading-relaxed">36-camera setup capturing 8K resolution at 60fps with AOV render passes</p>
-                </div>
-                <div className="text-center">
-                  <div className="w-16 h-16 bg-purple-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                    <Check className="w-8 h-8 text-purple-600" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-black mb-3">Material Accuracy</h3>
-                  <p className="text-gray-600 leading-relaxed">Physically-based materials from cotton to leather with accurate properties</p>
-                </div>
-                <div className="text-center">
-                  <div className="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                    <Check className="w-8 h-8 text-orange-600" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-black mb-3">Scalable Pipeline</h3>
-                  <p className="text-gray-600 leading-relaxed">On-demand API platform for enterprise dataset generation and delivery</p>
-                </div>
-                <div className="text-center">
-                  <div className="w-16 h-16 bg-teal-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                    <Check className="w-8 h-8 text-teal-600" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-black mb-3">Tagged Data</h3>
-                  <p className="text-gray-600 leading-relaxed">Comprehensive metadata and labels for optimized AI model training</p>
-                </div>
-                <div className="text-center">
-                  <div className="w-16 h-16 bg-indigo-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                    <Check className="w-8 h-8 text-indigo-600" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-black mb-3">AI-Ready Output</h3>
-                  <p className="text-gray-600 leading-relaxed">Training datasets optimized for enterprise GenAI applications</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Performance Metrics */}
-            <div className="bg-black text-white rounded-2xl p-8 sm:p-12 text-center">
-              <h2 className="text-3xl font-bold mb-12">Performance Impact</h2>
+            <div className="bg-gray-900 text-white rounded-3xl p-8 sm:p-12 text-center">
+              <h3 className="text-2xl font-bold mb-8">Performance Metrics</h3>
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
                 <div>
-                  <div className="text-4xl font-bold mb-3 text-blue-400">500M → 500</div>
-                  <div className="text-gray-300 text-sm font-medium">Training Frames</div>
+                  <div className="text-3xl font-bold mb-2">500M → 500</div>
+                  <div className="text-gray-300 text-sm">Frames Reduced</div>
                 </div>
                 <div>
-                  <div className="text-4xl font-bold mb-3 text-green-400">45TB</div>
-                  <div className="text-gray-300 text-sm font-medium">Dataset Volume</div>
+                  <div className="text-3xl font-bold mb-2">45TB</div>
+                  <div className="text-gray-300 text-sm">Data Volume</div>
                 </div>
                 <div>
-                  <div className="text-4xl font-bold mb-3 text-purple-400">8K@60fps</div>
-                  <div className="text-gray-300 text-sm font-medium">Video Quality</div>
+                  <div className="text-3xl font-bold mb-2">8K</div>
+                  <div className="text-gray-300 text-sm">Resolution @ 60fps</div>
                 </div>
                 <div>
-                  <div className="text-4xl font-bold mb-3 text-orange-400">4 Years</div>
-                  <div className="text-gray-300 text-sm font-medium">Technical Moat</div>
+                  <div className="text-3xl font-bold text-blue-600 mb-2">4 Years</div>
+                  <div className="text-gray-300 text-sm">Technical Moat</div>
                 </div>
               </div>
             </div>
@@ -772,15 +648,55 @@ const DatasetPlatform = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden hover:shadow-lg transition-all">
+                <div className="h-48 bg-gradient-to-br from-blue-600 to-blue-800 relative">
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-16 h-16 bg-white bg-opacity-10 rounded-xl flex items-center justify-center">
+                      {renderShape('rectangle')}
+                    </div>
+                  </div>
+                  <div className="absolute top-4 left-4">
+                    <span className="px-3 py-1 bg-blue-600 bg-opacity-80 text-white text-xs font-medium rounded-full">Demo</span>
+                  </div>
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-bold text-black mb-2">Pants Demo</h3>
+                  <p className="text-gray-600 mb-4">Interactive Demo • 50 samples</p>
+                  <ul className="space-y-2 mb-6">
+                    <li className="text-sm text-gray-600 flex items-center">
+                      <Check className="w-4 h-4 text-green-500 mr-2 flex-shrink-0" />
+                      8K • 60fps • 36 cameras
+                    </li>
+                    <li className="text-sm text-gray-600 flex items-center">
+                      <Check className="w-4 h-4 text-green-500 mr-2 flex-shrink-0" />
+                      AOV render passes
+                    </li>
+                    <li className="text-sm text-gray-600 flex items-center">
+                      <Check className="w-4 h-4 text-green-500 mr-2 flex-shrink-0" />
+                      Wind physics: No wind → Storm
+                    </li>
+                    <li className="text-sm text-gray-600 flex items-center">
+                      <Check className="w-4 h-4 text-green-500 mr-2 flex-shrink-0" />
+                      35+ adjustable parameters
+                    </li>
+                  </ul>
+                  <div className="text-center">
+                    <p className="text-lg font-semibold text-blue-900 mb-4">Try Interactive Demo</p>
+                    <button 
+                      onClick={() => {
+                        setPromptValue('Pants');
+                        setCurrentPage('generation');
+                        setShowModal(true);
+                      }}
+                      className="w-full bg-blue-600 text-white py-3 rounded-full font-medium hover:bg-blue-700 transition-colors"
+                    >
+                      Launch Demo
+                    </button>
+                  </div>
+                </div>
+              </div>
+
               {[
-                { 
-                  name: 'Pants Demo', 
-                  items: 'Interactive Demo • 50 samples', 
-                  specs: ['8K • 60fps • 36 cameras', 'AOV render passes', 'Wind physics: No wind → Storm', 'Materials: Matte → High specular'],
-                  gradient: 'from-blue-600 to-blue-800',
-                  shape: 'rectangle',
-                  isDemo: true
-                },
                 { 
                   name: 'Dresses', 
                   items: '2.6K videos • 45TB', 
@@ -825,9 +741,7 @@ const DatasetPlatform = () => {
                       </div>
                     </div>
                     <div className="absolute top-4 left-4">
-                      <span className={`px-3 py-1 text-white text-xs font-medium rounded-full ${dataset.isDemo ? 'bg-blue-600' : 'bg-black bg-opacity-40'}`}>
-                        {dataset.isDemo ? 'Demo' : 'Video'}
-                      </span>
+                      <span className="px-3 py-1 bg-black bg-opacity-40 text-white text-xs font-medium rounded-full">Video</span>
                     </div>
                   </div>
                   <div className="p-6">
@@ -842,31 +756,13 @@ const DatasetPlatform = () => {
                       ))}
                     </ul>
                     <div className="text-center">
-                      {dataset.isDemo ? (
-                        <>
-                          <p className="text-lg font-semibold text-blue-600 mb-4">Try Interactive Demo</p>
-                          <button 
-                            onClick={() => {
-                              setPromptValue('Pants');
-                              setCurrentPage('generation');
-                              setShowModal(true);
-                            }}
-                            className="w-full bg-blue-600 text-white py-3 rounded-full font-medium hover:bg-blue-700 transition-colors"
-                          >
-                            Launch Demo
-                          </button>
-                        </>
-                      ) : (
-                        <>
-                          <p className="text-lg font-semibold text-gray-900 mb-4">Enterprise Pricing</p>
-                          <a 
-                            href={`mailto:sales@23bulbs.com?subject=Dataset Inquiry - ${dataset.name}&body=Hi, I'm interested in learning more about the ${dataset.name} dataset (2.6K videos, 45TB). Please contact me to discuss pricing and requirements.`}
-                            className="w-full bg-black text-white py-3 rounded-full font-medium hover:bg-gray-800 transition-colors inline-block"
-                          >
-                            Contact Sales
-                          </a>
-                        </>
-                      )}
+                      <p className="text-lg font-semibold text-gray-900 mb-4">Enterprise Pricing</p>
+                      <a 
+                        href={`mailto:sales@23bulbs.com?subject=Dataset Inquiry - ${dataset.name}&body=Hi, I'm interested in learning more about the ${dataset.name} dataset (2.6K videos, 45TB). Please contact me to discuss pricing and requirements.`}
+                        className="w-full bg-black text-white py-3 rounded-full font-medium hover:bg-gray-800 transition-colors inline-block"
+                      >
+                        Contact Sales
+                      </a>
                     </div>
                   </div>
                 </div>
@@ -1034,7 +930,7 @@ const DatasetPlatform = () => {
             {getFilteredProjects().map((project) => (
               <div 
                 key={project.id}
-                className="bg-white border border-gray-200 rounded-xl overflow-hidden hover:border-blue-300 hover:shadow-lg transition-all"
+                className="bg-white border border-gray-200 rounded-xl overflow-hidden hover:border-blue-300 hover:shadow-lg transition-all group"
               >
                 <div className={`h-48 bg-gradient-to-br ${project.gradient} relative overflow-hidden`}>
                   <div className="absolute inset-0 flex items-center justify-center">
@@ -1055,10 +951,9 @@ const DatasetPlatform = () => {
                     ))}
                   </div>
                   <div className="text-center">
-                    <p className="text-sm text-gray-600 mb-3">Contact sales for enterprise pricing</p>
                     <a 
-                      href={`mailto:sales@23bulbs.com?subject=Project Inquiry - ${project.name}&body=Hi, I'm interested in the ${project.name} project. Please contact me to discuss pricing and requirements.`}
-                      className="w-full bg-gray-800 text-white py-2.5 rounded-lg font-medium hover:bg-black transition-colors inline-block text-sm"
+                      href={`mailto:sales@23bulbs.com?subject=Project Inquiry - ${project.name}&body=Hi, I'm interested in the ${project.name} project. Please contact me to discuss enterprise pricing and implementation.`}
+                      className="w-full bg-black text-white py-2.5 rounded-full font-medium hover:bg-gray-800 transition-colors inline-block text-sm"
                     >
                       Contact Sales
                     </a>
@@ -1067,7 +962,7 @@ const DatasetPlatform = () => {
               </div>
             ))}
 
-            <div className="bg-white border-2 border-dashed border-gray-300 rounded-xl overflow-hidden hover:border-gray-400 hover:bg-gray-50 transition-all">
+            <div className="bg-white border-2 border-dashed border-gray-300 rounded-xl overflow-hidden hover:border-gray-400 hover:bg-gray-50 transition-all group">
               <div className="h-48 bg-gray-100 relative overflow-hidden flex items-center justify-center">
                 <div className="text-center">
                   <div className="w-16 h-16 bg-gray-300 rounded-xl flex items-center justify-center mx-auto mb-4">
@@ -1084,10 +979,9 @@ const DatasetPlatform = () => {
                   <span className="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded-full">Custom</span>
                 </div>
                 <div className="text-center">
-                  <p className="text-sm text-gray-600 mb-3">Contact sales for custom solutions</p>
                   <a 
                     href="mailto:sales@23bulbs.com?subject=Custom Dataset Inquiry&body=Hi, I'm interested in creating a custom dataset. Please contact me to discuss requirements and pricing."
-                    className="w-full bg-gray-800 text-white py-2.5 rounded-lg font-medium hover:bg-black transition-colors inline-block text-sm"
+                    className="w-full bg-black text-white py-2.5 rounded-full font-medium hover:bg-gray-800 transition-colors inline-block text-sm"
                   >
                     Contact Sales
                   </a>
@@ -1148,7 +1042,10 @@ const DatasetPlatform = () => {
                     }`}
                   >
                     <div className="flex items-center justify-between">
-                      <span className="font-medium text-black text-sm sm:text-base">{category.name}</span>
+                      <div>
+                        <span className="font-medium text-black">{category.name}</span>
+                        <span className="text-xs text-gray-500 ml-2">({category.paramCount} params)</span>
+                      </div>
                       <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
                         selectedCategories.includes(category.id)
                           ? 'border-blue-500 bg-blue-500'
@@ -1166,7 +1063,7 @@ const DatasetPlatform = () => {
               {selectedCategories.length > 0 && (
                 <div className="mb-8 border-t border-gray-100 pt-8">
                   <h4 className="text-lg font-semibold text-black mb-6">Configuration Options</h4>
-                  <div className="space-y-6">
+                  <div className="space-y-4">
                     {selectedCategories.map(categoryId => {
                       const category = datasetCategories.find(cat => cat.id === categoryId);
                       const config = categoryConfigs[categoryId] || {};
@@ -1181,7 +1078,6 @@ const DatasetPlatform = () => {
                             <div className="flex items-center">
                               <div className="w-3 h-3 bg-blue-500 rounded-full mr-3"></div>
                               <h5 className="font-medium text-black">{category.name}</h5>
-                              <span className="ml-2 text-sm text-gray-500">({category.options.length} parameters)</span>
                             </div>
                             <ChevronDown className={`w-5 h-5 text-gray-500 transition-transform ${
                               isCollapsed ? '-rotate-90' : 'rotate-0'
@@ -1189,17 +1085,17 @@ const DatasetPlatform = () => {
                           </button>
                           
                           {!isCollapsed && (
-                            <div className="px-4 sm:px-6 pb-6">
-                              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <div className="px-4 sm:px-6 pb-4 sm:pb-6">
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 {category.options.map(option => (
-                                  <div key={option.id} className="space-y-3">
-                                    <label className="text-sm font-medium text-gray-700 block">
+                                  <div key={option.id} className="space-y-2">
+                                    <label className="text-sm font-medium text-gray-700">
                                       {option.name}
                                       {option.unit && <span className="text-gray-500 ml-1">({option.unit})</span>}
                                     </label>
                                     
                                     {option.type === 'range' && (
-                                      <div className="space-y-2">
+                                      <div className="space-y-1">
                                         <input
                                           type="range"
                                           min={option.min}
@@ -1209,15 +1105,15 @@ const DatasetPlatform = () => {
                                           onChange={(e) => updateCategoryConfig(categoryId, option.id, parseFloat(e.target.value))}
                                           className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
                                           style={{
-                                            background: `linear-gradient(to right, #3B82F6 0%, #3B82F6 ${((config[option.id] || option.default) - option.min) / (option.max - option.min) * 100}%, #E5E7EB ${((config[option.id] || option.default) - option.min) / (option.max - option.min) * 100}%, #E5E7EB 100%)`
+                                            background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${((config[option.id] || option.default) - option.min) / (option.max - option.min) * 100}%, #e5e7eb ${((config[option.id] || option.default) - option.min) / (option.max - option.min) * 100}%, #e5e7eb 100%)`
                                           }}
                                         />
                                         <div className="flex justify-between text-xs text-gray-500">
-                                          <span>{option.min}{option.unit || ''}</span>
-                                          <span className="font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded">
-                                            {config[option.id] || option.default}{option.unit || ''}
+                                          <span>{option.min}{option.unit}</span>
+                                          <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded font-medium">
+                                            {config[option.id] || option.default}{option.unit}
                                           </span>
-                                          <span>{option.max}{option.unit || ''}</span>
+                                          <span>{option.max}{option.unit}</span>
                                         </div>
                                       </div>
                                     )}
@@ -1226,7 +1122,7 @@ const DatasetPlatform = () => {
                                       <select
                                         value={config[option.id] || option.default}
                                         onChange={(e) => updateCategoryConfig(categoryId, option.id, e.target.value)}
-                                        className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none bg-white"
+                                        className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                                       >
                                         {option.options.map(optValue => (
                                           <option key={optValue} value={optValue}>{optValue}</option>
