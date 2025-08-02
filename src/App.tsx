@@ -481,10 +481,10 @@ const DatasetPlatform = () => {
         <main className="px-4 sm:px-6 py-16 sm:py-24">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-20">
-              <h2 className="text-5xl sm:text-6xl font-light text-black mb-8 tracking-tight">
+              <h2 className="text-5xl sm:text-6xl font-semibold text-black mb-8 tracking-tight">
                 Physics‑Aware Training Data
               </h2>
-              <p className="text-xl font-light text-gray-600 max-w-4xl mx-auto leading-relaxed">
+              <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
                 Current GenAI models are unusable for enterprise. We deliver real‑world simulation 
                 through API at scale, unlocking GenAI for enterprise use.
               </p>
@@ -493,161 +493,228 @@ const DatasetPlatform = () => {
             {/* Key Message Block */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 mb-24">
               <div className="space-y-8">
-                <h3 className="text-3xl font-light text-black mb-6">The Problem</h3>
-                <p className="text-lg font-light text-gray-700 leading-relaxed">
-                  <strong className="font-medium">Current GenAI models are unusable for enterprise.</strong> They're unstable, unpredictable, and ethically risky - costing 
-                  companies millions in failed deployment attempts. Without real-world, physics-aware data, <strong className="font-medium">GenAI is stuck in the lab.</strong>
+                <h3 className="text-3xl font-semibold text-black mb-6">The Problem</h3>
+                <p className="text-lg text-gray-700 leading-relaxed">
+                  <strong className="font-semibold">Current GenAI models are unusable for enterprise.</strong> They're unstable, unpredictable, and ethically risky - costing 
+                  companies millions in failed deployment attempts. Without real-world, physics-aware data, <strong className="font-semibold">GenAI is stuck in the lab.</strong>
                 </p>
                 
-                <p className="text-lg font-light text-gray-700 leading-relaxed">
+                <p className="text-lg text-gray-700 leading-relaxed">
                   Enterprises have poured money into GenAI only to abandon it - video melts after seconds, outputs lack consistency, and 
                   hallucinations damage brand trust. Sectors like fashion, gaming, and retail can't deploy GenAI at scale.
                 </p>
               </div>
               
               <div className="space-y-8">
-                <h3 className="text-3xl font-light text-black mb-6">Our Solution</h3>
-                <p className="text-lg font-light text-gray-700 leading-relaxed">
-                  <strong className="font-medium">We deliver real-world simulation through API - at scale.</strong> 23Bulbs delivers tagged, physics-accurate training data via a powerful 
+                <h3 className="text-3xl font-semibold text-black mb-6">Our Solution</h3>
+                <p className="text-lg text-gray-700 leading-relaxed">
+                  <strong className="font-semibold">We deliver real-world simulation through API - at scale.</strong> 23Bulbs delivers tagged, physics-accurate training data via a powerful 
                   simulation engine. Our cloth and motion data cut training time, lower computing costs, and unlock GenAI for enterprise use.
                 </p>
                 
-                <p className="text-lg font-light text-gray-700 leading-relaxed">
+                <p className="text-lg text-gray-700 leading-relaxed">
                   Specific, tagged data reduces training time and compute load - from 500M to just 500 frames per use case, extending video 
                   generation beyond the 4-8 second collapse point of current GenAI.
                 </p>
               </div>
             </div>
 
-            {/* Clean Data Flow Diagram */}
+            {/* Enhanced Physics-Aware Data Pipeline */}
             <div className="mb-24">
-              <h3 className="text-3xl font-light text-black mb-16 text-center">Data Pipeline</h3>
+              <h3 className="text-3xl font-semibold text-black mb-16 text-center">Physics‑Aware Data Pipeline</h3>
               
               <div className="bg-white border border-gray-200 rounded-2xl p-12">
                 {/* Desktop Flow */}
                 <div className="hidden lg:block">
-                  <div className="grid grid-cols-4 gap-8 items-center">
-                    <div className="text-center space-y-4">
-                      <div className="w-16 h-16 mx-auto bg-gray-100 rounded-2xl flex items-center justify-center">
-                        <div className="w-8 h-6 border-2 border-gray-600 rounded"></div>
+                  <div className="relative">
+                    {/* Stage 1: 3D Mesh Input */}
+                    <div className="grid grid-cols-4 gap-12 items-center mb-16">
+                      <div className="text-center space-y-6">
+                        <div className="w-24 h-24 mx-auto bg-gradient-to-br from-gray-100 to-gray-200 rounded-3xl flex items-center justify-center border-2 border-gray-300 shadow-lg">
+                          <div className="space-y-2">
+                            <div className="w-12 h-2 bg-gray-600 rounded"></div>
+                            <div className="w-8 h-2 bg-gray-500 rounded"></div>
+                            <div className="w-10 h-2 bg-gray-600 rounded"></div>
+                          </div>
+                        </div>
+                        <div>
+                          <div className="text-xl font-semibold text-black">3D Mesh Input</div>
+                          <div className="text-sm text-gray-600 mt-1">High‑fidelity garment geometry</div>
+                          <div className="text-xs text-gray-500 mt-2">• Topology mapping<br/>• Material zones<br/>• Vertex data</div>
+                        </div>
                       </div>
-                      <div>
-                        <div className="text-lg font-medium text-black">3D Models</div>
-                        <div className="text-sm text-gray-600">High‑fidelity geometry</div>
+                      
+                      {/* Arrow 1 */}
+                      <div className="flex justify-center">
+                        <div className="flex items-center space-x-2">
+                          <div className="w-16 h-1 bg-gradient-to-r from-gray-400 to-blue-500"></div>
+                          <div className="w-0 h-0 border-l-4 border-t-2 border-b-2 border-l-blue-500 border-t-transparent border-b-transparent"></div>
+                        </div>
                       </div>
+                      
+                      {/* Stage 2: Physics Engine */}
+                      <div className="text-center space-y-6">
+                        <div className="w-24 h-24 mx-auto bg-gradient-to-br from-blue-100 to-blue-200 rounded-3xl flex items-center justify-center border-2 border-blue-400 shadow-lg relative">
+                          <div className="relative">
+                            {/* Physics symbol */}
+                            <div className="w-8 h-8 border-3 border-blue-700 rounded-full relative">
+                              <div className="absolute inset-2 bg-blue-600 rounded-full"></div>
+                              <div className="absolute -top-1 -right-1 w-3 h-3 bg-blue-800 rounded-full"></div>
+                              <div className="absolute -bottom-1 -left-1 w-2 h-2 bg-blue-500 rounded-full"></div>
+                            </div>
+                          </div>
+                          <div className="absolute inset-0 bg-blue-400 rounded-3xl animate-pulse opacity-20"></div>
+                        </div>
+                        <div>
+                          <div className="text-xl font-semibold text-black">Physics Simulation</div>
+                          <div className="text-sm text-gray-600 mt-1">Real‑time cloth dynamics</div>
+                          <div className="text-xs text-gray-500 mt-2">• Wind forces<br/>• Gravity simulation<br/>• Collision detection</div>
+                        </div>
+                      </div>
+                      
+                      {/* Arrow 2 */}
+                      <div className="flex justify-center">
+                        <div className="flex items-center space-x-2">
+                          <div className="w-16 h-1 bg-gradient-to-r from-blue-500 to-green-500"></div>
+                          <div className="w-0 h-0 border-l-4 border-t-2 border-b-2 border-l-green-500 border-t-transparent border-b-transparent"></div>
+                        </div>
+                      </div>
+                      
+                      <div></div>
                     </div>
                     
-                    {/* Flow indicator */}
-                    <div className="flex justify-center">
-                      <div className="w-12 h-px bg-gray-300 relative">
-                        <div className="absolute right-0 top-0 w-2 h-px bg-gray-600 transform rotate-45 origin-right"></div>
-                        <div className="absolute right-0 bottom-0 w-2 h-px bg-gray-600 transform -rotate-45 origin-right"></div>
+                    {/* Stage 3: Multi-Camera Rendering */}
+                    <div className="grid grid-cols-4 gap-12 items-center">
+                      <div className="text-center space-y-6">
+                        <div className="w-24 h-24 mx-auto bg-gradient-to-br from-green-100 to-green-200 rounded-3xl flex items-center justify-center border-2 border-green-400 shadow-lg">
+                          <div className="relative">
+                            {/* Multi-camera array */}
+                            <div className="grid grid-cols-3 gap-1">
+                              <div className="w-2 h-2 bg-green-700 rounded-full"></div>
+                              <div className="w-2 h-2 bg-green-600 rounded-full"></div>
+                              <div className="w-2 h-2 bg-green-700 rounded-full"></div>
+                              <div className="w-2 h-2 bg-green-600 rounded-full"></div>
+                              <div className="w-3 h-3 bg-green-800 rounded-full"></div>
+                              <div className="w-2 h-2 bg-green-600 rounded-full"></div>
+                              <div className="w-2 h-2 bg-green-700 rounded-full"></div>
+                              <div className="w-2 h-2 bg-green-600 rounded-full"></div>
+                              <div className="w-2 h-2 bg-green-700 rounded-full"></div>
+                            </div>
+                          </div>
+                        </div>
+                        <div>
+                          <div className="text-xl font-semibold text-black">Multi‑Camera Array</div>
+                          <div className="text-sm text-gray-600 mt-1">36 synchronized perspectives</div>
+                          <div className="text-xs text-gray-500 mt-2">• 8K resolution<br/>• 60fps capture<br/>• AOV render passes</div>
+                        </div>
                       </div>
+                      
+                      {/* Arrow 3 */}
+                      <div className="flex justify-center">
+                        <div className="flex items-center space-x-2">
+                          <div className="w-16 h-1 bg-gradient-to-r from-green-500 to-purple-600"></div>
+                          <div className="w-0 h-0 border-l-4 border-t-2 border-b-2 border-l-purple-600 border-t-transparent border-b-transparent"></div>
+                        </div>
+                      </div>
+                      
+                      {/* Stage 4: AI Training Data */}
+                      <div className="text-center space-y-6">
+                        <div className="w-24 h-24 mx-auto bg-gradient-to-br from-purple-100 to-blue-200 rounded-3xl flex items-center justify-center border-2 border-purple-500 shadow-lg relative">
+                          <div className="relative">
+                            {/* AI/Data symbol */}
+                            <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-blue-700 rounded-lg transform rotate-12 relative">
+                              <div className="absolute inset-1 bg-white rounded opacity-90"></div>
+                              <div className="absolute inset-2 grid grid-cols-2 gap-0.5">
+                                <div className="bg-purple-600 rounded-sm"></div>
+                                <div className="bg-blue-600 rounded-sm"></div>
+                                <div className="bg-blue-600 rounded-sm"></div>
+                                <div className="bg-purple-600 rounded-sm"></div>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="absolute inset-0 bg-purple-400 rounded-3xl animate-pulse opacity-30"></div>
+                        </div>
+                        <div>
+                          <div className="text-xl font-semibold text-purple-900">AI Training Data</div>
+                          <div className="text-sm text-purple-700 mt-1">Tagged, physics‑accurate datasets</div>
+                          <div className="text-xs text-gray-500 mt-2">• Metadata labels<br/>• Frame sequences<br/>• Parameter tags</div>
+                        </div>
+                      </div>
+                      
+                      <div></div>
                     </div>
-                    
-                    <div className="text-center space-y-4">
-                      <div className="w-16 h-16 mx-auto bg-blue-50 rounded-2xl flex items-center justify-center border border-blue-200">
-                        <div className="w-0 h-0 border-l-4 border-r-4 border-b-6 border-l-transparent border-r-transparent border-b-blue-600"></div>
-                      </div>
-                      <div>
-                        <div className="text-lg font-medium text-black">Physics Engine</div>
-                        <div className="text-sm text-gray-600">Real‑time simulation</div>
-                      </div>
-                    </div>
-                    
-                    {/* Flow indicator */}
-                    <div className="flex justify-center">
-                      <div className="w-12 h-px bg-gray-300 relative">
-                        <div className="absolute right-0 top-0 w-2 h-px bg-gray-600 transform rotate-45 origin-right"></div>
-                        <div className="absolute right-0 bottom-0 w-2 h-px bg-gray-600 transform -rotate-45 origin-right"></div>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="grid grid-cols-4 gap-8 items-center mt-12">
-                    <div className="text-center space-y-4">
-                      <div className="w-16 h-16 mx-auto bg-gray-100 rounded-2xl flex items-center justify-center">
-                        <div className="w-8 h-8 bg-gray-600 rounded-full"></div>
-                      </div>
-                      <div>
-                        <div className="text-lg font-medium text-black">Multi‑Camera</div>
-                        <div className="text-sm text-gray-600">36 perspectives</div>
-                      </div>
-                    </div>
-                    
-                    {/* Flow indicator */}
-                    <div className="flex justify-center">
-                      <div className="w-12 h-px bg-gray-300 relative">
-                        <div className="absolute right-0 top-0 w-2 h-px bg-blue-600 transform rotate-45 origin-right"></div>
-                        <div className="absolute right-0 bottom-0 w-2 h-px bg-blue-600 transform -rotate-45 origin-right"></div>
-                      </div>
-                    </div>
-                    
-                    <div className="text-center space-y-4">
-                      <div className="w-16 h-16 mx-auto bg-blue-100 rounded-2xl flex items-center justify-center border border-blue-300">
-                        <div className="w-8 h-8 bg-blue-900 rounded transform rotate-45"></div>
-                      </div>
-                      <div>
-                        <div className="text-lg font-medium text-blue-900">Training Data</div>
-                        <div className="text-sm text-blue-700">AI‑ready output</div>
-                      </div>
-                    </div>
-                    
-                    <div></div>
                   </div>
                 </div>
 
                 {/* Mobile Flow */}
-                <div className="lg:hidden space-y-8">
-                  <div className="text-center space-y-4">
-                    <div className="w-16 h-16 mx-auto bg-gray-100 rounded-2xl flex items-center justify-center">
-                      <div className="w-8 h-6 border-2 border-gray-600 rounded"></div>
+                <div className="lg:hidden space-y-12">
+                  <div className="text-center space-y-6">
+                    <div className="w-20 h-20 mx-auto bg-gradient-to-br from-gray-100 to-gray-200 rounded-3xl flex items-center justify-center border-2 border-gray-300 shadow-lg">
+                      <div className="space-y-1">
+                        <div className="w-8 h-1 bg-gray-600 rounded"></div>
+                        <div className="w-6 h-1 bg-gray-500 rounded"></div>
+                        <div className="w-7 h-1 bg-gray-600 rounded"></div>
+                      </div>
                     </div>
                     <div>
-                      <div className="text-lg font-medium text-black">3D Models</div>
-                      <div className="text-sm text-gray-600">High‑fidelity geometry</div>
+                      <div className="text-lg font-semibold text-black">3D Mesh Input</div>
+                      <div className="text-sm text-gray-600">High‑fidelity garment geometry</div>
                     </div>
                   </div>
                   
                   <div className="flex justify-center">
-                    <div className="w-px h-8 bg-gray-300"></div>
+                    <div className="w-1 h-8 bg-gradient-to-b from-gray-400 to-blue-500"></div>
                   </div>
                   
-                  <div className="text-center space-y-4">
-                    <div className="w-16 h-16 mx-auto bg-blue-50 rounded-2xl flex items-center justify-center border border-blue-200">
-                      <div className="w-0 h-0 border-l-4 border-r-4 border-b-6 border-l-transparent border-r-transparent border-b-blue-600"></div>
+                  <div className="text-center space-y-6">
+                    <div className="w-20 h-20 mx-auto bg-gradient-to-br from-blue-100 to-blue-200 rounded-3xl flex items-center justify-center border-2 border-blue-400 shadow-lg">
+                      <div className="w-8 h-8 border-2 border-blue-700 rounded-full relative">
+                        <div className="absolute inset-2 bg-blue-600 rounded-full"></div>
+                      </div>
                     </div>
                     <div>
-                      <div className="text-lg font-medium text-black">Physics Engine</div>
-                      <div className="text-sm text-gray-600">Real‑time simulation</div>
+                      <div className="text-lg font-semibold text-black">Physics Simulation</div>
+                      <div className="text-sm text-gray-600">Real‑time cloth dynamics</div>
                     </div>
                   </div>
                   
                   <div className="flex justify-center">
-                    <div className="w-px h-8 bg-gray-300"></div>
+                    <div className="w-1 h-8 bg-gradient-to-b from-blue-500 to-green-500"></div>
                   </div>
                   
-                  <div className="text-center space-y-4">
-                    <div className="w-16 h-16 mx-auto bg-gray-100 rounded-2xl flex items-center justify-center">
-                      <div className="w-8 h-8 bg-gray-600 rounded-full"></div>
+                  <div className="text-center space-y-6">
+                    <div className="w-20 h-20 mx-auto bg-gradient-to-br from-green-100 to-green-200 rounded-3xl flex items-center justify-center border-2 border-green-400 shadow-lg">
+                      <div className="grid grid-cols-3 gap-1">
+                        <div className="w-1.5 h-1.5 bg-green-700 rounded-full"></div>
+                        <div className="w-1.5 h-1.5 bg-green-600 rounded-full"></div>
+                        <div className="w-1.5 h-1.5 bg-green-700 rounded-full"></div>
+                        <div className="w-1.5 h-1.5 bg-green-600 rounded-full"></div>
+                        <div className="w-2 h-2 bg-green-800 rounded-full"></div>
+                        <div className="w-1.5 h-1.5 bg-green-600 rounded-full"></div>
+                        <div className="w-1.5 h-1.5 bg-green-700 rounded-full"></div>
+                        <div className="w-1.5 h-1.5 bg-green-600 rounded-full"></div>
+                        <div className="w-1.5 h-1.5 bg-green-700 rounded-full"></div>
+                      </div>
                     </div>
                     <div>
-                      <div className="text-lg font-medium text-black">Multi‑Camera</div>
-                      <div className="text-sm text-gray-600">36 perspectives</div>
+                      <div className="text-lg font-semibold text-black">Multi‑Camera Array</div>
+                      <div className="text-sm text-gray-600">36 synchronized perspectives</div>
                     </div>
                   </div>
                   
                   <div className="flex justify-center">
-                    <div className="w-px h-8 bg-blue-300"></div>
+                    <div className="w-1 h-8 bg-gradient-to-b from-green-500 to-purple-600"></div>
                   </div>
                   
-                  <div className="text-center space-y-4">
-                    <div className="w-16 h-16 mx-auto bg-blue-100 rounded-2xl flex items-center justify-center border border-blue-300">
-                      <div className="w-8 h-8 bg-blue-900 rounded transform rotate-45"></div>
+                  <div className="text-center space-y-6">
+                    <div className="w-20 h-20 mx-auto bg-gradient-to-br from-purple-100 to-blue-200 rounded-3xl flex items-center justify-center border-2 border-purple-500 shadow-lg">
+                      <div className="w-8 h-8 bg-gradient-to-br from-purple-600 to-blue-700 rounded-lg transform rotate-12 relative">
+                        <div className="absolute inset-1 bg-white rounded opacity-90"></div>
+                      </div>
                     </div>
                     <div>
-                      <div className="text-lg font-medium text-blue-900">Training Data</div>
-                      <div className="text-sm text-blue-700">AI‑ready output</div>
+                      <div className="text-lg font-semibold text-purple-900">AI Training Data</div>
+                      <div className="text-sm text-purple-700">Tagged, physics‑accurate datasets</div>
                     </div>
                   </div>
                 </div>
@@ -660,21 +727,21 @@ const DatasetPlatform = () => {
                 
                 {/* Features */}
                 <div className="space-y-8">
-                  <h3 className="text-3xl font-light text-black mb-8">Features</h3>
+                  <h3 className="text-3xl font-semibold text-black mb-8">Features</h3>
                   
                   <div className="space-y-8">
-                    <div className="border-l-2 border-gray-200 pl-6">
-                      <h4 className="text-xl font-medium text-black mb-2">Physics-Accurate Simulation Engine</h4>
+                    <div className="border-l-4 border-gray-300 pl-6">
+                      <h4 className="text-xl font-semibold text-black mb-2">Physics-Accurate Simulation Engine</h4>
                       <p className="text-gray-600 leading-relaxed">Real-time cloth and motion simulation, customizable through 20+ parameters (e.g., fabric, force, movement type).</p>
                     </div>
                     
-                    <div className="border-l-2 border-blue-200 pl-6">
-                      <h4 className="text-xl font-medium text-black mb-2">On-Demand API with Scalable UI</h4>
+                    <div className="border-l-4 border-blue-300 pl-6">
+                      <h4 className="text-xl font-semibold text-black mb-2">On-Demand API with Scalable UI</h4>
                       <p className="text-gray-600 leading-relaxed">Self-serve platform for enterprises to request and receive high-fidelity video training data with seamless API integration.</p>
                     </div>
                     
-                    <div className="border-l-2 border-gray-200 pl-6">
-                      <h4 className="text-xl font-medium text-black mb-2">Multi-Engine Platform</h4>
+                    <div className="border-l-4 border-gray-300 pl-6">
+                      <h4 className="text-xl font-semibold text-black mb-2">Multi-Engine Platform</h4>
                       <p className="text-gray-600 leading-relaxed">Beyond ClothTrain - a growing suite of engines for human motion, sensor data, and dynamic environments, building a data flywheel.</p>
                     </div>
                   </div>
@@ -682,21 +749,21 @@ const DatasetPlatform = () => {
 
                 {/* Benefits */}
                 <div className="space-y-8">
-                  <h3 className="text-3xl font-light text-black mb-8">Benefits</h3>
+                  <h3 className="text-3xl font-semibold text-black mb-8">Benefits</h3>
                   
                   <div className="space-y-8">
-                    <div className="border-l-2 border-green-200 pl-6">
-                      <h4 className="text-xl font-medium text-black mb-2">Faster, Cheaper AI Training</h4>
+                    <div className="border-l-4 border-green-300 pl-6">
+                      <h4 className="text-xl font-semibold text-black mb-2">Faster, Cheaper AI Training</h4>
                       <p className="text-gray-600 leading-relaxed">Specific, tagged data reduces training time and compute load - from 500M to just 500 frames per use case.</p>
                     </div>
                     
-                    <div className="border-l-2 border-blue-200 pl-6">
-                      <h4 className="text-xl font-medium text-black mb-2">Enterprise-Ready Performance</h4>
+                    <div className="border-l-4 border-blue-300 pl-6">
+                      <h4 className="text-xl font-semibold text-black mb-2">Enterprise-Ready Performance</h4>
                       <p className="text-gray-600 leading-relaxed">Extends video generation beyond the 4-8 second collapse point of current GenAI; stable, predictable, brand-safe.</p>
                     </div>
                     
-                    <div className="border-l-2 border-purple-200 pl-6">
-                      <h4 className="text-xl font-medium text-black mb-2">Massive Revenue & Moat</h4>
+                    <div className="border-l-4 border-purple-300 pl-6">
+                      <h4 className="text-xl font-semibold text-black mb-2">Massive Revenue & Moat</h4>
                       <p className="text-gray-600 leading-relaxed">Recurring revenue from API + per-garment pricing; proprietary tech years in the making that giants like Meta & Snap couldn't build.</p>
                     </div>
                   </div>
@@ -706,45 +773,45 @@ const DatasetPlatform = () => {
 
             {/* Technical Specifications */}
             <div className="mb-24">
-              <h3 className="text-3xl font-light text-black mb-12 text-center">Technical Specifications</h3>
+              <h3 className="text-3xl font-semibold text-black mb-12 text-center">Technical Specifications</h3>
               
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
                 <div className="text-center space-y-4">
                   <div className="w-20 h-20 mx-auto bg-gray-50 rounded-2xl flex items-center justify-center border border-gray-200">
-                    <div className="text-2xl font-light text-gray-700">8K</div>
+                    <div className="text-2xl font-semibold text-gray-700">8K</div>
                   </div>
                   <div>
-                    <div className="text-lg font-medium text-black">Resolution</div>
+                    <div className="text-lg font-semibold text-black">Resolution</div>
                     <div className="text-sm text-gray-600">60fps output</div>
                   </div>
                 </div>
                 
                 <div className="text-center space-y-4">
                   <div className="w-20 h-20 mx-auto bg-gray-50 rounded-2xl flex items-center justify-center border border-gray-200">
-                    <div className="text-2xl font-light text-gray-700">36</div>
+                    <div className="text-2xl font-semibold text-gray-700">36</div>
                   </div>
                   <div>
-                    <div className="text-lg font-medium text-black">Camera Angles</div>
+                    <div className="text-lg font-semibold text-black">Camera Angles</div>
                     <div className="text-sm text-gray-600">Multi-perspective</div>
                   </div>
                 </div>
                 
                 <div className="text-center space-y-4">
                   <div className="w-20 h-20 mx-auto bg-blue-50 rounded-2xl flex items-center justify-center border border-blue-200">
-                    <div className="text-2xl font-light text-blue-700">45TB</div>
+                    <div className="text-2xl font-semibold text-blue-700">45TB</div>
                   </div>
                   <div>
-                    <div className="text-lg font-medium text-black">Data Volume</div>
+                    <div className="text-lg font-semibold text-black">Data Volume</div>
                     <div className="text-sm text-gray-600">Per dataset</div>
                   </div>
                 </div>
                 
                 <div className="text-center space-y-4">
                   <div className="w-20 h-20 mx-auto bg-blue-50 rounded-2xl flex items-center justify-center border border-blue-200">
-                    <div className="text-lg font-light text-blue-700">Real-time</div>
+                    <div className="text-sm font-semibold text-blue-700">Real-time</div>
                   </div>
                   <div>
-                    <div className="text-lg font-medium text-black">Processing</div>
+                    <div className="text-lg font-semibold text-black">Processing</div>
                     <div className="text-sm text-gray-600">Physics simulation</div>
                   </div>
                 </div>
@@ -753,28 +820,28 @@ const DatasetPlatform = () => {
 
             {/* Performance Impact */}
             <div className="bg-gray-50 rounded-3xl p-12 text-center">
-              <h3 className="text-3xl font-light text-black mb-8">Performance Impact</h3>
+              <h3 className="text-3xl font-semibold text-black mb-8">Performance Impact</h3>
               
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-center">
                 <div className="space-y-4">
-                  <div className="text-6xl font-light text-gray-400">500M</div>
+                  <div className="text-6xl font-semibold text-gray-400">500M</div>
                   <div className="text-lg text-gray-600">Traditional Training Frames</div>
                 </div>
                 
                 <div className="space-y-4">
-                  <div className="text-2xl font-light text-gray-600">Reduced to</div>
+                  <div className="text-2xl font-semibold text-gray-600">Reduced to</div>
                   <ArrowRight className="w-8 h-8 text-blue-600 mx-auto" />
                 </div>
                 
                 <div className="space-y-4">
-                  <div className="text-6xl font-light text-blue-900">500</div>
+                  <div className="text-6xl font-semibold text-blue-900">500</div>
                   <div className="text-lg text-blue-700">Physics-Aware Frames</div>
                 </div>
               </div>
               
               <div className="mt-12 pt-8 border-t border-gray-200">
-                <p className="text-lg font-light text-gray-700 max-w-3xl mx-auto leading-relaxed">
-                  <strong className="font-medium text-blue-900">4 Years</strong> of proprietary development creates an insurmountable technical moat. 
+                <p className="text-lg text-gray-700 max-w-3xl mx-auto leading-relaxed">
+                  <strong className="font-semibold text-blue-900">4 Years</strong> of proprietary development creates an insurmountable technical moat. 
                   Giants like Meta & Snap couldn't replicate this breakthrough in real-time physics simulation.
                 </p>
               </div>
