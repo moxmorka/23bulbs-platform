@@ -336,7 +336,10 @@ const DatasetPlatform = () => {
 
             <div className="text-center mt-8">
               <p className="text-sm text-gray-500">
-                Don't have an account? <button onClick={() => setCurrentPage('signup')} className="text-blue-600 hover:underline cursor-pointer">Sign Up</button>
+                Don't have an account?{' '}
+                <button onClick={() => setCurrentPage('signup')} className="text-blue-600 hover:underline cursor-pointer">
+                  Sign Up
+                </button>
               </p>
             </div>
           </div>
@@ -422,7 +425,10 @@ const DatasetPlatform = () => {
                     defaultChecked
                   />
                   <label htmlFor="terms" className="text-sm text-gray-600">
-                    I agree to the <span className="text-blue-600 hover:underline cursor-pointer">Terms of Service</span> and <span className="text-blue-600 hover:underline cursor-pointer">Privacy Policy</span>
+                    I agree to the{' '}
+                    <span className="text-blue-600 hover:underline cursor-pointer">Terms of Service</span>
+                    {' '}and{' '}
+                    <span className="text-blue-600 hover:underline cursor-pointer">Privacy Policy</span>
                   </label>
                 </div>
 
@@ -446,7 +452,10 @@ const DatasetPlatform = () => {
 
             <div className="text-center mt-8">
               <p className="text-sm text-gray-500">
-                Already have an account? <button onClick={() => setCurrentPage('signin')} className="text-blue-600 hover:underline cursor-pointer">Sign In</button>
+                Already have an account?{' '}
+                <button onClick={() => setCurrentPage('signin')} className="text-blue-600 hover:underline cursor-pointer">
+                  Sign In
+                </button>
               </p>
             </div>
           </div>
@@ -523,198 +532,222 @@ const DatasetPlatform = () => {
             <div className="mb-24">
               <h3 className="text-3xl font-semibold text-black mb-16 text-center">Physics‑Aware Data Pipeline</h3>
               
-              <div className="bg-white border border-gray-200 rounded-2xl p-12">
-                {/* Desktop Flow */}
-                <div className="hidden lg:block">
-                  <div className="relative">
-                    {/* Stage 1: 3D Mesh Input */}
-                    <div className="grid grid-cols-4 gap-12 items-center mb-16">
-                      <div className="text-center space-y-6">
-                        <div className="w-24 h-24 mx-auto bg-gradient-to-br from-gray-100 to-gray-200 rounded-3xl flex items-center justify-center border-2 border-gray-300 shadow-lg">
-                          <div className="space-y-2">
-                            <div className="w-12 h-2 bg-gray-600 rounded"></div>
-                            <div className="w-8 h-2 bg-gray-500 rounded"></div>
-                            <div className="w-10 h-2 bg-gray-600 rounded"></div>
-                          </div>
-                        </div>
-                        <div>
-                          <div className="text-xl font-semibold text-black">3D Mesh Input</div>
-                          <div className="text-sm text-gray-600 mt-1">High‑fidelity garment geometry</div>
-                          <div className="text-xs text-gray-500 mt-2">• Topology mapping<br/>• Material zones<br/>• Vertex data</div>
-                        </div>
-                      </div>
-                      
-                      {/* Arrow 1 */}
-                      <div className="flex justify-center">
-                        <div className="flex items-center space-x-2">
-                          <div className="w-16 h-1 bg-gradient-to-r from-gray-400 to-blue-500"></div>
-                          <div className="w-0 h-0 border-l-4 border-t-2 border-b-2 border-l-blue-500 border-t-transparent border-b-transparent"></div>
-                        </div>
-                      </div>
-                      
-                      {/* Stage 2: Physics Engine */}
-                      <div className="text-center space-y-6">
-                        <div className="w-24 h-24 mx-auto bg-gradient-to-br from-blue-100 to-blue-200 rounded-3xl flex items-center justify-center border-2 border-blue-400 shadow-lg relative">
-                          <div className="relative">
-                            {/* Physics symbol */}
-                            <div className="w-8 h-8 border-3 border-blue-700 rounded-full relative">
-                              <div className="absolute inset-2 bg-blue-600 rounded-full"></div>
-                              <div className="absolute -top-1 -right-1 w-3 h-3 bg-blue-800 rounded-full"></div>
-                              <div className="absolute -bottom-1 -left-1 w-2 h-2 bg-blue-500 rounded-full"></div>
-                            </div>
-                          </div>
-                          <div className="absolute inset-0 bg-blue-400 rounded-3xl animate-pulse opacity-20"></div>
-                        </div>
-                        <div>
-                          <div className="text-xl font-semibold text-black">Physics Simulation</div>
-                          <div className="text-sm text-gray-600 mt-1">Real‑time cloth dynamics</div>
-                          <div className="text-xs text-gray-500 mt-2">• Wind forces<br/>• Gravity simulation<br/>• Collision detection</div>
+              <div className="bg-white border border-gray-200 rounded-2xl p-16">
+                {/* Stage Labels */}
+                <div className="grid grid-cols-4 gap-8 mb-12">
+                  <div className="bg-black text-white px-4 py-2 rounded-full text-sm font-medium text-center">
+                    3D Input & Setup
+                  </div>
+                  <div className="bg-black text-white px-4 py-2 rounded-full text-sm font-medium text-center">
+                    Physics Simulation
+                  </div>
+                  <div className="bg-black text-white px-4 py-2 rounded-full text-sm font-medium text-center">
+                    Multi-Camera Capture
+                  </div>
+                  <div className="bg-black text-white px-4 py-2 rounded-full text-sm font-medium text-center">
+                    AI Training Data
+                  </div>
+                </div>
+
+                {/* Pipeline Flow */}
+                <div className="flex items-center justify-between">
+                  {/* Stage 1: 3D Input & Setup */}
+                  <div className="flex flex-col items-center">
+                    <div className="w-40 h-40 bg-white border-2 border-gray-300 rounded-lg flex items-center justify-center mb-6 shadow-sm">
+                      <div className="relative">
+                        {/* 3D Garment wireframe */}
+                        <div className="w-24 h-24 border-2 border-gray-600 rounded-lg relative">
+                          {/* Wireframe lines */}
+                          <div className="absolute inset-2 border border-gray-400 rounded"></div>
+                          <div className="absolute inset-4 border border-gray-400 rounded"></div>
+                          {/* Vertices */}
+                          <div className="absolute top-1 left-1 w-1 h-1 bg-gray-700 rounded-full"></div>
+                          <div className="absolute top-1 right-1 w-1 h-1 bg-gray-700 rounded-full"></div>
+                          <div className="absolute bottom-1 left-1 w-1 h-1 bg-gray-700 rounded-full"></div>
+                          <div className="absolute bottom-1 right-1 w-1 h-1 bg-gray-700 rounded-full"></div>
+                          {/* Material zones */}
+                          <div className="absolute top-6 left-6 w-3 h-3 bg-blue-200 rounded opacity-60"></div>
+                          <div className="absolute top-6 right-6 w-3 h-3 bg-green-200 rounded opacity-60"></div>
                         </div>
                       </div>
-                      
-                      {/* Arrow 2 */}
-                      <div className="flex justify-center">
-                        <div className="flex items-center space-x-2">
-                          <div className="w-16 h-1 bg-gradient-to-r from-blue-500 to-green-500"></div>
-                          <div className="w-0 h-0 border-l-4 border-t-2 border-b-2 border-l-green-500 border-t-transparent border-b-transparent"></div>
-                        </div>
-                      </div>
-                      
-                      <div></div>
                     </div>
-                    
-                    {/* Stage 3: Multi-Camera Rendering */}
-                    <div className="grid grid-cols-4 gap-12 items-center">
-                      <div className="text-center space-y-6">
-                        <div className="w-24 h-24 mx-auto bg-gradient-to-br from-green-100 to-green-200 rounded-3xl flex items-center justify-center border-2 border-green-400 shadow-lg">
-                          <div className="relative">
-                            {/* Multi-camera array */}
-                            <div className="grid grid-cols-3 gap-1">
-                              <div className="w-2 h-2 bg-green-700 rounded-full"></div>
-                              <div className="w-2 h-2 bg-green-600 rounded-full"></div>
-                              <div className="w-2 h-2 bg-green-700 rounded-full"></div>
-                              <div className="w-2 h-2 bg-green-600 rounded-full"></div>
-                              <div className="w-3 h-3 bg-green-800 rounded-full"></div>
-                              <div className="w-2 h-2 bg-green-600 rounded-full"></div>
-                              <div className="w-2 h-2 bg-green-700 rounded-full"></div>
-                              <div className="w-2 h-2 bg-green-600 rounded-full"></div>
-                              <div className="w-2 h-2 bg-green-700 rounded-full"></div>
+                  </div>
+
+                  {/* Arrow 1 */}
+                  <div className="flex items-center space-x-2">
+                    <div className="w-16 h-1 bg-gray-400"></div>
+                    <div className="w-0 h-0 border-l-6 border-t-3 border-b-3 border-l-gray-600 border-t-transparent border-b-transparent"></div>
+                  </div>
+
+                  {/* Stage 2: Physics Simulation */}
+                  <div className="flex flex-col items-center">
+                    <div className="w-40 h-40 bg-white border-2 border-gray-300 rounded-lg flex items-center justify-center mb-6 shadow-sm">
+                      <div className="relative">
+                        {/* Dynamic cloth with forces */}
+                        <div className="w-20 h-24 relative">
+                          {/* Cloth shape with deformation */}
+                          <div className="absolute inset-0 border-2 border-gray-600 rounded-t-lg rounded-bl-3xl"></div>
+                          {/* Wind force arrows */}
+                          <div className="absolute -right-6 top-2 flex flex-col space-y-1">
+                            <div className="flex items-center">
+                              <div className="w-4 h-0.5 bg-blue-500"></div>
+                              <div className="w-0 h-0 border-l-2 border-t-1 border-b-1 border-l-blue-500 border-t-transparent border-b-transparent"></div>
+                            </div>
+                            <div className="flex items-center">
+                              <div className="w-6 h-0.5 bg-blue-600"></div>
+                              <div className="w-0 h-0 border-l-2 border-t-1 border-b-1 border-l-blue-600 border-t-transparent border-b-transparent"></div>
+                            </div>
+                            <div className="flex items-center">
+                              <div className="w-4 h-0.5 bg-blue-500"></div>
+                              <div className="w-0 h-0 border-l-2 border-t-1 border-b-1 border-l-blue-500 border-t-transparent border-b-transparent"></div>
                             </div>
                           </div>
-                        </div>
-                        <div>
-                          <div className="text-xl font-semibold text-black">Multi‑Camera Array</div>
-                          <div className="text-sm text-gray-600 mt-1">36 synchronized perspectives</div>
-                          <div className="text-xs text-gray-500 mt-2">• 8K resolution<br/>• 60fps capture<br/>• AOV render passes</div>
-                        </div>
-                      </div>
-                      
-                      {/* Arrow 3 */}
-                      <div className="flex justify-center">
-                        <div className="flex items-center space-x-2">
-                          <div className="w-16 h-1 bg-gradient-to-r from-green-500 to-purple-600"></div>
-                          <div className="w-0 h-0 border-l-4 border-t-2 border-b-2 border-l-purple-600 border-t-transparent border-b-transparent"></div>
+                          {/* Gravity arrow */}
+                          <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 flex flex-col items-center">
+                            <div className="w-0.5 h-3 bg-purple-500"></div>
+                            <div className="w-0 h-0 border-l-1 border-r-1 border-t-2 border-l-transparent border-r-transparent border-t-purple-500"></div>
+                          </div>
                         </div>
                       </div>
-                      
-                      {/* Stage 4: AI Training Data */}
-                      <div className="text-center space-y-6">
-                        <div className="w-24 h-24 mx-auto bg-gradient-to-br from-purple-100 to-blue-200 rounded-3xl flex items-center justify-center border-2 border-purple-500 shadow-lg relative">
-                          <div className="relative">
-                            {/* AI/Data symbol */}
-                            <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-blue-700 rounded-lg transform rotate-12 relative">
-                              <div className="absolute inset-1 bg-white rounded opacity-90"></div>
-                              <div className="absolute inset-2 grid grid-cols-2 gap-0.5">
-                                <div className="bg-purple-600 rounded-sm"></div>
-                                <div className="bg-blue-600 rounded-sm"></div>
-                                <div className="bg-blue-600 rounded-sm"></div>
-                                <div className="bg-purple-600 rounded-sm"></div>
-                              </div>
+                    </div>
+                  </div>
+
+                  {/* Arrow 2 */}
+                  <div className="flex items-center space-x-2">
+                    <div className="w-16 h-1 bg-gray-400"></div>
+                    <div className="w-0 h-0 border-l-6 border-t-3 border-b-3 border-l-gray-600 border-t-transparent border-b-transparent"></div>
+                  </div>
+
+                  {/* Stage 3: Multi-Camera Capture */}
+                  <div className="flex flex-col items-center">
+                    <div className="w-40 h-40 bg-white border-2 border-gray-300 rounded-lg flex items-center justify-center mb-6 shadow-sm">
+                      <div className="relative">
+                        {/* Camera array visualization */}
+                        <div className="w-24 h-24 relative">
+                          {/* Center subject */}
+                          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-6 h-8 bg-gray-300 rounded"></div>
+                          {/* Cameras positioned around */}
+                          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-3 h-2 bg-gray-700 rounded-sm"></div>
+                          <div className="absolute top-2 right-0 w-3 h-2 bg-gray-700 rounded-sm transform rotate-45"></div>
+                          <div className="absolute right-0 top-1/2 transform -translate-y-1/2 w-3 h-2 bg-gray-700 rounded-sm transform rotate-90"></div>
+                          <div className="absolute bottom-2 right-0 w-3 h-2 bg-gray-700 rounded-sm transform rotate-135"></div>
+                          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-3 h-2 bg-gray-700 rounded-sm transform rotate-180"></div>
+                          <div className="absolute bottom-2 left-0 w-3 h-2 bg-gray-700 rounded-sm transform rotate-225"></div>
+                          <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-3 h-2 bg-gray-700 rounded-sm transform rotate-270"></div>
+                          <div className="absolute top-2 left-0 w-3 h-2 bg-gray-700 rounded-sm transform rotate-315"></div>
+                          {/* Recording indicator */}
+                          <div className="absolute -top-2 left-1/2 transform -translate-x-1/2">
+                            <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Arrow 3 */}
+                  <div className="flex items-center space-x-2">
+                    <div className="w-16 h-1 bg-blue-500"></div>
+                    <div className="w-0 h-0 border-l-6 border-t-3 border-b-3 border-l-blue-600 border-t-transparent border-b-transparent"></div>
+                  </div>
+
+                  {/* Stage 4: AI Training Data */}
+                  <div className="flex flex-col items-center">
+                    <div className="w-40 h-40 bg-white border-2 border-blue-300 rounded-lg flex items-center justify-center mb-6 shadow-lg">
+                      <div className="relative">
+                        {/* Tagged dataset visualization */}
+                        <div className="w-24 h-24 bg-gradient-to-br from-blue-50 to-green-50 rounded-lg border border-blue-200 p-2">
+                          {/* Data frames */}
+                          <div className="space-y-1">
+                            <div className="h-2 bg-blue-300 rounded flex items-center justify-end pr-1">
+                              <div className="w-1 h-1 bg-blue-600 rounded-full"></div>
+                            </div>
+                            <div className="h-2 bg-green-300 rounded flex items-center justify-end pr-1">
+                              <div className="w-1 h-1 bg-green-600 rounded-full"></div>
+                            </div>
+                            <div className="h-2 bg-purple-300 rounded flex items-center justify-end pr-1">
+                              <div className="w-1 h-1 bg-purple-600 rounded-full"></div>
+                            </div>
+                            <div className="h-2 bg-orange-300 rounded flex items-center justify-end pr-1">
+                              <div className="w-1 h-1 bg-orange-600 rounded-full"></div>
                             </div>
                           </div>
-                          <div className="absolute inset-0 bg-purple-400 rounded-3xl animate-pulse opacity-30"></div>
+                          {/* Metadata tags */}
+                          <div className="absolute -right-2 -top-2 text-xs bg-blue-600 text-white px-1 rounded">8K</div>
+                          <div className="absolute -right-2 top-4 text-xs bg-green-600 text-white px-1 rounded">60fps</div>
+                          <div className="absolute -left-2 -top-2 text-xs bg-purple-600 text-white px-1 rounded">Tags</div>
                         </div>
-                        <div>
-                          <div className="text-xl font-semibold text-purple-900">AI Training Data</div>
-                          <div className="text-sm text-purple-700 mt-1">Tagged, physics‑accurate datasets</div>
-                          <div className="text-xs text-gray-500 mt-2">• Metadata labels<br/>• Frame sequences<br/>• Parameter tags</div>
+                        {/* Enhanced indicator */}
+                        <div className="absolute -top-3 -right-3">
+                          <div className="w-4 h-4 text-yellow-500">✦</div>
                         </div>
                       </div>
-                      
-                      <div></div>
                     </div>
                   </div>
                 </div>
 
-                {/* Mobile Flow */}
-                <div className="lg:hidden space-y-12">
-                  <div className="text-center space-y-6">
-                    <div className="w-20 h-20 mx-auto bg-gradient-to-br from-gray-100 to-gray-200 rounded-3xl flex items-center justify-center border-2 border-gray-300 shadow-lg">
-                      <div className="space-y-1">
-                        <div className="w-8 h-1 bg-gray-600 rounded"></div>
-                        <div className="w-6 h-1 bg-gray-500 rounded"></div>
-                        <div className="w-7 h-1 bg-gray-600 rounded"></div>
+                {/* Stage Descriptions */}
+                <div className="grid grid-cols-4 gap-8 mt-12 text-center">
+                  <div className="text-sm text-gray-600">
+                    3D mesh input with material properties and topology mapping
+                  </div>
+                  <div className="text-sm text-gray-600">
+                    Real-time physics: wind forces, gravity, collision detection
+                  </div>
+                  <div className="text-sm text-gray-600">
+                    36-angle capture array with 8K@60fps recording
+                  </div>
+                  <div className="text-sm text-gray-600">
+                    Tagged training data with metadata and parameter labels
+                  </div>
+                </div>
+
+                {/* Configuration Categories */}
+                <div className="mt-16 pt-8 border-t border-gray-200">
+                  <h4 className="text-xl font-semibold text-black mb-8 text-center">Configurable Parameters</h4>
+                  <div className="grid grid-cols-4 gap-6">
+                    <div className="text-center">
+                      <div className="w-16 h-16 mx-auto bg-yellow-50 rounded-xl flex items-center justify-center border border-yellow-200 mb-3">
+                        <div className="w-8 h-8 bg-yellow-400 rounded-full relative">
+                          <div className="absolute inset-1 border-2 border-yellow-600 rounded-full"></div>
+                          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-0.5 h-2 bg-yellow-600"></div>
+                        </div>
                       </div>
+                      <div className="font-medium text-black">Lighting</div>
+                      <div className="text-xs text-gray-500">Angle, count, intensity</div>
                     </div>
-                    <div>
-                      <div className="text-lg font-semibold text-black">3D Mesh Input</div>
-                      <div className="text-sm text-gray-600">High‑fidelity garment geometry</div>
-                    </div>
-                  </div>
-                  
-                  <div className="flex justify-center">
-                    <div className="w-1 h-8 bg-gradient-to-b from-gray-400 to-blue-500"></div>
-                  </div>
-                  
-                  <div className="text-center space-y-6">
-                    <div className="w-20 h-20 mx-auto bg-gradient-to-br from-blue-100 to-blue-200 rounded-3xl flex items-center justify-center border-2 border-blue-400 shadow-lg">
-                      <div className="w-8 h-8 border-2 border-blue-700 rounded-full relative">
-                        <div className="absolute inset-2 bg-blue-600 rounded-full"></div>
+                    <div className="text-center">
+                      <div className="w-16 h-16 mx-auto bg-green-50 rounded-xl flex items-center justify-center border border-green-200 mb-3">
+                        <div className="w-8 h-8 bg-green-400 rounded relative">
+                          <div className="absolute inset-1 bg-green-300 rounded"></div>
+                          <div className="absolute top-1 left-1 w-2 h-2 bg-green-600 rounded-full"></div>
+                        </div>
                       </div>
+                      <div className="font-medium text-black">Materials</div>
+                      <div className="text-xs text-gray-500">Fabric type, roughness</div>
                     </div>
-                    <div>
-                      <div className="text-lg font-semibold text-black">Physics Simulation</div>
-                      <div className="text-sm text-gray-600">Real‑time cloth dynamics</div>
-                    </div>
-                  </div>
-                  
-                  <div className="flex justify-center">
-                    <div className="w-1 h-8 bg-gradient-to-b from-blue-500 to-green-500"></div>
-                  </div>
-                  
-                  <div className="text-center space-y-6">
-                    <div className="w-20 h-20 mx-auto bg-gradient-to-br from-green-100 to-green-200 rounded-3xl flex items-center justify-center border-2 border-green-400 shadow-lg">
-                      <div className="grid grid-cols-3 gap-1">
-                        <div className="w-1.5 h-1.5 bg-green-700 rounded-full"></div>
-                        <div className="w-1.5 h-1.5 bg-green-600 rounded-full"></div>
-                        <div className="w-1.5 h-1.5 bg-green-700 rounded-full"></div>
-                        <div className="w-1.5 h-1.5 bg-green-600 rounded-full"></div>
-                        <div className="w-2 h-2 bg-green-800 rounded-full"></div>
-                        <div className="w-1.5 h-1.5 bg-green-600 rounded-full"></div>
-                        <div className="w-1.5 h-1.5 bg-green-700 rounded-full"></div>
-                        <div className="w-1.5 h-1.5 bg-green-600 rounded-full"></div>
-                        <div className="w-1.5 h-1.5 bg-green-700 rounded-full"></div>
+                    <div className="text-center">
+                      <div className="w-16 h-16 mx-auto bg-blue-50 rounded-xl flex items-center justify-center border border-blue-200 mb-3">
+                        <div className="w-8 h-6 bg-blue-400 rounded relative">
+                          <div className="absolute inset-1 border border-blue-600 rounded"></div>
+                          <div className="absolute top-0 right-0 w-2 h-1 bg-blue-600"></div>
+                        </div>
                       </div>
+                      <div className="font-medium text-black">Camera</div>
+                      <div className="text-xs text-gray-500">Angles, resolution</div>
                     </div>
-                    <div>
-                      <div className="text-lg font-semibold text-black">Multi‑Camera Array</div>
-                      <div className="text-sm text-gray-600">36 synchronized perspectives</div>
-                    </div>
-                  </div>
-                  
-                  <div className="flex justify-center">
-                    <div className="w-1 h-8 bg-gradient-to-b from-green-500 to-purple-600"></div>
-                  </div>
-                  
-                  <div className="text-center space-y-6">
-                    <div className="w-20 h-20 mx-auto bg-gradient-to-br from-purple-100 to-blue-200 rounded-3xl flex items-center justify-center border-2 border-purple-500 shadow-lg">
-                      <div className="w-8 h-8 bg-gradient-to-br from-purple-600 to-blue-700 rounded-lg transform rotate-12 relative">
-                        <div className="absolute inset-1 bg-white rounded opacity-90"></div>
+                    <div className="text-center">
+                      <div className="w-16 h-16 mx-auto bg-purple-50 rounded-xl flex items-center justify-center border border-purple-200 mb-3">
+                        <div className="relative">
+                          <div className="w-6 h-8 bg-purple-300 rounded-t-lg"></div>
+                          <div className="absolute -right-2 top-1 flex flex-col space-y-0.5">
+                            <div className="w-3 h-0.5 bg-purple-600"></div>
+                            <div className="w-2 h-0.5 bg-purple-600"></div>
+                            <div className="w-3 h-0.5 bg-purple-600"></div>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                    <div>
-                      <div className="text-lg font-semibold text-purple-900">AI Training Data</div>
-                      <div className="text-sm text-purple-700">Tagged, physics‑accurate datasets</div>
+                      <div className="font-medium text-black">Physics Forces</div>
+                      <div className="text-xs text-gray-500">Wind, gravity strength</div>
                     </div>
                   </div>
                 </div>
@@ -997,80 +1030,13 @@ const DatasetPlatform = () => {
                     </ul>
                     <div className="text-center">
                       <p className="text-lg font-semibold text-gray-900 mb-4">Enterprise Pricing</p>
-                      <a 
-                        href={`mailto:sales@23bulbs.com?subject=Dataset Inquiry - ${dataset.name}&body=Hi, I'm interested in learning more about the ${dataset.name} dataset (2.6K videos, 45TB). Please contact me to discuss pricing and requirements.`}
-                        className="w-full bg-black text-white py-3 rounded-full font-medium hover:bg-gray-800 transition-colors inline-block"
-                      >
+                      <button className="w-full bg-black text-white py-3 rounded-full font-medium hover:bg-gray-800 transition-colors">
                         Contact Sales
-                      </a>
+                      </button>
                     </div>
                   </div>
                 </div>
               ))}
-            </div>
-          </div>
-        </main>
-      </div>
-    );
-  }
-
-  if (currentPage === 'checkout') {
-    return (
-      <div className="min-h-screen bg-white" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, sans-serif' }}>
-        <header className="px-6 py-8 border-b border-gray-100">
-          <div className="max-w-4xl mx-auto flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <button 
-                onClick={() => setCurrentPage('generation')}
-                className="text-gray-500 hover:text-black p-2 hover:bg-gray-50 rounded-full transition-colors"
-              >
-                <ArrowLeft className="w-5 h-5" />
-              </button>
-              <h1 className="text-2xl font-semibold text-black">23 Bulbs</h1>
-            </div>
-          </div>
-        </header>
-
-        <main className="px-6 py-16">
-          <div className="max-w-2xl mx-auto">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-black mb-4">Contact Sales</h2>
-              <p className="text-lg text-gray-600">Enterprise dataset licensing for "{generatedDataset?.name}"</p>
-            </div>
-
-            <div className="bg-gray-50 rounded-2xl p-8 mb-8">
-              <h3 className="text-xl font-semibold text-black mb-6">Dataset Configuration</h3>
-              <div className="space-y-4">
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Dataset Type</span>
-                  <span className="font-medium text-black">{generatedDataset?.name}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Categories</span>
-                  <span className="font-medium text-black">{generatedDataset?.categories?.length} selected</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Estimated Samples</span>
-                  <span className="font-medium text-black">{generatedDataset?.samples?.toLocaleString()}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Data Volume</span>
-                  <span className="font-medium text-black">{generatedDataset?.size}</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="text-center">
-              <a 
-                href={`mailto:sales@23bulbs.com?subject=Dataset Configuration - ${generatedDataset?.name}&body=Hi, I'd like to discuss enterprise licensing for a ${generatedDataset?.name} dataset with ${generatedDataset?.categories?.length} categories. Please contact me to discuss pricing and implementation timeline.`}
-                className="w-full bg-black text-white py-4 rounded-full font-medium hover:bg-gray-800 transition-colors inline-block mb-4"
-              >
-                Schedule Sales Call
-              </a>
-              <p className="text-sm text-gray-600">
-                Our enterprise team will contact you within 24 hours to discuss<br />
-                custom pricing, technical consultation, and implementation support.
-              </p>
             </div>
           </div>
         </main>
@@ -1191,12 +1157,9 @@ const DatasetPlatform = () => {
                     ))}
                   </div>
                   <div className="text-center">
-                    <a 
-                      href={`mailto:sales@23bulbs.com?subject=Project Inquiry - ${project.name}&body=Hi, I'm interested in the ${project.name} project. Please contact me to discuss enterprise pricing and implementation.`}
-                      className="w-full bg-black text-white py-2.5 rounded-full font-medium hover:bg-gray-800 transition-colors inline-block text-sm"
-                    >
+                    <button className="w-full bg-black text-white py-2.5 rounded-full font-medium hover:bg-gray-800 transition-colors text-sm">
                       Contact Sales
-                    </a>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -1219,192 +1182,146 @@ const DatasetPlatform = () => {
                   <span className="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded-full">Custom</span>
                 </div>
                 <div className="text-center">
-                  <a 
-                    href="mailto:sales@23bulbs.com?subject=Custom Dataset Inquiry&body=Hi, I'm interested in creating a custom dataset. Please contact me to discuss requirements and pricing."
-                    className="w-full bg-black text-white py-2.5 rounded-full font-medium hover:bg-gray-800 transition-colors inline-block text-sm"
-                  >
+                  <button className="w-full bg-black text-white py-2.5 rounded-full font-medium hover:bg-gray-800 transition-colors text-sm">
                     Contact Sales
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-gray-100 border border-gray-200 rounded-xl p-6">
-            <div className="flex items-start space-x-4">
-              <div className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center flex-shrink-0">
-                <div className="w-4 h-4 border-2 border-white rounded-full border-dashed"></div>
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-2">Need help starting a project?</h3>
-                <p className="text-gray-600 text-sm mb-4 leading-relaxed">Our team can guide you through the best dataset configuration for your specific AI training needs.</p>
-                <a 
-                  href="mailto:support@23bulbs.com?subject=Project Configuration Help&body=Hi, I need help choosing the right dataset configuration for my AI training project."
-                  className="inline-flex items-center space-x-2 bg-gray-800 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-black transition-colors"
-                >
-                  <span>Get Started</span>
-                  <ArrowRight className="w-4 h-4" />
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-20 flex items-center justify-center p-4 sm:p-6 z-50">
-          <div className="bg-white rounded-2xl sm:rounded-3xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl">
-            <div className="p-4 sm:p-8 border-b border-gray-100 flex-shrink-0">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-xl sm:text-2xl font-bold text-black">Configure Dataset</h3>
-                  <p className="text-gray-600 mt-1 text-sm sm:text-base">"{promptValue}"</p>
-                </div>
-                <button
-                  onClick={() => setShowModal(false)}
-                  className="text-gray-400 hover:text-gray-600 p-2 hover:bg-gray-50 rounded-full transition-all"
-                >
-                  <X className="w-5 h-5 sm:w-6 sm:h-6" />
-                </button>
-              </div>
-            </div>
-            
-            <div className="flex-1 overflow-y-auto p-4 sm:p-8" style={{ maxHeight: 'calc(90vh - 200px)' }}>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6 sm:mb-8">
-                {datasetCategories.map((category) => (
-                  <button
-                    key={category.id}
-                    onClick={() => toggleCategory(category.id)}
-                    className={`p-4 rounded-xl border transition-all text-left ${
-                      selectedCategories.includes(category.id)
-                        ? 'border-blue-500 bg-blue-50'
-                        : 'border-gray-200 hover:border-gray-300'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <span className="font-medium text-black">{category.name}</span>
-                        <span className="text-xs text-gray-500 ml-2">({category.paramCount} params)</span>
-                      </div>
-                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                        selectedCategories.includes(category.id)
-                          ? 'border-blue-500 bg-blue-500'
-                          : 'border-gray-300'
-                      }`}>
-                        {selectedCategories.includes(category.id) && (
-                          <div className="w-2 h-2 bg-white rounded-full"></div>
-                        )}
-                      </div>
-                    </div>
                   </button>
-                ))}
+                </div>
               </div>
+            </div>
+          </div>
 
-              {selectedCategories.length > 0 && (
-                <div className="mb-8 border-t border-gray-100 pt-8">
-                  <h4 className="text-lg font-semibold text-black mb-6">Configuration Options</h4>
-                  <div className="space-y-4">
-                    {selectedCategories.map(categoryId => {
-                      const category = datasetCategories.find(cat => cat.id === categoryId);
-                      const config = categoryConfigs[categoryId] || {};
-                      const isCollapsed = collapsedCategories[categoryId];
-                      
-                      return (
-                        <div key={categoryId} className="bg-gray-50 rounded-xl overflow-hidden">
-                          <button
-                            onClick={() => toggleCategoryCollapse(categoryId)}
-                            className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-100 transition-colors"
-                          >
-                            <div className="flex items-center">
-                              <div className="w-3 h-3 bg-blue-500 rounded-full mr-3"></div>
-                              <h5 className="font-medium text-black">{category.name}</h5>
-                            </div>
-                            <ChevronDown className={`w-5 h-5 text-gray-500 transition-transform ${
-                              isCollapsed ? '-rotate-90' : 'rotate-0'
-                            }`} />
-                          </button>
-                          
-                          {!isCollapsed && (
-                            <div className="px-4 sm:px-6 pb-4 sm:pb-6">
-                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                {category.options.map(option => (
-                                  <div key={option.id} className="space-y-2">
-                                    <label className="text-sm font-medium text-gray-700">
-                                      {option.name}
-                                      {option.unit && <span className="text-gray-500 ml-1">({option.unit})</span>}
-                                    </label>
-                                    
-                                    {option.type === 'range' && (
-                                      <div className="space-y-1">
-                                        <input
-                                          type="range"
-                                          min={option.min}
-                                          max={option.max}
-                                          step={option.step || 1}
-                                          value={config[option.id] || option.default}
-                                          onChange={(e) => updateCategoryConfig(categoryId, option.id, parseFloat(e.target.value))}
-                                          className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
-                                          style={{
-                                            background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${((config[option.id] || option.default) - option.min) / (option.max - option.min) * 100}%, #e5e7eb ${((config[option.id] || option.default) - option.min) / (option.max - option.min) * 100}%, #e5e7eb 100%)`
-                                          }}
-                                        />
-                                        <div className="flex justify-between text-xs text-gray-500">
-                                          <span>{option.min}{option.unit}</span>
-                                          <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded font-medium">
-                                            {config[option.id] || option.default}{option.unit}
-                                          </span>
-                                          <span>{option.max}{option.unit}</span>
-                                        </div>
-                                      </div>
-                                    )}
-                                    
-                                    {option.type === 'select' && (
-                                      <select
-                                        value={config[option.id] || option.default}
-                                        onChange={(e) => updateCategoryConfig(categoryId, option.id, e.target.value)}
-                                        className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                                      >
-                                        {option.options.map(optValue => (
-                                          <option key={optValue} value={optValue}>{optValue}</option>
-                                        ))}
-                                      </select>
-                                    )}
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })}
+          {showModal && (
+            <div className="fixed inset-0 bg-black bg-opacity-20 flex items-center justify-center p-4 z-50">
+              <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl">
+                <div className="p-6 border-b border-gray-100 flex-shrink-0">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-xl font-bold text-black">Configure Dataset</h3>
+                      <p className="text-gray-600 mt-1">"{promptValue}"</p>
+                    </div>
+                    <button
+                      onClick={() => setShowModal(false)}
+                      className="text-gray-400 hover:text-gray-600 p-2 hover:bg-gray-50 rounded-full transition-all"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
                   </div>
                 </div>
-              )}
-            </div>
-              
-            <div className="flex flex-col sm:flex-row items-center justify-between p-4 sm:p-8 border-t border-gray-100 flex-shrink-0 space-y-3 sm:space-y-0">
-              <span className="text-gray-600 text-sm sm:text-base">
-                {selectedCategories.length} selected
-              </span>
-              <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3 w-full sm:w-auto">
-                <button
-                  onClick={() => setShowModal(false)}
-                  className="w-full sm:w-auto px-6 py-2.5 text-gray-600 hover:text-black font-medium transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={generateDataset}
-                  disabled={selectedCategories.length === 0}
-                  className="w-full sm:w-auto px-6 py-2.5 bg-blue-600 text-white font-medium rounded-full hover:bg-blue-700 disabled:bg-gray-200 disabled:cursor-not-allowed transition-colors"
-                >
-                  Generate
-                </button>
+                
+                <div className="flex-1 overflow-y-auto p-6">
+                  <div className="grid grid-cols-2 gap-4 mb-8">
+                    {datasetCategories.map((category) => (
+                      <button
+                        key={category.id}
+                        onClick={() => toggleCategory(category.id)}
+                        className={`p-4 rounded-xl border transition-all text-left ${
+                          selectedCategories.includes(category.id)
+                            ? 'border-blue-500 bg-blue-50'
+                            : 'border-gray-200 hover:border-gray-300'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <span className="font-medium text-black">{category.name}</span>
+                            <span className="text-xs text-gray-500 ml-2">({category.options.length} params)</span>
+                          </div>
+                          <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                            selectedCategories.includes(category.id)
+                              ? 'border-blue-500 bg-blue-500'
+                              : 'border-gray-300'
+                          }`}>
+                            {selectedCategories.includes(category.id) && (
+                              <div className="w-2 h-2 bg-white rounded-full"></div>
+                            )}
+                          </div>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+
+                  {selectedCategories.length > 0 && (
+                    <div>
+                      <h4 className="text-lg font-semibold text-black mb-6">Configuration Options</h4>
+                      {selectedCategories.map(categoryId => {
+                        const category = datasetCategories.find(cat => cat.id === categoryId);
+                        const config = categoryConfigs[categoryId] || {};
+                        
+                        return (
+                          <div key={categoryId} className="bg-gray-50 rounded-xl p-6 mb-4">
+                            <h5 className="font-medium text-black mb-4">{category.name}</h5>
+                            <div className="grid grid-cols-2 gap-4">
+                              {category.options.map(option => (
+                                <div key={option.id} className="space-y-2">
+                                  <label className="text-sm font-medium text-gray-700">
+                                    {option.name}
+                                    {option.unit && <span className="text-gray-500 ml-1">({option.unit})</span>}
+                                  </label>
+                                  
+                                  {option.type === 'range' && (
+                                    <div className="space-y-1">
+                                      <input
+                                        type="range"
+                                        min={option.min}
+                                        max={option.max}
+                                        step={option.step || 1}
+                                        value={config[option.id] || option.default}
+                                        onChange={(e) => updateCategoryConfig(categoryId, option.id, parseFloat(e.target.value))}
+                                        className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                                      />
+                                      <div className="flex justify-between text-xs text-gray-500">
+                                        <span>{option.min}{option.unit}</span>
+                                        <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded font-medium">
+                                          {config[option.id] || option.default}{option.unit}
+                                        </span>
+                                        <span>{option.max}{option.unit}</span>
+                                      </div>
+                                    </div>
+                                  )}
+                                  
+                                  {option.type === 'select' && (
+                                    <select
+                                      value={config[option.id] || option.default}
+                                      onChange={(e) => updateCategoryConfig(categoryId, option.id, e.target.value)}
+                                      className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                                    >
+                                      {option.options.map(optValue => (
+                                        <option key={optValue} value={optValue}>{optValue}</option>
+                                      ))}
+                                    </select>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+                  
+                <div className="flex items-center justify-between p-6 border-t border-gray-100 flex-shrink-0">
+                  <span className="text-gray-600">{selectedCategories.length} selected</span>
+                  <div className="flex space-x-3">
+                    <button
+                      onClick={() => setShowModal(false)}
+                      className="px-6 py-2.5 text-gray-600 hover:text-black font-medium transition-colors"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={generateDataset}
+                      disabled={selectedCategories.length === 0}
+                      className="px-6 py-2.5 bg-blue-600 text-white font-medium rounded-full hover:bg-blue-700 disabled:bg-gray-200 disabled:cursor-not-allowed transition-colors"
+                    >
+                      Generate
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 };
