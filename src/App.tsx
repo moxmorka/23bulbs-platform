@@ -529,83 +529,91 @@ const DatasetPlatform = () => {
             </div>
 
             {/* Enhanced Physics-Aware Data Pipeline */}
-            <div className="mb-24">
-              <h3 className="text-3xl font-semibold text-black mb-16 text-center">Physics‑Aware Data Pipeline</h3>
+            <div className="mb-32">
+              <h3 className="text-4xl font-semibold text-black mb-20 text-center">Physics‑Aware Data Pipeline</h3>
               
-              <div className="bg-white border border-gray-200 rounded-2xl p-16">
+              <div className="bg-white border border-gray-200 rounded-3xl p-20">
                 {/* Stage Labels */}
-                <div className="grid grid-cols-4 gap-8 mb-12">
-                  <div className="bg-black text-white px-4 py-2 rounded-full text-sm font-medium text-center">
-                    3D Input & Setup
+                <div className="flex items-center justify-between mb-16">
+                  <div className="flex flex-col items-center w-1/4">
+                    <div className="bg-black text-white px-6 py-3 rounded-full text-base font-semibold text-center">
+                      3D Input & Setup
+                    </div>
                   </div>
-                  <div className="bg-black text-white px-4 py-2 rounded-full text-sm font-medium text-center">
-                    Physics Simulation
+                  <div className="flex flex-col items-center w-1/4">
+                    <div className="bg-black text-white px-6 py-3 rounded-full text-base font-semibold text-center">
+                      Physics Simulation
+                    </div>
                   </div>
-                  <div className="bg-black text-white px-4 py-2 rounded-full text-sm font-medium text-center">
-                    Multi-Camera Capture
+                  <div className="flex flex-col items-center w-1/4">
+                    <div className="bg-black text-white px-6 py-3 rounded-full text-base font-semibold text-center">
+                      Multi-Camera Capture
+                    </div>
                   </div>
-                  <div className="bg-black text-white px-4 py-2 rounded-full text-sm font-medium text-center">
-                    AI Training Data
+                  <div className="flex flex-col items-center w-1/4">
+                    <div className="bg-black text-white px-6 py-3 rounded-full text-base font-semibold text-center">
+                      AI Training Data
+                    </div>
                   </div>
                 </div>
 
                 {/* Pipeline Flow */}
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between mb-16">
                   {/* Stage 1: 3D Input & Setup */}
-                  <div className="flex flex-col items-center">
-                    <div className="w-40 h-40 bg-white border-2 border-gray-300 rounded-lg flex items-center justify-center mb-6 shadow-sm">
+                  <div className="flex flex-col items-center w-1/4">
+                    <div className="w-48 h-48 bg-white border-3 border-gray-300 rounded-2xl flex items-center justify-center mb-8 shadow-lg">
                       <div className="relative">
                         {/* 3D Garment wireframe */}
-                        <div className="w-24 h-24 border-2 border-gray-600 rounded-lg relative">
+                        <div className="w-28 h-28 border-3 border-gray-600 rounded-xl relative">
                           {/* Wireframe lines */}
-                          <div className="absolute inset-2 border border-gray-400 rounded"></div>
-                          <div className="absolute inset-4 border border-gray-400 rounded"></div>
+                          <div className="absolute inset-3 border-2 border-gray-400 rounded-lg"></div>
+                          <div className="absolute inset-6 border border-gray-400 rounded"></div>
                           {/* Vertices */}
-                          <div className="absolute top-1 left-1 w-1 h-1 bg-gray-700 rounded-full"></div>
-                          <div className="absolute top-1 right-1 w-1 h-1 bg-gray-700 rounded-full"></div>
-                          <div className="absolute bottom-1 left-1 w-1 h-1 bg-gray-700 rounded-full"></div>
-                          <div className="absolute bottom-1 right-1 w-1 h-1 bg-gray-700 rounded-full"></div>
+                          <div className="absolute top-1 left-1 w-2 h-2 bg-gray-700 rounded-full"></div>
+                          <div className="absolute top-1 right-1 w-2 h-2 bg-gray-700 rounded-full"></div>
+                          <div className="absolute bottom-1 left-1 w-2 h-2 bg-gray-700 rounded-full"></div>
+                          <div className="absolute bottom-1 right-1 w-2 h-2 bg-gray-700 rounded-full"></div>
                           {/* Material zones */}
-                          <div className="absolute top-6 left-6 w-3 h-3 bg-blue-200 rounded opacity-60"></div>
-                          <div className="absolute top-6 right-6 w-3 h-3 bg-green-200 rounded opacity-60"></div>
+                          <div className="absolute top-8 left-8 w-4 h-4 bg-blue-200 rounded opacity-70"></div>
+                          <div className="absolute top-8 right-8 w-4 h-4 bg-green-200 rounded opacity-70"></div>
                         </div>
                       </div>
                     </div>
                   </div>
 
                   {/* Arrow 1 */}
-                  <div className="flex items-center space-x-2">
-                    <div className="w-16 h-1 bg-gray-400"></div>
-                    <div className="w-0 h-0 border-l-6 border-t-3 border-b-3 border-l-gray-600 border-t-transparent border-b-transparent"></div>
+                  <div className="flex items-center space-x-3">
+                    <div className="w-20 h-2 bg-gray-400 rounded"></div>
+                    <div className="w-0 h-0 border-l-8 border-t-4 border-b-4 border-l-gray-600 border-t-transparent border-b-transparent"></div>
                   </div>
 
                   {/* Stage 2: Physics Simulation */}
-                  <div className="flex flex-col items-center">
-                    <div className="w-40 h-40 bg-white border-2 border-gray-300 rounded-lg flex items-center justify-center mb-6 shadow-sm">
+                  <div className="flex flex-col items-center w-1/4">
+                    <div className="w-48 h-48 bg-white border-3 border-gray-300 rounded-2xl flex items-center justify-center mb-8 shadow-lg">
                       <div className="relative">
                         {/* Dynamic cloth with forces */}
-                        <div className="w-20 h-24 relative">
+                        <div className="w-24 h-28 relative">
                           {/* Cloth shape with deformation */}
-                          <div className="absolute inset-0 border-2 border-gray-600 rounded-t-lg rounded-bl-3xl"></div>
+                          <div className="absolute inset-0 border-3 border-gray-600 rounded-t-xl rounded-bl-3xl bg-gray-50"></div>
                           {/* Wind force arrows */}
-                          <div className="absolute -right-6 top-2 flex flex-col space-y-1">
+                          <div className="absolute -right-8 top-3 flex flex-col space-y-2">
                             <div className="flex items-center">
-                              <div className="w-4 h-0.5 bg-blue-500"></div>
-                              <div className="w-0 h-0 border-l-2 border-t-1 border-b-1 border-l-blue-500 border-t-transparent border-b-transparent"></div>
+                              <div className="w-5 h-1 bg-blue-500 rounded"></div>
+                              <div className="w-0 h-0 border-l-3 border-t-2 border-b-2 border-l-blue-500 border-t-transparent border-b-transparent"></div>
                             </div>
                             <div className="flex items-center">
-                              <div className="w-6 h-0.5 bg-blue-600"></div>
-                              <div className="w-0 h-0 border-l-2 border-t-1 border-b-1 border-l-blue-600 border-t-transparent border-b-transparent"></div>
+                              <div className="w-7 h-1 bg-blue-600 rounded"></div>
+                              <div className="w-0 h-0 border-l-3 border-t-2 border-b-2 border-l-blue-600 border-t-transparent border-b-transparent"></div>
                             </div>
                             <div className="flex items-center">
-                              <div className="w-4 h-0.5 bg-blue-500"></div>
-                              <div className="w-0 h-0 border-l-2 border-t-1 border-b-1 border-l-blue-500 border-t-transparent border-b-transparent"></div>
+                              <div className="w-5 h-1 bg-blue-500 rounded"></div>
+                              <div className="w-0 h-0 border-l-3 border-t-2 border-b-2 border-l-blue-500 border-t-transparent border-b-transparent"></div>
                             </div>
                           </div>
                           {/* Gravity arrow */}
-                          <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 flex flex-col items-center">
-                            <div className="w-0.5 h-3 bg-purple-500"></div>
-                            <div className="w-0 h-0 border-l-1 border-r-1 border-t-2 border-l-transparent border-r-transparent border-t-purple-500"></div>
+                          <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 flex flex-col items-center">
+                            <div className="w-1 h-4 bg-purple-500 rounded"></div>
+                            <div className="w-0 h-0 border-l-2 border-r-2 border-t-3 border-l-transparent border-r-transparent border-t-purple-500"></div>
                           </div>
                         </div>
                       </div>
@@ -613,31 +621,31 @@ const DatasetPlatform = () => {
                   </div>
 
                   {/* Arrow 2 */}
-                  <div className="flex items-center space-x-2">
-                    <div className="w-16 h-1 bg-gray-400"></div>
-                    <div className="w-0 h-0 border-l-6 border-t-3 border-b-3 border-l-gray-600 border-t-transparent border-b-transparent"></div>
+                  <div className="flex items-center space-x-3">
+                    <div className="w-20 h-2 bg-gray-400 rounded"></div>
+                    <div className="w-0 h-0 border-l-8 border-t-4 border-b-4 border-l-gray-600 border-t-transparent border-b-transparent"></div>
                   </div>
 
                   {/* Stage 3: Multi-Camera Capture */}
-                  <div className="flex flex-col items-center">
-                    <div className="w-40 h-40 bg-white border-2 border-gray-300 rounded-lg flex items-center justify-center mb-6 shadow-sm">
+                  <div className="flex flex-col items-center w-1/4">
+                    <div className="w-48 h-48 bg-white border-3 border-gray-300 rounded-2xl flex items-center justify-center mb-8 shadow-lg">
                       <div className="relative">
                         {/* Camera array visualization */}
-                        <div className="w-24 h-24 relative">
+                        <div className="w-28 h-28 relative">
                           {/* Center subject */}
-                          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-6 h-8 bg-gray-300 rounded"></div>
+                          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-10 bg-gray-300 rounded-lg shadow-sm"></div>
                           {/* Cameras positioned around */}
-                          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-3 h-2 bg-gray-700 rounded-sm"></div>
-                          <div className="absolute top-2 right-0 w-3 h-2 bg-gray-700 rounded-sm transform rotate-45"></div>
-                          <div className="absolute right-0 top-1/2 transform -translate-y-1/2 w-3 h-2 bg-gray-700 rounded-sm transform rotate-90"></div>
-                          <div className="absolute bottom-2 right-0 w-3 h-2 bg-gray-700 rounded-sm transform rotate-135"></div>
-                          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-3 h-2 bg-gray-700 rounded-sm transform rotate-180"></div>
-                          <div className="absolute bottom-2 left-0 w-3 h-2 bg-gray-700 rounded-sm transform rotate-225"></div>
-                          <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-3 h-2 bg-gray-700 rounded-sm transform rotate-270"></div>
-                          <div className="absolute top-2 left-0 w-3 h-2 bg-gray-700 rounded-sm transform rotate-315"></div>
+                          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-4 h-3 bg-gray-700 rounded-sm shadow-sm"></div>
+                          <div className="absolute top-3 right-0 w-4 h-3 bg-gray-700 rounded-sm transform rotate-45 shadow-sm"></div>
+                          <div className="absolute right-0 top-1/2 transform -translate-y-1/2 w-4 h-3 bg-gray-700 rounded-sm transform rotate-90 shadow-sm"></div>
+                          <div className="absolute bottom-3 right-0 w-4 h-3 bg-gray-700 rounded-sm transform rotate-135 shadow-sm"></div>
+                          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-4 h-3 bg-gray-700 rounded-sm transform rotate-180 shadow-sm"></div>
+                          <div className="absolute bottom-3 left-0 w-4 h-3 bg-gray-700 rounded-sm transform rotate-225 shadow-sm"></div>
+                          <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-4 h-3 bg-gray-700 rounded-sm transform rotate-270 shadow-sm"></div>
+                          <div className="absolute top-3 left-0 w-4 h-3 bg-gray-700 rounded-sm transform rotate-315 shadow-sm"></div>
                           {/* Recording indicator */}
-                          <div className="absolute -top-2 left-1/2 transform -translate-x-1/2">
-                            <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+                          <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                            <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse shadow-lg"></div>
                           </div>
                         </div>
                       </div>
@@ -645,40 +653,40 @@ const DatasetPlatform = () => {
                   </div>
 
                   {/* Arrow 3 */}
-                  <div className="flex items-center space-x-2">
-                    <div className="w-16 h-1 bg-blue-500"></div>
-                    <div className="w-0 h-0 border-l-6 border-t-3 border-b-3 border-l-blue-600 border-t-transparent border-b-transparent"></div>
+                  <div className="flex items-center space-x-3">
+                    <div className="w-20 h-2 bg-blue-500 rounded"></div>
+                    <div className="w-0 h-0 border-l-8 border-t-4 border-b-4 border-l-blue-600 border-t-transparent border-b-transparent"></div>
                   </div>
 
                   {/* Stage 4: AI Training Data */}
-                  <div className="flex flex-col items-center">
-                    <div className="w-40 h-40 bg-white border-2 border-blue-300 rounded-lg flex items-center justify-center mb-6 shadow-lg">
+                  <div className="flex flex-col items-center w-1/4">
+                    <div className="w-48 h-48 bg-white border-3 border-blue-300 rounded-2xl flex items-center justify-center mb-8 shadow-2xl">
                       <div className="relative">
                         {/* Tagged dataset visualization */}
-                        <div className="w-24 h-24 bg-gradient-to-br from-blue-50 to-green-50 rounded-lg border border-blue-200 p-2">
+                        <div className="w-28 h-28 bg-gradient-to-br from-blue-50 to-green-50 rounded-xl border-2 border-blue-200 p-3 shadow-lg">
                           {/* Data frames */}
-                          <div className="space-y-1">
-                            <div className="h-2 bg-blue-300 rounded flex items-center justify-end pr-1">
-                              <div className="w-1 h-1 bg-blue-600 rounded-full"></div>
+                          <div className="space-y-2">
+                            <div className="h-3 bg-blue-300 rounded-lg flex items-center justify-end pr-2">
+                              <div className="w-2 h-2 bg-blue-600 rounded-full shadow-sm"></div>
                             </div>
-                            <div className="h-2 bg-green-300 rounded flex items-center justify-end pr-1">
-                              <div className="w-1 h-1 bg-green-600 rounded-full"></div>
+                            <div className="h-3 bg-green-300 rounded-lg flex items-center justify-end pr-2">
+                              <div className="w-2 h-2 bg-green-600 rounded-full shadow-sm"></div>
                             </div>
-                            <div className="h-2 bg-purple-300 rounded flex items-center justify-end pr-1">
-                              <div className="w-1 h-1 bg-purple-600 rounded-full"></div>
+                            <div className="h-3 bg-purple-300 rounded-lg flex items-center justify-end pr-2">
+                              <div className="w-2 h-2 bg-purple-600 rounded-full shadow-sm"></div>
                             </div>
-                            <div className="h-2 bg-orange-300 rounded flex items-center justify-end pr-1">
-                              <div className="w-1 h-1 bg-orange-600 rounded-full"></div>
+                            <div className="h-3 bg-orange-300 rounded-lg flex items-center justify-end pr-2">
+                              <div className="w-2 h-2 bg-orange-600 rounded-full shadow-sm"></div>
                             </div>
                           </div>
                           {/* Metadata tags */}
-                          <div className="absolute -right-2 -top-2 text-xs bg-blue-600 text-white px-1 rounded">8K</div>
-                          <div className="absolute -right-2 top-4 text-xs bg-green-600 text-white px-1 rounded">60fps</div>
-                          <div className="absolute -left-2 -top-2 text-xs bg-purple-600 text-white px-1 rounded">Tags</div>
+                          <div className="absolute -right-3 -top-3 text-xs bg-blue-600 text-white px-2 py-1 rounded-lg shadow-lg font-semibold">8K</div>
+                          <div className="absolute -right-3 top-6 text-xs bg-green-600 text-white px-2 py-1 rounded-lg shadow-lg font-semibold">60fps</div>
+                          <div className="absolute -left-3 -top-3 text-xs bg-purple-600 text-white px-2 py-1 rounded-lg shadow-lg font-semibold">Tags</div>
                         </div>
                         {/* Enhanced indicator */}
-                        <div className="absolute -top-3 -right-3">
-                          <div className="w-4 h-4 text-yellow-500">✦</div>
+                        <div className="absolute -top-4 -right-4">
+                          <div className="w-6 h-6 text-yellow-500 text-xl">✦</div>
                         </div>
                       </div>
                     </div>
@@ -686,68 +694,76 @@ const DatasetPlatform = () => {
                 </div>
 
                 {/* Stage Descriptions */}
-                <div className="grid grid-cols-4 gap-8 mt-12 text-center">
-                  <div className="text-sm text-gray-600">
-                    3D mesh input with material properties and topology mapping
+                <div className="flex items-start justify-between mb-20">
+                  <div className="w-1/4 text-center">
+                    <div className="text-base text-gray-600 leading-relaxed">
+                      3D mesh input with material properties and topology mapping
+                    </div>
                   </div>
-                  <div className="text-sm text-gray-600">
-                    Real-time physics: wind forces, gravity, collision detection
+                  <div className="w-1/4 text-center">
+                    <div className="text-base text-gray-600 leading-relaxed">
+                      Real-time physics: wind forces, gravity, collision detection
+                    </div>
                   </div>
-                  <div className="text-sm text-gray-600">
-                    36-angle capture array with 8K@60fps recording
+                  <div className="w-1/4 text-center">
+                    <div className="text-base text-gray-600 leading-relaxed">
+                      36-angle capture array with 8K@60fps recording
+                    </div>
                   </div>
-                  <div className="text-sm text-gray-600">
-                    Tagged training data with metadata and parameter labels
+                  <div className="w-1/4 text-center">
+                    <div className="text-base text-gray-600 leading-relaxed">
+                      Tagged training data with metadata and parameter labels
+                    </div>
                   </div>
                 </div>
 
                 {/* Configuration Categories */}
-                <div className="mt-16 pt-8 border-t border-gray-200">
-                  <h4 className="text-xl font-semibold text-black mb-8 text-center">Configurable Parameters</h4>
-                  <div className="grid grid-cols-4 gap-6">
-                    <div className="text-center">
-                      <div className="w-16 h-16 mx-auto bg-yellow-50 rounded-xl flex items-center justify-center border border-yellow-200 mb-3">
-                        <div className="w-8 h-8 bg-yellow-400 rounded-full relative">
-                          <div className="absolute inset-1 border-2 border-yellow-600 rounded-full"></div>
-                          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-0.5 h-2 bg-yellow-600"></div>
+                <div className="pt-12 border-t-2 border-gray-200">
+                  <h4 className="text-2xl font-semibold text-black mb-12 text-center">Configurable Parameters</h4>
+                  <div className="grid grid-cols-4 gap-8">
+                    <div className="text-center group">
+                      <div className="w-20 h-20 mx-auto bg-yellow-50 rounded-2xl flex items-center justify-center border-2 border-yellow-200 mb-4 group-hover:shadow-lg transition-all">
+                        <div className="w-10 h-10 bg-yellow-400 rounded-full relative shadow-sm">
+                          <div className="absolute inset-2 border-2 border-yellow-600 rounded-full"></div>
+                          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-1 h-3 bg-yellow-600 rounded"></div>
                         </div>
                       </div>
-                      <div className="font-medium text-black">Lighting</div>
-                      <div className="text-xs text-gray-500">Angle, count, intensity</div>
+                      <div className="font-semibold text-black text-lg mb-2">Lighting</div>
+                      <div className="text-sm text-gray-500">Angle, count, intensity</div>
                     </div>
-                    <div className="text-center">
-                      <div className="w-16 h-16 mx-auto bg-green-50 rounded-xl flex items-center justify-center border border-green-200 mb-3">
-                        <div className="w-8 h-8 bg-green-400 rounded relative">
-                          <div className="absolute inset-1 bg-green-300 rounded"></div>
-                          <div className="absolute top-1 left-1 w-2 h-2 bg-green-600 rounded-full"></div>
+                    <div className="text-center group">
+                      <div className="w-20 h-20 mx-auto bg-green-50 rounded-2xl flex items-center justify-center border-2 border-green-200 mb-4 group-hover:shadow-lg transition-all">
+                        <div className="w-10 h-10 bg-green-400 rounded-lg relative shadow-sm">
+                          <div className="absolute inset-2 bg-green-300 rounded"></div>
+                          <div className="absolute top-2 left-2 w-3 h-3 bg-green-600 rounded-full"></div>
                         </div>
                       </div>
-                      <div className="font-medium text-black">Materials</div>
-                      <div className="text-xs text-gray-500">Fabric type, roughness</div>
+                      <div className="font-semibold text-black text-lg mb-2">Materials</div>
+                      <div className="text-sm text-gray-500">Fabric type, roughness</div>
                     </div>
-                    <div className="text-center">
-                      <div className="w-16 h-16 mx-auto bg-blue-50 rounded-xl flex items-center justify-center border border-blue-200 mb-3">
-                        <div className="w-8 h-6 bg-blue-400 rounded relative">
-                          <div className="absolute inset-1 border border-blue-600 rounded"></div>
-                          <div className="absolute top-0 right-0 w-2 h-1 bg-blue-600"></div>
+                    <div className="text-center group">
+                      <div className="w-20 h-20 mx-auto bg-blue-50 rounded-2xl flex items-center justify-center border-2 border-blue-200 mb-4 group-hover:shadow-lg transition-all">
+                        <div className="w-10 h-8 bg-blue-400 rounded-lg relative shadow-sm">
+                          <div className="absolute inset-2 border-2 border-blue-600 rounded"></div>
+                          <div className="absolute top-0 right-0 w-3 h-2 bg-blue-600 rounded-sm"></div>
                         </div>
                       </div>
-                      <div className="font-medium text-black">Camera</div>
-                      <div className="text-xs text-gray-500">Angles, resolution</div>
+                      <div className="font-semibold text-black text-lg mb-2">Camera</div>
+                      <div className="text-sm text-gray-500">Angles, resolution</div>
                     </div>
-                    <div className="text-center">
-                      <div className="w-16 h-16 mx-auto bg-purple-50 rounded-xl flex items-center justify-center border border-purple-200 mb-3">
+                    <div className="text-center group">
+                      <div className="w-20 h-20 mx-auto bg-purple-50 rounded-2xl flex items-center justify-center border-2 border-purple-200 mb-4 group-hover:shadow-lg transition-all">
                         <div className="relative">
-                          <div className="w-6 h-8 bg-purple-300 rounded-t-lg"></div>
-                          <div className="absolute -right-2 top-1 flex flex-col space-y-0.5">
-                            <div className="w-3 h-0.5 bg-purple-600"></div>
-                            <div className="w-2 h-0.5 bg-purple-600"></div>
-                            <div className="w-3 h-0.5 bg-purple-600"></div>
+                          <div className="w-8 h-10 bg-purple-300 rounded-t-lg shadow-sm"></div>
+                          <div className="absolute -right-3 top-2 flex flex-col space-y-1">
+                            <div className="w-4 h-1 bg-purple-600 rounded"></div>
+                            <div className="w-3 h-1 bg-purple-600 rounded"></div>
+                            <div className="w-4 h-1 bg-purple-600 rounded"></div>
                           </div>
                         </div>
                       </div>
-                      <div className="font-medium text-black">Physics Forces</div>
-                      <div className="text-xs text-gray-500">Wind, gravity strength</div>
+                      <div className="font-semibold text-black text-lg mb-2">Physics Forces</div>
+                      <div className="text-sm text-gray-500">Wind, gravity strength</div>
                     </div>
                   </div>
                 </div>
