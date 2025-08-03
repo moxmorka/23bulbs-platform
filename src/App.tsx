@@ -532,18 +532,10 @@ const DatasetPlatform = () => {
       <div className="min-h-screen bg-white" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, sans-serif' }}>
         <header className="px-4 sm:px-6 py-6 sm:py-8">
           <div className="max-w-6xl mx-auto flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <button 
-                onClick={() => setCurrentPage('landing')}
-                className="text-gray-500 hover:text-black p-2 hover:bg-gray-50 rounded-full transition-colors"
-              >
-                <ArrowLeft className="w-5 h-5" />
-              </button>
-              <h1 className="text-xl sm:text-2xl font-semibold text-black">23 Bulbs</h1>
-            </div>
+            <h1 className="text-xl sm:text-2xl font-semibold text-black">23 Bulbs</h1>
             <button 
               onClick={() => setCurrentPage('signin')}
-              className="bg-gray-900 text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-medium hover:bg-gray-800 transition-colors"
+              className="bg-black text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-medium hover:bg-gray-800 transition-colors"
             >
               Sign In
             </button>
@@ -553,88 +545,88 @@ const DatasetPlatform = () => {
         <main className="px-4 sm:px-6 py-16 sm:py-32">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-32">
-              <h2 className="text-6xl font-light text-black mb-8 tracking-tight">
+              <h2 className="text-4xl sm:text-6xl font-bold text-black mb-6 sm:mb-8 tracking-tight">
                 Physics‑Aware Training Data
               </h2>
-              <p className="text-xl font-light text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
                 Current GenAI models are unusable for enterprise. We deliver real‑world simulation 
                 through API at scale, unlocking GenAI for enterprise use.
               </p>
             </div>
 
             <div className="mb-32">
-              <h3 className="text-3xl font-light text-black mb-16 text-center">Technical Pipeline</h3>
+              <h3 className="text-3xl sm:text-4xl font-bold text-black mb-12 sm:mb-16 text-center">Technical Pipeline</h3>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                 <div className="text-center">
                   <div className="w-16 h-16 mx-auto mb-6 bg-gray-100 rounded-full flex items-center justify-center">
                     <div className="w-6 h-4 border-2 border-gray-700 rounded-sm"></div>
                   </div>
-                  <h4 className="text-lg font-medium text-black mb-2">3D Models</h4>
-                  <p className="text-sm text-gray-600">High‑fidelity geometry</p>
+                  <h4 className="text-lg sm:text-xl font-semibold text-black mb-2">3D Models</h4>
+                  <p className="text-sm sm:text-base text-gray-600">High‑fidelity geometry</p>
                 </div>
                 
                 <div className="text-center">
                   <div className="w-16 h-16 mx-auto mb-6 bg-gray-100 rounded-full flex items-center justify-center">
                     <div className="w-0 h-0 border-l-3 border-r-3 border-b-6 border-l-transparent border-r-transparent border-b-gray-700"></div>
                   </div>
-                  <h4 className="text-lg font-medium text-black mb-2">Physics Engine</h4>
-                  <p className="text-sm text-gray-600">Real‑time simulation</p>
+                  <h4 className="text-lg sm:text-xl font-semibold text-black mb-2">Physics Engine</h4>
+                  <p className="text-sm sm:text-base text-gray-600">Real‑time simulation</p>
                 </div>
                 
                 <div className="text-center">
                   <div className="w-16 h-16 mx-auto mb-6 bg-gray-100 rounded-full flex items-center justify-center">
                     <div className="w-6 h-6 bg-gray-700 rounded-full"></div>
                   </div>
-                  <h4 className="text-lg font-medium text-black mb-2">Multi‑Camera Render</h4>
-                  <p className="text-sm text-gray-600">36 camera perspectives</p>
+                  <h4 className="text-lg sm:text-xl font-semibold text-black mb-2">Multi‑Camera Render</h4>
+                  <p className="text-sm sm:text-base text-gray-600">36 camera perspectives</p>
                 </div>
                 
                 <div className="text-center">
                   <div className="w-16 h-16 mx-auto mb-6 bg-blue-50 rounded-full flex items-center justify-center">
                     <div className="w-6 h-6 bg-blue-900 transform rotate-45 rounded-sm"></div>
                   </div>
-                  <h4 className="text-lg font-medium text-black mb-2">Training Data</h4>
-                  <p className="text-sm text-gray-600">Tagged, AI‑ready output</p>
+                  <h4 className="text-lg sm:text-xl font-semibold text-black mb-2">Training Data</h4>
+                  <p className="text-sm sm:text-base text-gray-600">Tagged, AI‑ready output</p>
                 </div>
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-16 mb-32">
               <div className="bg-gray-100 rounded-2xl p-12">
-                <h3 className="text-2xl font-light text-black mb-8">The Problem</h3>
+                <h3 className="text-2xl sm:text-3xl font-bold text-black mb-6 sm:mb-8">The Problem</h3>
                 <div className="space-y-6">
                   <div className="flex items-start space-x-4">
                     <div className="w-4 h-4 mt-1 border-2 border-gray-700 rounded-full flex-shrink-0"></div>
                     <div>
-                      <h4 className="font-medium text-black mb-1">Unstable Generation</h4>
-                      <p className="text-sm text-gray-600">Video melts after 4‑8 seconds</p>
+                      <h4 className="text-base sm:text-lg font-semibold text-black mb-1">Unstable Generation</h4>
+                      <p className="text-sm sm:text-base text-gray-600">Video melts after 4‑8 seconds</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-4">
                     <div className="w-4 h-4 mt-1 bg-gray-700 rounded-sm flex-shrink-0"></div>
                     <div>
-                      <h4 className="font-medium text-black mb-1">Blocked Adoption</h4>
-                      <p className="text-sm text-gray-600">Enterprise can't deploy at scale</p>
+                      <h4 className="text-base sm:text-lg font-semibold text-black mb-1">Blocked Adoption</h4>
+                      <p className="text-sm sm:text-base text-gray-600">Enterprise can't deploy at scale</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-4">
                     <div className="w-4 h-4 mt-1 border-2 border-gray-700 flex-shrink-0" style={{clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)'}}></div>
                     <div>
-                      <h4 className="font-medium text-black mb-1">Legal Risk</h4>
-                      <p className="text-sm text-gray-600">Copyright infringement liability</p>
+                      <h4 className="text-base sm:text-lg font-semibold text-black mb-1">Legal Risk</h4>
+                      <p className="text-sm sm:text-base text-gray-600">Copyright infringement liability</p>
                     </div>
                   </div>
                 </div>
               </div>
 
               <div className="bg-gray-100 rounded-2xl p-12">
-                <h3 className="text-2xl font-light text-black mb-8">Our Solution</h3>
+                <h3 className="text-2xl sm:text-3xl font-bold text-black mb-6 sm:mb-8">Our Solution</h3>
                 <div className="space-y-6">
                   <div className="flex items-start space-x-4">
                     <div className="w-4 h-4 mt-1 border-2 border-gray-700 rounded-full flex-shrink-0"></div>
                     <div>
-                      <h4 className="font-medium text-black mb-1">Real‑Time Physics</h4>
-                      <p className="text-sm text-gray-600">Cloth and motion simulation</p>
+                      <h4 className="text-base sm:text-lg font-semibold text-black mb-1">Real‑Time Physics</h4>
+                      <p className="text-sm sm:text-base text-gray-600">Cloth and motion simulation</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-4">
@@ -645,15 +637,15 @@ const DatasetPlatform = () => {
                       <div className="w-1.5 h-1.5 bg-gray-700 rounded-full"></div>
                     </div>
                     <div>
-                      <h4 className="font-medium text-black mb-1">Multi‑Camera Array</h4>
-                      <p className="text-sm text-gray-600">36 perspectives per frame</p>
+                      <h4 className="text-base sm:text-lg font-semibold text-black mb-1">Multi‑Camera Array</h4>
+                      <p className="text-sm sm:text-base text-gray-600">36 perspectives per frame</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-4">
                     <div className="w-4 h-4 mt-1 bg-gray-700 rounded-sm border-2 border-gray-700 flex-shrink-0"></div>
                     <div>
-                      <h4 className="font-medium text-black mb-1">Material Accuracy</h4>
-                      <p className="text-sm text-gray-600">Physics‑based rendering</p>
+                      <h4 className="text-base sm:text-lg font-semibold text-black mb-1">Material Accuracy</h4>
+                      <p className="text-sm sm:text-base text-gray-600">Physics‑based rendering</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-4">
@@ -663,8 +655,8 @@ const DatasetPlatform = () => {
                       <div className="w-1 h-4 bg-gray-700"></div>
                     </div>
                     <div>
-                      <h4 className="font-medium text-black mb-1">Scalable Pipeline</h4>
-                      <p className="text-sm text-gray-600">API‑driven generation</p>
+                      <h4 className="text-base sm:text-lg font-semibold text-black mb-1">Scalable Pipeline</h4>
+                      <p className="text-sm sm:text-base text-gray-600">API‑driven generation</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-4">
@@ -677,15 +669,15 @@ const DatasetPlatform = () => {
                       </div>
                     </div>
                     <div>
-                      <h4 className="font-medium text-black mb-1">Tagged Data</h4>
-                      <p className="text-sm text-gray-600">Labeled training datasets</p>
+                      <h4 className="text-base sm:text-lg font-semibold text-black mb-1">Tagged Data</h4>
+                      <p className="text-sm sm:text-base text-gray-600">Labeled training datasets</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-4">
                     <div className="w-4 h-4 mt-1 bg-blue-900 rounded-sm flex-shrink-0"></div>
                     <div>
-                      <h4 className="font-medium text-black mb-1">AI‑Ready Output</h4>
-                      <p className="text-sm text-gray-600">Optimized for training</p>
+                      <h4 className="text-base sm:text-lg font-semibold text-black mb-1">AI‑Ready Output</h4>
+                      <p className="text-sm sm:text-base text-gray-600">Optimized for training</p>
                     </div>
                   </div>
                 </div>
@@ -693,22 +685,22 @@ const DatasetPlatform = () => {
             </div>
 
             <div className="bg-gray-900 text-white rounded-2xl p-16 text-center">
-              <h3 className="text-2xl font-light mb-16">Performance Metrics</h3>
+              <h3 className="text-2xl sm:text-3xl font-bold mb-12 sm:mb-16">Performance Metrics</h3>
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-12">
                 <div>
-                  <div className="text-4xl font-light mb-2">500M → 500</div>
+                  <div className="text-4xl font-bold mb-2">500M → 500</div>
                   <div className="text-gray-400 text-sm">Frames Reduced</div>
                 </div>
                 <div>
-                  <div className="text-4xl font-light mb-2">45TB</div>
+                  <div className="text-4xl font-bold mb-2">45TB</div>
                   <div className="text-gray-400 text-sm">Data Volume</div>
                 </div>
                 <div>
-                  <div className="text-4xl font-light mb-2">8K</div>
+                  <div className="text-4xl font-bold mb-2">8K</div>
                   <div className="text-gray-400 text-sm">Resolution @ 60fps</div>
                 </div>
                 <div>
-                  <div className="text-4xl font-light text-blue-600 mb-2">4 Years</div>
+                  <div className="text-4xl font-bold text-blue-600 mb-2">4 Years</div>
                   <div className="text-gray-400 text-sm">Technical Moat</div>
                 </div>
               </div>
@@ -722,7 +714,7 @@ const DatasetPlatform = () => {
   if (currentPage === 'marketplace') {
     return (
       <div className="min-h-screen bg-white" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, sans-serif' }}>
-        <header className="px-6 py-8 border-b border-gray-100">
+        <header className="px-4 sm:px-6 py-6 sm:py-8 border-b border-gray-100">
           <div className="max-w-6xl mx-auto flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <button 
@@ -731,11 +723,11 @@ const DatasetPlatform = () => {
               >
                 <ArrowLeft className="w-5 h-5" />
               </button>
-              <h1 className="text-2xl font-semibold text-black">23 Bulbs</h1>
+              <h1 className="text-xl sm:text-2xl font-semibold text-black">23 Bulbs</h1>
             </div>
             <button 
               onClick={() => setCurrentPage('signin')}
-              className="bg-black text-white px-6 py-2.5 rounded-full text-sm font-medium hover:bg-gray-800 transition-colors"
+              className="bg-black text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-medium hover:bg-gray-800 transition-colors"
             >
               Sign In
             </button>
@@ -884,7 +876,7 @@ const DatasetPlatform = () => {
   if (currentPage === 'api-checkout') {
     return (
       <div className="min-h-screen bg-white" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, sans-serif' }}>
-        <header className="px-6 py-8 border-b border-gray-100">
+        <header className="px-4 sm:px-6 py-6 sm:py-8 border-b border-gray-100">
           <div className="max-w-4xl mx-auto flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <button 
@@ -893,7 +885,7 @@ const DatasetPlatform = () => {
               >
                 <ArrowLeft className="w-5 h-5" />
               </button>
-              <h1 className="text-2xl font-semibold text-black">23 Bulbs</h1>
+              <h1 className="text-xl sm:text-2xl font-semibold text-black">23 Bulbs</h1>
             </div>
           </div>
         </header>
@@ -1037,7 +1029,7 @@ const DatasetPlatform = () => {
   if (currentPage === 'checkout') {
     return (
       <div className="min-h-screen bg-white" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, sans-serif' }}>
-        <header className="px-6 py-8 border-b border-gray-100">
+        <header className="px-4 sm:px-6 py-6 sm:py-8 border-b border-gray-100">
           <div className="max-w-4xl mx-auto flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <button 
@@ -1046,7 +1038,7 @@ const DatasetPlatform = () => {
               >
                 <ArrowLeft className="w-5 h-5" />
               </button>
-              <h1 className="text-2xl font-semibold text-black">23 Bulbs</h1>
+              <h1 className="text-xl sm:text-2xl font-semibold text-black">23 Bulbs</h1>
             </div>
           </div>
         </header>
@@ -1101,7 +1093,7 @@ const DatasetPlatform = () => {
   // Main Dashboard
   return (
     <div className="min-h-screen bg-white" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, sans-serif' }}>
-      <header className="px-6 py-8 border-b border-gray-100">
+      <header className="px-4 sm:px-6 py-6 sm:py-8 border-b border-gray-100">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <button 
@@ -1110,12 +1102,12 @@ const DatasetPlatform = () => {
             >
               <ArrowLeft className="w-5 h-5" />
             </button>
-            <h1 className="text-2xl font-semibold text-black">23 Bulbs</h1>
+            <h1 className="text-xl sm:text-2xl font-semibold text-black">23 Bulbs</h1>
           </div>
           <div className="flex items-center space-x-4">
             <button 
               onClick={() => setCurrentPage('marketplace')}
-              className="text-gray-600 hover:text-black px-4 py-2 text-sm font-medium transition-colors"
+              className="text-gray-600 hover:text-black px-4 py-2 text-xs sm:text-sm font-medium transition-colors"
             >
               Browse Datasets
             </button>
