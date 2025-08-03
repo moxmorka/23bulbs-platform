@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowRight, ArrowLeft, X, Check, ChevronDown } from 'lucide-react';
+import { ArrowRight, ArrowLeft, X, Check, ChevronDown, Key, Copy, ExternalLink } from 'lucide-react';
 
 const DatasetPlatform = () => {
   const [currentPage, setCurrentPage] = useState('landing');
@@ -11,39 +11,100 @@ const DatasetPlatform = () => {
   const [generatedDataset, setGeneratedDataset] = useState(null);
   const [selectedDataType, setSelectedDataType] = useState('All');
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [apiKey, setApiKey] = useState('');
+  const [copied, setCopied] = useState(false);
 
   const datasetCategories = [
     { 
       id: 'lights', 
       name: 'Lighting',
+      paramCount: 5,
       options: [
         { id: 'angle', name: 'Light Angle', type: 'range', min: 0, max: 360, default: 45, unit: '°' },
         { id: 'count', name: 'Number of Lights', type: 'range', min: 1, max: 8, default: 3, unit: 'lights' },
-        { id: 'intensity', name: 'Light Intensity', type: 'range', min: 0.1, max: 2.0, default: 1.0, unit: 'lux', step: 0.1 }
+        { id: 'intensity', name: 'Light Intensity', type: 'range', min: 0.1, max: 2.0, default: 1.0, unit: 'lux', step: 0.1 },
+        { id: 'color_temp', name: 'Color Temperature', type: 'range', min: 2700, max: 6500, default: 5000, unit: 'K' },
+        { id: 'hdri', name: 'HDRI Environment', type: 'select', options: ['Studio', 'Outdoor', 'Indoor', 'Sunset'], default: 'Studio' }
       ]
     },
     { 
       id: 'materials', 
-      name: 'Materials',
+      name: 'Materials & Textures',
+      paramCount: 5,
       options: [
-        { id: 'fabric_type', name: 'Fabric Type', type: 'select', options: ['Cotton', 'Denim', 'Silk', 'Polyester'], default: 'Cotton' },
-        { id: 'roughness', name: 'Surface Roughness', type: 'range', min: 0.0, max: 1.0, default: 0.5, step: 0.1 }
+        { id: 'fabric_type', name: 'Fabric Type', type: 'select', options: ['Cotton', 'Denim', 'Silk', 'Polyester', 'Wool', 'Leather'], default: 'Cotton' },
+        { id: 'roughness', name: 'Surface Roughness', type: 'range', min: 0.0, max: 1.0, default: 0.5, step: 0.1 },
+        { id: 'metallic', name: 'Metallic', type: 'range', min: 0.0, max: 1.0, default: 0.0, step: 0.1 },
+        { id: 'subsurface', name: 'Subsurface Scattering', type: 'range', min: 0.0, max: 1.0, default: 0.3, step: 0.1 },
+        { id: 'normal_strength', name: 'Normal Map Strength', type: 'range', min: 0.0, max: 2.0, default: 1.0, step: 0.1 }
       ]
     },
     { 
       id: 'camera', 
-      name: 'Camera',
+      name: 'Camera Setup',
+      paramCount: 5,
       options: [
-        { id: 'angles', name: 'Camera Angles', type: 'range', min: 1, max: 16, default: 8, unit: 'angles' },
-        { id: 'resolution', name: 'Resolution', type: 'select', options: ['HD', '4K', '8K'], default: '4K' }
+        { id: 'angles', name: 'Camera Angles', type: 'range', min: 1, max: 36, default: 8, unit: 'angles' },
+        { id: 'resolution', name: 'Resolution', type: 'select', options: ['HD', '4K', '8K'], default: '4K' },
+        { id: 'focal_length', name: 'Focal Length', type: 'range', min: 18, max: 200, default: 50, unit: 'mm' },
+        { id: 'depth_of_field', name: 'Depth of Field', type: 'range', min: 0.0, max: 10.0, default: 2.8, unit: 'f' },
+        { id: 'motion_blur', name: 'Motion Blur', type: 'range', min: 0.0, max: 1.0, default: 0.2, step: 0.1 }
       ]
     },
     { 
       id: 'forces', 
       name: 'Physics Forces',
+      paramCount: 5,
       options: [
         { id: 'wind_strength', name: 'Wind Strength', type: 'range', min: 0.0, max: 10.0, default: 2.0, unit: 'm/s', step: 0.5 },
-        { id: 'gravity', name: 'Gravity Strength', type: 'range', min: 0.5, max: 2.0, default: 1.0, unit: 'g', step: 0.1 }
+        { id: 'gravity', name: 'Gravity Strength', type: 'range', min: 0.5, max: 2.0, default: 1.0, unit: 'g', step: 0.1 },
+        { id: 'wind_direction', name: 'Wind Direction', type: 'range', min: 0, max: 360, default: 90, unit: '°' },
+        { id: 'air_density', name: 'Air Density', type: 'range', min: 0.5, max: 2.0, default: 1.0, unit: 'kg/m³', step: 0.1 },
+        { id: 'collision_margin', name: 'Collision Margin', type: 'range', min: 0.001, max: 0.1, default: 0.01, unit: 'm', step: 0.001 }
+      ]
+    },
+    { 
+      id: 'thickness', 
+      name: 'Material Thickness',
+      paramCount: 4,
+      options: [
+        { id: 'fabric_thickness', name: 'Fabric Thickness', type: 'range', min: 0.1, max: 5.0, default: 1.0, unit: 'mm', step: 0.1 },
+        { id: 'thread_density', name: 'Thread Density', type: 'range', min: 10, max: 200, default: 100, unit: 'threads/cm' },
+        { id: 'weave_pattern', name: 'Weave Pattern', type: 'select', options: ['Plain', 'Twill', 'Satin', 'Basket'], default: 'Plain' },
+        { id: 'elasticity', name: 'Elasticity', type: 'range', min: 0.0, max: 1.0, default: 0.2, step: 0.1 }
+      ]
+    },
+    { 
+      id: 'colors', 
+      name: 'Colors & Patterns',
+      paramCount: 4,
+      options: [
+        { id: 'base_color', name: 'Base Color', type: 'select', options: ['Black', 'White', 'Red', 'Blue', 'Green', 'Custom'], default: 'Blue' },
+        { id: 'saturation', name: 'Color Saturation', type: 'range', min: 0.0, max: 2.0, default: 1.0, step: 0.1 },
+        { id: 'pattern_type', name: 'Pattern Type', type: 'select', options: ['None', 'Stripes', 'Dots', 'Plaid', 'Custom'], default: 'None' },
+        { id: 'pattern_scale', name: 'Pattern Scale', type: 'range', min: 0.1, max: 5.0, default: 1.0, step: 0.1 }
+      ]
+    },
+    { 
+      id: 'environment', 
+      name: 'Environment',
+      paramCount: 4,
+      options: [
+        { id: 'temperature', name: 'Temperature', type: 'range', min: -20, max: 50, default: 20, unit: '°C' },
+        { id: 'humidity', name: 'Humidity', type: 'range', min: 10, max: 90, default: 50, unit: '%' },
+        { id: 'background', name: 'Background', type: 'select', options: ['White', 'Black', 'Gray', 'Custom HDRI'], default: 'White' },
+        { id: 'floor_material', name: 'Floor Material', type: 'select', options: ['Concrete', 'Wood', 'Marble', 'Fabric'], default: 'Concrete' }
+      ]
+    },
+    { 
+      id: 'animation', 
+      name: 'Animation States',
+      paramCount: 4,
+      options: [
+        { id: 'movement_type', name: 'Movement Type', type: 'select', options: ['Static', 'Walking', 'Running', 'Dancing'], default: 'Walking' },
+        { id: 'animation_speed', name: 'Animation Speed', type: 'range', min: 0.1, max: 3.0, default: 1.0, step: 0.1 },
+        { id: 'frame_rate', name: 'Frame Rate', type: 'select', options: ['24fps', '30fps', '60fps', '120fps'], default: '60fps' },
+        { id: 'duration', name: 'Duration', type: 'range', min: 1, max: 10, default: 5, unit: 's' }
       ]
     }
   ];
@@ -197,16 +258,27 @@ const DatasetPlatform = () => {
   };
 
   const generateDataset = () => {
-    setShowModal(false);
+    const newApiKey = '23b_live_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    setApiKey(newApiKey);
+    
     const dataset = {
-      name: promptValue,
+      name: promptValue || 'Pants',
       categories: selectedCategories,
       samples: Math.floor(Math.random() * 50000) + 10000,
       size: `${(Math.random() * 5 + 1).toFixed(1)}GB`,
       price: selectedCategories.length * 29 + 99
     };
     setGeneratedDataset(dataset);
-    setCurrentPage('checkout');
+    setShowModal(false);
+    setCurrentPage('api-checkout');
+  };
+
+  const copyApiKey = () => {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(apiKey);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
   };
 
   if (currentPage === 'landing') {
@@ -336,10 +408,7 @@ const DatasetPlatform = () => {
 
             <div className="text-center mt-8">
               <p className="text-sm text-gray-500">
-                Don't have an account?{' '}
-                <button onClick={() => setCurrentPage('signup')} className="text-blue-600 hover:underline cursor-pointer">
-                  Sign Up
-                </button>
+                Don't have an account? <button onClick={() => setCurrentPage('signup')} className="text-blue-600 hover:underline cursor-pointer">Sign Up</button>
               </p>
             </div>
           </div>
@@ -425,10 +494,7 @@ const DatasetPlatform = () => {
                     defaultChecked
                   />
                   <label htmlFor="terms" className="text-sm text-gray-600">
-                    I agree to the{' '}
-                    <span className="text-blue-600 hover:underline cursor-pointer">Terms of Service</span>
-                    {' '}and{' '}
-                    <span className="text-blue-600 hover:underline cursor-pointer">Privacy Policy</span>
+                    I agree to the <span className="text-blue-600 hover:underline cursor-pointer">Terms of Service</span> and <span className="text-blue-600 hover:underline cursor-pointer">Privacy Policy</span>
                   </label>
                 </div>
 
@@ -452,10 +518,7 @@ const DatasetPlatform = () => {
 
             <div className="text-center mt-8">
               <p className="text-sm text-gray-500">
-                Already have an account?{' '}
-                <button onClick={() => setCurrentPage('signin')} className="text-blue-600 hover:underline cursor-pointer">
-                  Sign In
-                </button>
+                Already have an account? <button onClick={() => setCurrentPage('signin')} className="text-blue-600 hover:underline cursor-pointer">Sign In</button>
               </p>
             </div>
           </div>
@@ -487,417 +550,167 @@ const DatasetPlatform = () => {
           </div>
         </header>
 
-        <main className="px-4 sm:px-6 py-16 sm:py-24">
-          <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-20">
-              <h2 className="text-5xl sm:text-6xl font-semibold text-black mb-8 tracking-tight">
+        <main className="px-4 sm:px-6 py-16 sm:py-32">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-32">
+              <h2 className="text-6xl font-light text-black mb-8 tracking-tight">
                 Physics‑Aware Training Data
               </h2>
-              <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
+              <p className="text-xl font-light text-gray-600 max-w-3xl mx-auto leading-relaxed">
                 Current GenAI models are unusable for enterprise. We deliver real‑world simulation 
                 through API at scale, unlocking GenAI for enterprise use.
               </p>
             </div>
 
-            {/* Key Message Block */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 mb-24">
-              <div className="space-y-8">
-                <h3 className="text-3xl font-semibold text-black mb-6">The Problem</h3>
-                <p className="text-lg text-gray-700 leading-relaxed">
-                  <strong className="font-semibold">Current GenAI models are unusable for enterprise.</strong> They're unstable, unpredictable, and ethically risky - costing 
-                  companies millions in failed deployment attempts. Without real-world, physics-aware data, <strong className="font-semibold">GenAI is stuck in the lab.</strong>
-                </p>
-                
-                <p className="text-lg text-gray-700 leading-relaxed">
-                  Enterprises have poured money into GenAI only to abandon it - video melts after seconds, outputs lack consistency, and 
-                  hallucinations damage brand trust. Sectors like fashion, gaming, and retail can't deploy GenAI at scale.
-                </p>
-              </div>
-              
-              <div className="space-y-8">
-                <h3 className="text-3xl font-semibold text-black mb-6">Our Solution</h3>
-                <p className="text-lg text-gray-700 leading-relaxed">
-                  <strong className="font-semibold">We deliver real-world simulation through API - at scale.</strong> 23Bulbs delivers tagged, physics-accurate training data via a powerful 
-                  simulation engine. Our cloth and motion data cut training time, lower computing costs, and unlock GenAI for enterprise use.
-                </p>
-                
-                <p className="text-lg text-gray-700 leading-relaxed">
-                  Specific, tagged data reduces training time and compute load - from 500M to just 500 frames per use case, extending video 
-                  generation beyond the 4-8 second collapse point of current GenAI.
-                </p>
-              </div>
-            </div>
-
-            {/* Enhanced Physics-Aware Data Pipeline */}
             <div className="mb-32">
-              <h3 className="text-4xl font-semibold text-black mb-20 text-center">Physics‑Aware Data Pipeline</h3>
-              
-              <div className="bg-white border border-gray-200 rounded-3xl p-20">
-                {/* Stage Labels */}
-                <div className="grid grid-cols-4 gap-0 mb-16">
-                  <div className="flex justify-center">
-                    <div className="bg-black text-white px-6 py-3 rounded-full text-base font-semibold text-center">
-                      3D Input & Setup
+              <h3 className="text-3xl font-light text-black mb-16 text-center">Technical Pipeline</h3>
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div className="text-center">
+                  <div className="w-16 h-16 mx-auto mb-6 bg-gray-100 rounded-full flex items-center justify-center">
+                    <div className="w-6 h-4 border-2 border-gray-700 rounded-sm"></div>
+                  </div>
+                  <h4 className="text-lg font-medium text-black mb-2">3D Models</h4>
+                  <p className="text-sm text-gray-600">High‑fidelity geometry</p>
+                </div>
+                
+                <div className="text-center">
+                  <div className="w-16 h-16 mx-auto mb-6 bg-gray-100 rounded-full flex items-center justify-center">
+                    <div className="w-0 h-0 border-l-3 border-r-3 border-b-6 border-l-transparent border-r-transparent border-b-gray-700"></div>
+                  </div>
+                  <h4 className="text-lg font-medium text-black mb-2">Physics Engine</h4>
+                  <p className="text-sm text-gray-600">Real‑time simulation</p>
+                </div>
+                
+                <div className="text-center">
+                  <div className="w-16 h-16 mx-auto mb-6 bg-gray-100 rounded-full flex items-center justify-center">
+                    <div className="w-6 h-6 bg-gray-700 rounded-full"></div>
+                  </div>
+                  <h4 className="text-lg font-medium text-black mb-2">Multi‑Camera Render</h4>
+                  <p className="text-sm text-gray-600">36 camera perspectives</p>
+                </div>
+                
+                <div className="text-center">
+                  <div className="w-16 h-16 mx-auto mb-6 bg-blue-50 rounded-full flex items-center justify-center">
+                    <div className="w-6 h-6 bg-blue-900 transform rotate-45 rounded-sm"></div>
+                  </div>
+                  <h4 className="text-lg font-medium text-black mb-2">Training Data</h4>
+                  <p className="text-sm text-gray-600">Tagged, AI‑ready output</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-16 mb-32">
+              <div className="bg-gray-100 rounded-2xl p-12">
+                <h3 className="text-2xl font-light text-black mb-8">The Problem</h3>
+                <div className="space-y-6">
+                  <div className="flex items-start space-x-4">
+                    <div className="w-4 h-4 mt-1 border-2 border-gray-700 rounded-full flex-shrink-0"></div>
+                    <div>
+                      <h4 className="font-medium text-black mb-1">Unstable Generation</h4>
+                      <p className="text-sm text-gray-600">Video melts after 4‑8 seconds</p>
                     </div>
                   </div>
-                  <div className="flex justify-center">
-                    <div className="bg-black text-white px-6 py-3 rounded-full text-base font-semibold text-center">
-                      Physics Simulation
+                  <div className="flex items-start space-x-4">
+                    <div className="w-4 h-4 mt-1 bg-gray-700 rounded-sm flex-shrink-0"></div>
+                    <div>
+                      <h4 className="font-medium text-black mb-1">Blocked Adoption</h4>
+                      <p className="text-sm text-gray-600">Enterprise can't deploy at scale</p>
                     </div>
                   </div>
-                  <div className="flex justify-center">
-                    <div className="bg-black text-white px-6 py-3 rounded-full text-base font-semibold text-center">
-                      Multi-Camera Capture
-                    </div>
-                  </div>
-                  <div className="flex justify-center">
-                    <div className="bg-black text-white px-6 py-3 rounded-full text-base font-semibold text-center">
-                      AI Training Data
+                  <div className="flex items-start space-x-4">
+                    <div className="w-4 h-4 mt-1 border-2 border-gray-700 flex-shrink-0" style={{clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)'}}></div>
+                    <div>
+                      <h4 className="font-medium text-black mb-1">Legal Risk</h4>
+                      <p className="text-sm text-gray-600">Copyright infringement liability</p>
                     </div>
                   </div>
                 </div>
+              </div>
 
-                {/* Pipeline Flow with Icons */}
-                <div className="relative mb-16">
-                  <div className="grid grid-cols-4 gap-0">
-                    {/* Stage 1: 3D Input & Setup */}
-                    <div className="flex justify-center">
-                      <div className="w-48 h-48 bg-white border-3 border-gray-300 rounded-2xl flex items-center justify-center shadow-lg">
-                        <div className="relative">
-                          {/* 3D Garment wireframe */}
-                          <div className="w-28 h-28 border-3 border-gray-600 rounded-xl relative">
-                            {/* Wireframe lines */}
-                            <div className="absolute inset-3 border-2 border-gray-400 rounded-lg"></div>
-                            <div className="absolute inset-6 border border-gray-400 rounded"></div>
-                            {/* Vertices */}
-                            <div className="absolute top-1 left-1 w-2 h-2 bg-gray-700 rounded-full"></div>
-                            <div className="absolute top-1 right-1 w-2 h-2 bg-gray-700 rounded-full"></div>
-                            <div className="absolute bottom-1 left-1 w-2 h-2 bg-gray-700 rounded-full"></div>
-                            <div className="absolute bottom-1 right-1 w-2 h-2 bg-gray-700 rounded-full"></div>
-                            {/* Material zones */}
-                            <div className="absolute top-8 left-8 w-4 h-4 bg-blue-200 rounded opacity-70"></div>
-                            <div className="absolute top-8 right-8 w-4 h-4 bg-green-200 rounded opacity-70"></div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Stage 2: Physics Simulation */}
-                    <div className="flex justify-center">
-                      <div className="w-48 h-48 bg-white border-3 border-gray-300 rounded-2xl flex items-center justify-center shadow-lg">
-                        <div className="relative">
-                          {/* Dynamic cloth with forces */}
-                          <div className="w-24 h-28 relative">
-                            {/* Cloth shape with deformation */}
-                            <div className="absolute inset-0 border-3 border-gray-600 rounded-t-xl rounded-bl-3xl bg-gray-50"></div>
-                            {/* Wind force arrows */}
-                            <div className="absolute -right-8 top-3 flex flex-col space-y-2">
-                              <div className="flex items-center">
-                                <div className="w-5 h-1 bg-blue-500 rounded"></div>
-                                <div className="w-0 h-0 border-l-3 border-t-2 border-b-2 border-l-blue-500 border-t-transparent border-b-transparent"></div>
-                              </div>
-                              <div className="flex items-center">
-                                <div className="w-7 h-1 bg-blue-600 rounded"></div>
-                                <div className="w-0 h-0 border-l-3 border-t-2 border-b-2 border-l-blue-600 border-t-transparent border-b-transparent"></div>
-                              </div>
-                              <div className="flex items-center">
-                                <div className="w-5 h-1 bg-blue-500 rounded"></div>
-                                <div className="w-0 h-0 border-l-3 border-t-2 border-b-2 border-l-blue-500 border-t-transparent border-b-transparent"></div>
-                              </div>
-                            </div>
-                            {/* Gravity arrow */}
-                            <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 flex flex-col items-center">
-                              <div className="w-1 h-4 bg-purple-500 rounded"></div>
-                              <div className="w-0 h-0 border-l-2 border-r-2 border-t-3 border-l-transparent border-r-transparent border-t-purple-500"></div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Stage 3: Multi-Camera Capture */}
-                    <div className="flex justify-center">
-                      <div className="w-48 h-48 bg-white border-3 border-gray-300 rounded-2xl flex items-center justify-center shadow-lg">
-                        <div className="relative">
-                          {/* Camera array visualization */}
-                          <div className="w-28 h-28 relative">
-                            {/* Center subject */}
-                            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-10 bg-gray-300 rounded-lg shadow-sm"></div>
-                            {/* Cameras positioned around */}
-                            <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-4 h-3 bg-gray-700 rounded-sm shadow-sm"></div>
-                            <div className="absolute top-3 right-0 w-4 h-3 bg-gray-700 rounded-sm transform rotate-45 shadow-sm"></div>
-                            <div className="absolute right-0 top-1/2 transform -translate-y-1/2 w-4 h-3 bg-gray-700 rounded-sm transform rotate-90 shadow-sm"></div>
-                            <div className="absolute bottom-3 right-0 w-4 h-3 bg-gray-700 rounded-sm transform rotate-135 shadow-sm"></div>
-                            <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-4 h-3 bg-gray-700 rounded-sm transform rotate-180 shadow-sm"></div>
-                            <div className="absolute bottom-3 left-0 w-4 h-3 bg-gray-700 rounded-sm transform rotate-225 shadow-sm"></div>
-                            <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-4 h-3 bg-gray-700 rounded-sm transform rotate-270 shadow-sm"></div>
-                            <div className="absolute top-3 left-0 w-4 h-3 bg-gray-700 rounded-sm transform rotate-315 shadow-sm"></div>
-                            {/* Recording indicator */}
-                            <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                              <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse shadow-lg"></div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Stage 4: AI Training Data */}
-                    <div className="flex justify-center">
-                      <div className="w-48 h-48 bg-white border-3 border-blue-300 rounded-2xl flex items-center justify-center shadow-2xl">
-                        <div className="relative">
-                          {/* Tagged dataset visualization */}
-                          <div className="w-28 h-28 bg-gradient-to-br from-blue-50 to-green-50 rounded-xl border-2 border-blue-200 p-3 shadow-lg">
-                            {/* Data frames */}
-                            <div className="space-y-2">
-                              <div className="h-3 bg-blue-300 rounded-lg flex items-center justify-end pr-2">
-                                <div className="w-2 h-2 bg-blue-600 rounded-full shadow-sm"></div>
-                              </div>
-                              <div className="h-3 bg-green-300 rounded-lg flex items-center justify-end pr-2">
-                                <div className="w-2 h-2 bg-green-600 rounded-full shadow-sm"></div>
-                              </div>
-                              <div className="h-3 bg-purple-300 rounded-lg flex items-center justify-end pr-2">
-                                <div className="w-2 h-2 bg-purple-600 rounded-full shadow-sm"></div>
-                              </div>
-                              <div className="h-3 bg-orange-300 rounded-lg flex items-center justify-end pr-2">
-                                <div className="w-2 h-2 bg-orange-600 rounded-full shadow-sm"></div>
-                              </div>
-                            </div>
-                            {/* Metadata tags */}
-                            <div className="absolute -right-3 -top-3 text-xs bg-blue-600 text-white px-2 py-1 rounded-lg shadow-lg font-semibold">8K</div>
-                            <div className="absolute -right-3 top-6 text-xs bg-green-600 text-white px-2 py-1 rounded-lg shadow-lg font-semibold">60fps</div>
-                            <div className="absolute -left-3 -top-3 text-xs bg-purple-600 text-white px-2 py-1 rounded-lg shadow-lg font-semibold">Tags</div>
-                          </div>
-                          {/* Enhanced indicator */}
-                          <div className="absolute -top-4 -right-4">
-                            <div className="w-6 h-6 text-yellow-500 text-xl">✦</div>
-                          </div>
-                        </div>
-                      </div>
+              <div className="bg-gray-100 rounded-2xl p-12">
+                <h3 className="text-2xl font-light text-black mb-8">Our Solution</h3>
+                <div className="space-y-6">
+                  <div className="flex items-start space-x-4">
+                    <div className="w-4 h-4 mt-1 border-2 border-gray-700 rounded-full flex-shrink-0"></div>
+                    <div>
+                      <h4 className="font-medium text-black mb-1">Real‑Time Physics</h4>
+                      <p className="text-sm text-gray-600">Cloth and motion simulation</p>
                     </div>
                   </div>
-
-                  {/* Arrows positioned absolutely */}
-                  <div className="absolute top-1/2 left-0 w-full h-0 transform -translate-y-1/2">
-                    {/* Arrow 1 */}
-                    <div className="absolute left-1/4 transform -translate-x-1/2 flex items-center">
-                      <div className="w-16 h-2 bg-gray-400 rounded"></div>
-                      <div className="w-0 h-0 border-l-6 border-t-3 border-b-3 border-l-gray-600 border-t-transparent border-b-transparent"></div>
+                  <div className="flex items-start space-x-4">
+                    <div className="grid grid-cols-2 gap-0.5 w-4 h-4 mt-1 flex-shrink-0">
+                      <div className="w-1.5 h-1.5 bg-gray-700 rounded-full"></div>
+                      <div className="w-1.5 h-1.5 bg-gray-700 rounded-full"></div>
+                      <div className="w-1.5 h-1.5 bg-gray-700 rounded-full"></div>
+                      <div className="w-1.5 h-1.5 bg-gray-700 rounded-full"></div>
                     </div>
-
-                    {/* Arrow 2 */}
-                    <div className="absolute left-2/4 transform -translate-x-1/2 flex items-center">
-                      <div className="w-16 h-2 bg-gray-400 rounded"></div>
-                      <div className="w-0 h-0 border-l-6 border-t-3 border-b-3 border-l-gray-600 border-t-transparent border-b-transparent"></div>
-                    </div>
-
-                    {/* Arrow 3 */}
-                    <div className="absolute left-3/4 transform -translate-x-1/2 flex items-center">
-                      <div className="w-16 h-2 bg-blue-500 rounded"></div>
-                      <div className="w-0 h-0 border-l-6 border-t-3 border-b-3 border-l-blue-600 border-t-transparent border-b-transparent"></div>
+                    <div>
+                      <h4 className="font-medium text-black mb-1">Multi‑Camera Array</h4>
+                      <p className="text-sm text-gray-600">36 perspectives per frame</p>
                     </div>
                   </div>
-                </div>
-
-                {/* Stage Descriptions */}
-                <div className="grid grid-cols-4 gap-0 mb-20">
-                  <div className="text-center">
-                    <div className="text-base text-gray-600 leading-relaxed">
-                      3D mesh input with material properties and topology mapping
+                  <div className="flex items-start space-x-4">
+                    <div className="w-4 h-4 mt-1 bg-gray-700 rounded-sm border-2 border-gray-700 flex-shrink-0"></div>
+                    <div>
+                      <h4 className="font-medium text-black mb-1">Material Accuracy</h4>
+                      <p className="text-sm text-gray-600">Physics‑based rendering</p>
                     </div>
                   </div>
-                  <div className="text-center">
-                    <div className="text-base text-gray-600 leading-relaxed">
-                      Real-time physics: wind forces, gravity, collision detection
+                  <div className="flex items-start space-x-4">
+                    <div className="flex space-x-0.5 mt-1 flex-shrink-0">
+                      <div className="w-1 h-4 bg-gray-700"></div>
+                      <div className="w-1 h-3 bg-gray-700"></div>
+                      <div className="w-1 h-4 bg-gray-700"></div>
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-black mb-1">Scalable Pipeline</h4>
+                      <p className="text-sm text-gray-600">API‑driven generation</p>
                     </div>
                   </div>
-                  <div className="text-center">
-                    <div className="text-base text-gray-600 leading-relaxed">
-                      36-angle capture array with 8K@60fps recording
-                    </div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-base text-gray-600 leading-relaxed">
-                      Tagged training data with metadata and parameter labels
-                    </div>
-                  </div>
-                </div>
-
-                {/* Configuration Categories */}
-                <div className="pt-12 border-t-2 border-gray-200">
-                  <h4 className="text-2xl font-semibold text-black mb-12 text-center">Configurable Parameters</h4>
-                  <div className="grid grid-cols-4 gap-8">
-                    <div className="text-center group">
-                      <div className="w-20 h-20 mx-auto bg-yellow-50 rounded-2xl flex items-center justify-center border-2 border-yellow-200 mb-4 group-hover:shadow-lg transition-all">
-                        <div className="w-10 h-10 bg-yellow-400 rounded-full relative shadow-sm">
-                          <div className="absolute inset-2 border-2 border-yellow-600 rounded-full"></div>
-                          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-1 h-3 bg-yellow-600 rounded"></div>
-                        </div>
+                  <div className="flex items-start space-x-4">
+                    <div className="w-4 h-4 mt-1 bg-gray-700 rounded-sm relative flex-shrink-0">
+                      <div className="absolute inset-1 grid grid-cols-2 gap-0.5">
+                        <div className="w-1 h-1 bg-white rounded-full"></div>
+                        <div className="w-1 h-1 bg-white rounded-full"></div>
+                        <div className="w-1 h-1 bg-white rounded-full"></div>
+                        <div className="w-1 h-1 bg-white rounded-full"></div>
                       </div>
-                      <div className="font-semibold text-black text-lg mb-2">Lighting</div>
-                      <div className="text-sm text-gray-500">Angle, count, intensity</div>
                     </div>
-                    <div className="text-center group">
-                      <div className="w-20 h-20 mx-auto bg-green-50 rounded-2xl flex items-center justify-center border-2 border-green-200 mb-4 group-hover:shadow-lg transition-all">
-                        <div className="w-10 h-10 bg-green-400 rounded-lg relative shadow-sm">
-                          <div className="absolute inset-2 bg-green-300 rounded"></div>
-                          <div className="absolute top-2 left-2 w-3 h-3 bg-green-600 rounded-full"></div>
-                        </div>
-                      </div>
-                      <div className="font-semibold text-black text-lg mb-2">Materials</div>
-                      <div className="text-sm text-gray-500">Fabric type, roughness</div>
+                    <div>
+                      <h4 className="font-medium text-black mb-1">Tagged Data</h4>
+                      <p className="text-sm text-gray-600">Labeled training datasets</p>
                     </div>
-                    <div className="text-center group">
-                      <div className="w-20 h-20 mx-auto bg-blue-50 rounded-2xl flex items-center justify-center border-2 border-blue-200 mb-4 group-hover:shadow-lg transition-all">
-                        <div className="w-10 h-8 bg-blue-400 rounded-lg relative shadow-sm">
-                          <div className="absolute inset-2 border-2 border-blue-600 rounded"></div>
-                          <div className="absolute top-0 right-0 w-3 h-2 bg-blue-600 rounded-sm"></div>
-                        </div>
-                      </div>
-                      <div className="font-semibold text-black text-lg mb-2">Camera</div>
-                      <div className="text-sm text-gray-500">Angles, resolution</div>
-                    </div>
-                    <div className="text-center group">
-                      <div className="w-20 h-20 mx-auto bg-purple-50 rounded-2xl flex items-center justify-center border-2 border-purple-200 mb-4 group-hover:shadow-lg transition-all">
-                        <div className="relative">
-                          <div className="w-8 h-10 bg-purple-300 rounded-t-lg shadow-sm"></div>
-                          <div className="absolute -right-3 top-2 flex flex-col space-y-1">
-                            <div className="w-4 h-1 bg-purple-600 rounded"></div>
-                            <div className="w-3 h-1 bg-purple-600 rounded"></div>
-                            <div className="w-4 h-1 bg-purple-600 rounded"></div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="font-semibold text-black text-lg mb-2">Physics Forces</div>
-                      <div className="text-sm text-gray-500">Wind, gravity strength</div>
+                  </div>
+                  <div className="flex items-start space-x-4">
+                    <div className="w-4 h-4 mt-1 bg-blue-900 rounded-sm flex-shrink-0"></div>
+                    <div>
+                      <h4 className="font-medium text-black mb-1">AI‑Ready Output</h4>
+                      <p className="text-sm text-gray-600">Optimized for training</p>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Features & Benefits Grid */}
-            <div className="mb-24">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-                
-                {/* Features */}
-                <div className="space-y-8">
-                  <h3 className="text-3xl font-semibold text-black mb-8">Features</h3>
-                  
-                  <div className="space-y-8">
-                    <div className="border-l-4 border-gray-300 pl-6">
-                      <h4 className="text-xl font-semibold text-black mb-2">Physics-Accurate Simulation Engine</h4>
-                      <p className="text-gray-600 leading-relaxed">Real-time cloth and motion simulation, customizable through 20+ parameters (e.g., fabric, force, movement type).</p>
-                    </div>
-                    
-                    <div className="border-l-4 border-blue-300 pl-6">
-                      <h4 className="text-xl font-semibold text-black mb-2">On-Demand API with Scalable UI</h4>
-                      <p className="text-gray-600 leading-relaxed">Self-serve platform for enterprises to request and receive high-fidelity video training data with seamless API integration.</p>
-                    </div>
-                    
-                    <div className="border-l-4 border-gray-300 pl-6">
-                      <h4 className="text-xl font-semibold text-black mb-2">Multi-Engine Platform</h4>
-                      <p className="text-gray-600 leading-relaxed">Beyond ClothTrain - a growing suite of engines for human motion, sensor data, and dynamic environments, building a data flywheel.</p>
-                    </div>
-                  </div>
+            <div className="bg-gray-900 text-white rounded-2xl p-16 text-center">
+              <h3 className="text-2xl font-light mb-16">Performance Metrics</h3>
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-12">
+                <div>
+                  <div className="text-4xl font-light mb-2">500M → 500</div>
+                  <div className="text-gray-400 text-sm">Frames Reduced</div>
                 </div>
-
-                {/* Benefits */}
-                <div className="space-y-8">
-                  <h3 className="text-3xl font-semibold text-black mb-8">Benefits</h3>
-                  
-                  <div className="space-y-8">
-                    <div className="border-l-4 border-green-300 pl-6">
-                      <h4 className="text-xl font-semibold text-black mb-2">Faster, Cheaper AI Training</h4>
-                      <p className="text-gray-600 leading-relaxed">Specific, tagged data reduces training time and compute load - from 500M to just 500 frames per use case.</p>
-                    </div>
-                    
-                    <div className="border-l-4 border-blue-300 pl-6">
-                      <h4 className="text-xl font-semibold text-black mb-2">Enterprise-Ready Performance</h4>
-                      <p className="text-gray-600 leading-relaxed">Extends video generation beyond the 4-8 second collapse point of current GenAI; stable, predictable, brand-safe.</p>
-                    </div>
-                    
-                    <div className="border-l-4 border-purple-300 pl-6">
-                      <h4 className="text-xl font-semibold text-black mb-2">Massive Revenue & Moat</h4>
-                      <p className="text-gray-600 leading-relaxed">Recurring revenue from API + per-garment pricing; proprietary tech years in the making that giants like Meta & Snap couldn't build.</p>
-                    </div>
-                  </div>
+                <div>
+                  <div className="text-4xl font-light mb-2">45TB</div>
+                  <div className="text-gray-400 text-sm">Data Volume</div>
                 </div>
-              </div>
-            </div>
-
-            {/* Technical Specifications */}
-            <div className="mb-24">
-              <h3 className="text-3xl font-semibold text-black mb-12 text-center">Technical Specifications</h3>
-              
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-                <div className="text-center space-y-4">
-                  <div className="w-20 h-20 mx-auto bg-gray-50 rounded-2xl flex items-center justify-center border border-gray-200">
-                    <div className="text-2xl font-semibold text-gray-700">8K</div>
-                  </div>
-                  <div>
-                    <div className="text-lg font-semibold text-black">Resolution</div>
-                    <div className="text-sm text-gray-600">60fps output</div>
-                  </div>
+                <div>
+                  <div className="text-4xl font-light mb-2">8K</div>
+                  <div className="text-gray-400 text-sm">Resolution @ 60fps</div>
                 </div>
-                
-                <div className="text-center space-y-4">
-                  <div className="w-20 h-20 mx-auto bg-gray-50 rounded-2xl flex items-center justify-center border border-gray-200">
-                    <div className="text-2xl font-semibold text-gray-700">36</div>
-                  </div>
-                  <div>
-                    <div className="text-lg font-semibold text-black">Camera Angles</div>
-                    <div className="text-sm text-gray-600">Multi-perspective</div>
-                  </div>
+                <div>
+                  <div className="text-4xl font-light text-blue-600 mb-2">4 Years</div>
+                  <div className="text-gray-400 text-sm">Technical Moat</div>
                 </div>
-                
-                <div className="text-center space-y-4">
-                  <div className="w-20 h-20 mx-auto bg-blue-50 rounded-2xl flex items-center justify-center border border-blue-200">
-                    <div className="text-2xl font-semibold text-blue-700">45TB</div>
-                  </div>
-                  <div>
-                    <div className="text-lg font-semibold text-black">Data Volume</div>
-                    <div className="text-sm text-gray-600">Per dataset</div>
-                  </div>
-                </div>
-                
-                <div className="text-center space-y-4">
-                  <div className="w-20 h-20 mx-auto bg-blue-50 rounded-2xl flex items-center justify-center border border-blue-200">
-                    <div className="text-sm font-semibold text-blue-700">Real-time</div>
-                  </div>
-                  <div>
-                    <div className="text-lg font-semibold text-black">Processing</div>
-                    <div className="text-sm text-gray-600">Physics simulation</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Performance Impact */}
-            <div className="bg-gray-50 rounded-3xl p-12 text-center">
-              <h3 className="text-3xl font-semibold text-black mb-8">Performance Impact</h3>
-              
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-center">
-                <div className="space-y-4">
-                  <div className="text-6xl font-semibold text-gray-400">500M</div>
-                  <div className="text-lg text-gray-600">Traditional Training Frames</div>
-                </div>
-                
-                <div className="space-y-4">
-                  <div className="text-2xl font-semibold text-gray-600">Reduced to</div>
-                  <ArrowRight className="w-8 h-8 text-blue-600 mx-auto" />
-                </div>
-                
-                <div className="space-y-4">
-                  <div className="text-6xl font-semibold text-blue-900">500</div>
-                  <div className="text-lg text-blue-700">Physics-Aware Frames</div>
-                </div>
-              </div>
-              
-              <div className="mt-12 pt-8 border-t border-gray-200">
-                <p className="text-lg text-gray-700 max-w-3xl mx-auto leading-relaxed">
-                  <strong className="font-semibold text-blue-900">4 Years</strong> of proprietary development creates an insurmountable technical moat. 
-                  Giants like Meta & Snap couldn't replicate this breakthrough in real-time physics simulation.
-                </p>
               </div>
             </div>
           </div>
@@ -1051,13 +864,233 @@ const DatasetPlatform = () => {
                     </ul>
                     <div className="text-center">
                       <p className="text-lg font-semibold text-gray-900 mb-4">Enterprise Pricing</p>
-                      <button className="w-full bg-black text-white py-3 rounded-full font-medium hover:bg-gray-800 transition-colors">
+                      <a 
+                        href={`mailto:sales@23bulbs.com?subject=Dataset Inquiry - ${dataset.name}&body=Hi, I'm interested in learning more about the ${dataset.name} dataset (2.6K videos, 45TB). Please contact me to discuss pricing and requirements.`}
+                        className="w-full bg-black text-white py-3 rounded-full font-medium hover:bg-gray-800 transition-colors inline-block"
+                      >
                         Contact Sales
-                      </button>
+                      </a>
                     </div>
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  if (currentPage === 'api-checkout') {
+    return (
+      <div className="min-h-screen bg-white" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, sans-serif' }}>
+        <header className="px-6 py-8 border-b border-gray-100">
+          <div className="max-w-4xl mx-auto flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <button 
+                onClick={() => setCurrentPage('generation')}
+                className="text-gray-500 hover:text-black p-2 hover:bg-gray-50 rounded-full transition-colors"
+              >
+                <ArrowLeft className="w-5 h-5" />
+              </button>
+              <h1 className="text-2xl font-semibold text-black">23 Bulbs</h1>
+            </div>
+          </div>
+        </header>
+
+        <main className="px-6 py-16">
+          <div className="max-w-2xl mx-auto">
+            <div className="text-center mb-12">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Key className="w-8 h-8 text-green-600" />
+              </div>
+              <h2 className="text-3xl font-bold text-black mb-4">API Access Generated</h2>
+              <p className="text-lg text-gray-600">Your dataset configuration is ready! Use this API key to access your custom "{generatedDataset?.name}" dataset.</p>
+            </div>
+
+            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl p-8 mb-8">
+              <h3 className="text-xl font-semibold text-black mb-6 flex items-center">
+                <Key className="w-5 h-5 mr-2" />
+                Your API Key
+              </h3>
+              
+              <div className="bg-white border border-gray-200 rounded-xl p-4 mb-6">
+                <div className="flex items-center justify-between">
+                  <div className="flex-1 mr-4">
+                    <code className="text-sm font-mono text-gray-800 break-all">{apiKey}</code>
+                  </div>
+                  <button 
+                    onClick={copyApiKey}
+                    className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+                  >
+                    <Copy className="w-4 h-4" />
+                    <span>{copied ? 'Copied!' : 'Copy'}</span>
+                  </button>
+                </div>
+              </div>
+
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                <p className="text-sm text-amber-800">
+                  <strong>Important:</strong> Store this API key securely. For security reasons, we won't show it again.
+                </p>
+              </div>
+            </div>
+
+            <div className="bg-gray-50 rounded-2xl p-8 mb-8">
+              <h3 className="text-xl font-semibold text-black mb-6">Dataset Configuration</h3>
+              <div className="space-y-4">
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Dataset Type</span>
+                  <span className="font-medium text-black">{generatedDataset?.name}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Categories</span>
+                  <span className="font-medium text-black">{generatedDataset?.categories?.length} selected</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Estimated Samples</span>
+                  <span className="font-medium text-black">{generatedDataset?.samples?.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Data Volume</span>
+                  <span className="font-medium text-black">{generatedDataset?.size}</span>
+                </div>
+                <div className="flex justify-between border-t border-gray-200 pt-4">
+                  <span className="text-gray-600">API Endpoint</span>
+                  <span className="font-mono text-sm text-blue-600">api.23bulbs.com/v1/generate</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white border border-gray-200 rounded-2xl p-8 mb-8">
+              <h3 className="text-xl font-semibold text-black mb-6">Quick Start Guide</h3>
+              <div className="space-y-6">
+                <div>
+                  <h4 className="font-medium text-black mb-3">1. Install the SDK</h4>
+                  <div className="bg-gray-900 text-gray-100 rounded-lg p-4">
+                    <code className="text-sm">pip install twentythreebulbs</code>
+                  </div>
+                </div>
+                
+                <div>
+                  <h4 className="font-medium text-black mb-3">2. Initialize the Client</h4>
+                  <div className="bg-gray-900 text-gray-100 rounded-lg p-4">
+                    <code className="text-sm">
+                      from twentythreebulbs import Client<br />
+                      <br />
+                      client = Client(api_key="{apiKey ? apiKey.substring(0, 20) + '...' : 'your-api-key'}")<br />
+                      dataset = client.generate("{generatedDataset?.name?.toLowerCase() || 'pants'}")
+                    </code>
+                  </div>
+                </div>
+
+                <div>
+                  <h4 className="font-medium text-black mb-3">3. Generate Your Dataset</h4>
+                  <div className="bg-gray-900 text-gray-100 rounded-lg p-4">
+                    <code className="text-sm">
+                      # Generate and download your dataset<br />
+                      result = dataset.create()<br />
+                      dataset.download("./my_dataset/")
+                    </code>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4">
+              <a 
+                href="https://docs.23bulbs.com/quickstart"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 bg-blue-600 text-white py-3 rounded-full font-medium hover:bg-blue-700 transition-colors inline-flex items-center justify-center space-x-2"
+              >
+                <span>View Full Documentation</span>
+                <ExternalLink className="w-4 h-4" />
+              </a>
+              <button 
+                onClick={() => setCurrentPage('generation')}
+                className="flex-1 bg-gray-100 text-gray-900 py-3 rounded-full font-medium hover:bg-gray-200 transition-colors"
+              >
+                Create Another Dataset
+              </button>
+            </div>
+
+            <div className="text-center mt-8 p-6 bg-blue-50 rounded-xl">
+              <h4 className="font-semibold text-black mb-2">Need Help?</h4>
+              <p className="text-sm text-gray-600 mb-4">
+                Our technical team is here to help you integrate and optimize your dataset generation.
+              </p>
+              <a 
+                href={`mailto:support@23bulbs.com?subject=API Integration Help - ${generatedDataset?.name}&body=Hi, I just received my API key and need help integrating the ${generatedDataset?.name} dataset. My API key starts with: ${apiKey ? apiKey.substring(0, 10) + '...' : 'API key'}`}
+                className="inline-flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+              >
+                <span>Contact Support</span>
+                <ArrowRight className="w-4 h-4" />
+              </a>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  if (currentPage === 'checkout') {
+    return (
+      <div className="min-h-screen bg-white" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, sans-serif' }}>
+        <header className="px-6 py-8 border-b border-gray-100">
+          <div className="max-w-4xl mx-auto flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <button 
+                onClick={() => setCurrentPage('generation')}
+                className="text-gray-500 hover:text-black p-2 hover:bg-gray-50 rounded-full transition-colors"
+              >
+                <ArrowLeft className="w-5 h-5" />
+              </button>
+              <h1 className="text-2xl font-semibold text-black">23 Bulbs</h1>
+            </div>
+          </div>
+        </header>
+
+        <main className="px-6 py-16">
+          <div className="max-w-2xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold text-black mb-4">Contact Sales</h2>
+              <p className="text-lg text-gray-600">Enterprise dataset licensing for "{generatedDataset?.name}"</p>
+            </div>
+
+            <div className="bg-gray-50 rounded-2xl p-8 mb-8">
+              <h3 className="text-xl font-semibold text-black mb-6">Dataset Configuration</h3>
+              <div className="space-y-4">
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Dataset Type</span>
+                  <span className="font-medium text-black">{generatedDataset?.name}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Categories</span>
+                  <span className="font-medium text-black">{generatedDataset?.categories?.length} selected</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Estimated Samples</span>
+                  <span className="font-medium text-black">{generatedDataset?.samples?.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Data Volume</span>
+                  <span className="font-medium text-black">{generatedDataset?.size}</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="text-center">
+              <a 
+                href={`mailto:sales@23bulbs.com?subject=Dataset Configuration - ${generatedDataset?.name}&body=Hi, I'd like to discuss enterprise licensing for a ${generatedDataset?.name} dataset with ${generatedDataset?.categories?.length} categories. Please contact me to discuss pricing and implementation timeline.`}
+                className="w-full bg-black text-white py-4 rounded-full font-medium hover:bg-gray-800 transition-colors inline-block mb-4"
+              >
+                Schedule Sales Call
+              </a>
+              <p className="text-sm text-gray-600">
+                Our enterprise team will contact you within 24 hours to discuss<br />
+                custom pricing, technical consultation, and implementation support.
+              </p>
             </div>
           </div>
         </main>
@@ -1178,9 +1211,12 @@ const DatasetPlatform = () => {
                     ))}
                   </div>
                   <div className="text-center">
-                    <button className="w-full bg-black text-white py-2.5 rounded-full font-medium hover:bg-gray-800 transition-colors text-sm">
+                    <a 
+                      href={`mailto:sales@23bulbs.com?subject=Project Inquiry - ${project.name}&body=Hi, I'm interested in the ${project.name} project. Please contact me to discuss enterprise pricing and implementation.`}
+                      className="w-full bg-black text-white py-2.5 rounded-full font-medium hover:bg-gray-800 transition-colors inline-block text-sm"
+                    >
                       Contact Sales
-                    </button>
+                    </a>
                   </div>
                 </div>
               </div>
@@ -1203,146 +1239,196 @@ const DatasetPlatform = () => {
                   <span className="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded-full">Custom</span>
                 </div>
                 <div className="text-center">
-                  <button className="w-full bg-black text-white py-2.5 rounded-full font-medium hover:bg-gray-800 transition-colors text-sm">
+                  <a 
+                    href="mailto:sales@23bulbs.com?subject=Custom Dataset Inquiry&body=Hi, I'm interested in creating a custom dataset. Please contact me to discuss requirements and pricing."
+                    className="w-full bg-black text-white py-2.5 rounded-full font-medium hover:bg-gray-800 transition-colors inline-block text-sm"
+                  >
                     Contact Sales
-                  </button>
+                  </a>
                 </div>
               </div>
             </div>
           </div>
 
-          {showModal && (
-            <div className="fixed inset-0 bg-black bg-opacity-20 flex items-center justify-center p-4 z-50">
-              <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl">
-                <div className="p-6 border-b border-gray-100 flex-shrink-0">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="text-xl font-bold text-black">Configure Dataset</h3>
-                      <p className="text-gray-600 mt-1">"{promptValue}"</p>
-                    </div>
-                    <button
-                      onClick={() => setShowModal(false)}
-                      className="text-gray-400 hover:text-gray-600 p-2 hover:bg-gray-50 rounded-full transition-all"
-                    >
-                      <X className="w-5 h-5" />
-                    </button>
-                  </div>
-                </div>
-                
-                <div className="flex-1 overflow-y-auto p-6">
-                  <div className="grid grid-cols-2 gap-4 mb-8">
-                    {datasetCategories.map((category) => (
-                      <button
-                        key={category.id}
-                        onClick={() => toggleCategory(category.id)}
-                        className={`p-4 rounded-xl border transition-all text-left ${
-                          selectedCategories.includes(category.id)
-                            ? 'border-blue-500 bg-blue-50'
-                            : 'border-gray-200 hover:border-gray-300'
-                        }`}
-                      >
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <span className="font-medium text-black">{category.name}</span>
-                            <span className="text-xs text-gray-500 ml-2">({category.options.length} params)</span>
-                          </div>
-                          <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                            selectedCategories.includes(category.id)
-                              ? 'border-blue-500 bg-blue-500'
-                              : 'border-gray-300'
-                          }`}>
-                            {selectedCategories.includes(category.id) && (
-                              <div className="w-2 h-2 bg-white rounded-full"></div>
-                            )}
-                          </div>
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-
-                  {selectedCategories.length > 0 && (
-                    <div>
-                      <h4 className="text-lg font-semibold text-black mb-6">Configuration Options</h4>
-                      {selectedCategories.map(categoryId => {
-                        const category = datasetCategories.find(cat => cat.id === categoryId);
-                        const config = categoryConfigs[categoryId] || {};
-                        
-                        return (
-                          <div key={categoryId} className="bg-gray-50 rounded-xl p-6 mb-4">
-                            <h5 className="font-medium text-black mb-4">{category.name}</h5>
-                            <div className="grid grid-cols-2 gap-4">
-                              {category.options.map(option => (
-                                <div key={option.id} className="space-y-2">
-                                  <label className="text-sm font-medium text-gray-700">
-                                    {option.name}
-                                    {option.unit && <span className="text-gray-500 ml-1">({option.unit})</span>}
-                                  </label>
-                                  
-                                  {option.type === 'range' && (
-                                    <div className="space-y-1">
-                                      <input
-                                        type="range"
-                                        min={option.min}
-                                        max={option.max}
-                                        step={option.step || 1}
-                                        value={config[option.id] || option.default}
-                                        onChange={(e) => updateCategoryConfig(categoryId, option.id, parseFloat(e.target.value))}
-                                        className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-                                      />
-                                      <div className="flex justify-between text-xs text-gray-500">
-                                        <span>{option.min}{option.unit}</span>
-                                        <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded font-medium">
-                                          {config[option.id] || option.default}{option.unit}
-                                        </span>
-                                        <span>{option.max}{option.unit}</span>
-                                      </div>
-                                    </div>
-                                  )}
-                                  
-                                  {option.type === 'select' && (
-                                    <select
-                                      value={config[option.id] || option.default}
-                                      onChange={(e) => updateCategoryConfig(categoryId, option.id, e.target.value)}
-                                      className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                                    >
-                                      {option.options.map(optValue => (
-                                        <option key={optValue} value={optValue}>{optValue}</option>
-                                      ))}
-                                    </select>
-                                  )}
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
-                  
-                <div className="flex items-center justify-between p-6 border-t border-gray-100 flex-shrink-0">
-                  <span className="text-gray-600">{selectedCategories.length} selected</span>
-                  <div className="flex space-x-3">
-                    <button
-                      onClick={() => setShowModal(false)}
-                      className="px-6 py-2.5 text-gray-600 hover:text-black font-medium transition-colors"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      onClick={generateDataset}
-                      disabled={selectedCategories.length === 0}
-                      className="px-6 py-2.5 bg-blue-600 text-white font-medium rounded-full hover:bg-blue-700 disabled:bg-gray-200 disabled:cursor-not-allowed transition-colors"
-                    >
-                      Generate
-                    </button>
-                  </div>
-                </div>
+          <div className="bg-gray-100 border border-gray-200 rounded-xl p-6">
+            <div className="flex items-start space-x-4">
+              <div className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center flex-shrink-0">
+                <div className="w-4 h-4 border-2 border-white rounded-full border-dashed"></div>
+              </div>
+              <div>
+                <h3 className="font-semibold text-gray-900 mb-2">Need help starting a project?</h3>
+                <p className="text-gray-600 text-sm mb-4 leading-relaxed">Our team can guide you through the best dataset configuration for your specific AI training needs.</p>
+                <a 
+                  href="mailto:support@23bulbs.com?subject=Project Configuration Help&body=Hi, I need help choosing the right dataset configuration for my AI training project."
+                  className="inline-flex items-center space-x-2 bg-gray-800 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-black transition-colors"
+                >
+                  <span>Get Started</span>
+                  <ArrowRight className="w-4 h-4" />
+                </a>
               </div>
             </div>
-          )}
+          </div>
         </div>
       </div>
+
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-20 flex items-center justify-center p-4 sm:p-6 z-50">
+          <div className="bg-white rounded-2xl sm:rounded-3xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl">
+            <div className="p-4 sm:p-8 border-b border-gray-100 flex-shrink-0">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-xl sm:text-2xl font-bold text-black">Configure Dataset</h3>
+                  <p className="text-gray-600 mt-1 text-sm sm:text-base">"{promptValue}"</p>
+                </div>
+                <button
+                  onClick={() => setShowModal(false)}
+                  className="text-gray-400 hover:text-gray-600 p-2 hover:bg-gray-50 rounded-full transition-all"
+                >
+                  <X className="w-5 h-5 sm:w-6 sm:h-6" />
+                </button>
+              </div>
+            </div>
+            
+            <div className="flex-1 overflow-y-auto p-4 sm:p-8" style={{ maxHeight: 'calc(90vh - 200px)' }}>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6 sm:mb-8">
+                {datasetCategories.map((category) => (
+                  <button
+                    key={category.id}
+                    onClick={() => toggleCategory(category.id)}
+                    className={`p-4 rounded-xl border transition-all text-left ${
+                      selectedCategories.includes(category.id)
+                        ? 'border-blue-500 bg-blue-50'
+                        : 'border-gray-200 hover:border-gray-300'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <span className="font-medium text-black">{category.name}</span>
+                        <span className="text-xs text-gray-500 ml-2">({category.paramCount} params)</span>
+                      </div>
+                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                        selectedCategories.includes(category.id)
+                          ? 'border-blue-500 bg-blue-500'
+                          : 'border-gray-300'
+                      }`}>
+                        {selectedCategories.includes(category.id) && (
+                          <div className="w-2 h-2 bg-white rounded-full"></div>
+                        )}
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+
+              {selectedCategories.length > 0 && (
+                <div className="mb-8 border-t border-gray-100 pt-8">
+                  <h4 className="text-lg font-semibold text-black mb-6">Configuration Options</h4>
+                  <div className="space-y-4">
+                    {selectedCategories.map(categoryId => {
+                      const category = datasetCategories.find(cat => cat.id === categoryId);
+                      const config = categoryConfigs[categoryId] || {};
+                      const isCollapsed = collapsedCategories[categoryId];
+                      
+                      return (
+                        <div key={categoryId} className="bg-gray-50 rounded-xl overflow-hidden">
+                          <button
+                            onClick={() => toggleCategoryCollapse(categoryId)}
+                            className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-100 transition-colors"
+                          >
+                            <div className="flex items-center">
+                              <div className="w-3 h-3 bg-blue-500 rounded-full mr-3"></div>
+                              <h5 className="font-medium text-black">{category.name}</h5>
+                              <span className="text-xs text-gray-500 ml-2">({category.paramCount} parameters)</span>
+                            </div>
+                            <ChevronDown className={`w-5 h-5 text-gray-500 transition-transform ${
+                              isCollapsed ? '-rotate-90' : 'rotate-0'
+                            }`} />
+                          </button>
+                          
+                          {!isCollapsed && (
+                            <div className="px-4 sm:px-6 pb-4 sm:pb-6">
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                {category.options.map(option => (
+                                  <div key={option.id} className="space-y-2">
+                                    <label className="text-sm font-medium text-gray-700">
+                                      {option.name}
+                                      {option.unit && <span className="text-gray-500 ml-1">({option.unit})</span>}
+                                    </label>
+                                    
+                                    {option.type === 'range' && (
+                                      <div className="space-y-1">
+                                        <input
+                                          type="range"
+                                          min={option.min}
+                                          max={option.max}
+                                          step={option.step || 1}
+                                          value={config[option.id] || option.default}
+                                          onChange={(e) => updateCategoryConfig(categoryId, option.id, parseFloat(e.target.value))}
+                                          className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+                                          style={{
+                                            background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${((config[option.id] || option.default) - option.min) / (option.max - option.min) * 100}%, #e5e7eb ${((config[option.id] || option.default) - option.min) / (option.max - option.min) * 100}%, #e5e7eb 100%)`
+                                          }}
+                                        />
+                                        <div className="flex justify-between text-xs text-gray-500">
+                                          <span>{option.min}{option.unit}</span>
+                                          <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded font-medium">
+                                            {config[option.id] || option.default}{option.unit}
+                                          </span>
+                                          <span>{option.max}{option.unit}</span>
+                                        </div>
+                                      </div>
+                                    )}
+                                    
+                                    {option.type === 'select' && (
+                                      <select
+                                        value={config[option.id] || option.default}
+                                        onChange={(e) => updateCategoryConfig(categoryId, option.id, e.target.value)}
+                                        className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                                      >
+                                        {option.options.map(optValue => (
+                                          <option key={optValue} value={optValue}>{optValue}</option>
+                                        ))}
+                                      </select>
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+              
+            <div className="flex flex-col sm:flex-row items-center justify-between p-4 sm:p-8 border-t border-gray-100 flex-shrink-0 space-y-3 sm:space-y-0">
+              <span className="text-gray-600 text-sm sm:text-base">
+                {selectedCategories.length} categories selected ({selectedCategories.reduce((total, catId) => {
+                  const cat = datasetCategories.find(c => c.id === catId);
+                  return total + (cat ? cat.paramCount : 0);
+                }, 0)} total parameters)
+              </span>
+              <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3 w-full sm:w-auto">
+                <button
+                  onClick={() => setShowModal(false)}
+                  className="w-full sm:w-auto px-6 py-2.5 text-gray-600 hover:text-black font-medium transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={generateDataset}
+                  disabled={selectedCategories.length === 0}
+                  className="w-full sm:w-auto px-6 py-2.5 bg-blue-600 text-white font-medium rounded-full hover:bg-blue-700 disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed transition-colors"
+                >
+                  Generate Dataset
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
