@@ -4,91 +4,130 @@ import * as d3 from 'd3';
 
 // Data structure for the new diagram.
 const diagramData = {
-  mainNode: "GenAI Customer",
-  apiSurface: "API Surface",
-  dataEngines: "Our Real-Time, Real-World, Data Engines",
-  engines: [
+  name: "GenAI Customer",
+  children: [
     {
-      name: "ClothTrain",
-      details: ["PixelThread", "Other Engines"]
+      name: "API Surface",
+      children: [
+        {
+          name: "Callable Parameters (e.g., Cloth)",
+          children: [
+            { name: "Garment" },
+            { name: "Materials" },
+            { name: "Textures" },
+            { name: "Movement Type" },
+            { name: "External Force" },
+            { name: "Background" },
+            { name: "Body/Model/Avatar" },
+            { name: "Sim Seed" },
+          ],
+        },
+        {
+          name: "Our Real-Time, Real-World, Data Engines",
+          children: [
+            { name: "ClothTrain", details: ["PixelThread", "Other Engines"] },
+            { name: "SensorTrain", details: ["SmarThreads", "Motion Capture"] },
+            { name: "VideoTrain", details: ["Time matched to physics and sensor data"] },
+            { name: "ScanTrain", details: ["Gaussian Photogramm"] },
+          ],
+        },
+      ],
     },
-    {
-      name: "SensorTrain",
-      details: ["SmarThreads", "Motion Capture"]
-    },
-    {
-      name: "VideoTrain",
-      details: ["Time matched to physics and sensor data"]
-    },
-    {
-      name: "ScanTrain",
-      details: ["Gaussian Photogramm"]
-    }
   ],
-  callableParameters: {
-    title: "Callable Parameters (e.g. Cloth):",
-    list: ["Garment", "Materials", "Textures", "Movement Type", "External Force", "Background", "Body/Model/Avatar", "Sim Seed"]
-  }
 };
 
-// Component for the new dynamic SVG diagram
 const TechnologyDiagram = () => {
+  const svgRef = useRef();
+
+  useEffect(() => {
+    const svg = d3.select(svgRef.current);
+    const container = d3.select(svgRef.current.parentNode);
+    if (!container.node()) return;
+    
+    const width = container.node().getBoundingClientRect().width;
+    const height = 500;
+    
+    svg.attr('viewBox', [0, 0, width, height]);
+    svg.selectAll('*').remove();
+
+    const margin = { top: 40, right: 120, bottom: 40, left: 120 };
+    const innerWidth = width - margin.left - margin.right;
+    const innerHeight = height - margin.top - margin.bottom;
+
+    const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+
+    const treeLayout = d3.tree().size([innerHeight, innerWidth]);
+
+    const root = d3.hierarchy(diagramData);
+    const treeData = treeLayout(root);
+
+    const linkGenerator = d3.linkHorizontal()
+      .x(d => d.y)
+      .y(d => d.x);
+
+    // Links
+    const links = g.selectAll('.link')
+      .data(treeData.links())
+      .join('path')
+      .attr('class', 'link')
+      .attr('fill', 'none')
+      .attr('stroke', '#e5e7eb')
+      .attr('stroke-width', 2)
+      .attr('d', linkGenerator);
+      
+    // Nodes
+    const nodes = g.selectAll('.node')
+      .data(root.descendants())
+      .join('g')
+      .attr('class', d => `node ${d.children ? 'node--internal' : 'node--leaf'}`)
+      .attr('transform', d => `translate(${d.y},${d.x})`);
+
+    nodes.append('circle')
+      .attr('r', 10)
+      .attr('fill', d => d.children ? '#60a5fa' : '#3b82f6')
+      .attr('stroke', '#e5e7eb')
+      .attr('stroke-width', 2);
+    
+    // Node labels
+    nodes.append('text')
+      .attr('dy', 5)
+      .attr('x', d => d.children ? -12 : 12)
+      .attr('text-anchor', d => d.children ? 'end' : 'start')
+      .text(d => d.data.name)
+      .attr('class', 'text-base font-semibold fill-gray-900')
+      .style('font-family', 'inherit');
+
+    // Add a pulse animation to the main node
+    d3.select(nodes.nodes()[0]).select('circle')
+      .attr('class', 'pulse');
+    
+    // Highlight links on hover
+    nodes.on('mouseover', (event, d) => {
+        links.attr('stroke', '#e5e7eb').attr('stroke-width', 2);
+        const ancestors = d.ancestors();
+        links.filter(l => ancestors.some(a => l.target === a || l.source === a))
+          .attr('stroke', '#3b82f6').attr('stroke-width', 4);
+    }).on('mouseout', () => {
+        links.attr('stroke', '#e5e7eb').attr('stroke-width', 2);
+    });
+
+  }, []);
+
   return (
-    <div className="bg-black text-white rounded-3xl p-12">
-      <div className="relative w-full h-[600px]">
-        <h3 className="text-4xl sm:text-5xl font-bold mb-8 text-center">Our Training Ecosystem</h3>
-        <svg className="absolute inset-0 w-full h-full text-gray-400" viewBox="0 0 1000 600">
-          {/* Main Arrows */}
-          <line x1="500" y1="120" x2="500" y2="180" stroke="currentColor" strokeWidth="2" markerEnd="url(#arrowhead)"/>
-          <line x1="500" y1="220" x2="500" y2="280" stroke="currentColor" strokeWidth="2" markerEnd="url(#arrowhead)"/>
-          <line x1="500" y1="220" x2="400" y2="220" stroke="currentColor" strokeWidth="2" markerEnd="url(#arrowhead)"/>
-          <line x1="500" y1="220" x2="500" y2="180" stroke="currentColor" strokeWidth="2" markerEnd="url(#arrowhead)"/>
-          <line x1="500" y1="320" x2="500" y2="380" stroke="currentColor" strokeWidth="2" markerEnd="url(#arrowhead)"/>
-          <line x1="500" y1="380" x2="250" y2="450" stroke="currentColor" strokeWidth="2" markerEnd="url(#arrowhead)"/>
-          <line x1="500" y1="380" x2="450" y2="450" stroke="currentColor" strokeWidth="2" markerEnd="url(#arrowhead)"/>
-          <line x1="500" y1="380" x2="550" y2="450" stroke="currentColor" strokeWidth="2" markerEnd="url(#arrowhead)"/>
-          <line x1="500" y1="380" x2="750" y2="450" stroke="currentColor" strokeWidth="2" markerEnd="url(#arrowhead)"/>
-          <line x1="400" y1="220" x2="400" y2="280" stroke="currentColor" strokeWidth="2" markerEnd="url(#arrowhead)"/>
-          
-          {/* Arrow heads */}
-          <defs>
-            <marker id="arrowhead" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto">
-              <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor" />
-            </marker>
-          </defs>
-
-          {/* GenAI Customer */}
-          <rect x="425" y="80" width="150" height="40" rx="8" stroke="currentColor" strokeWidth="1" fill="none"/>
-          <text x="500" y="105" textAnchor="middle" className="text-sm font-semibold fill-current">GenAI Customer</text>
-          
-          {/* API Surface */}
-          <rect x="425" y="180" width="150" height="40" rx="8" stroke="currentColor" strokeWidth="1" fill="none"/>
-          <text x="500" y="205" textAnchor="middle" className="text-sm font-semibold fill-current">API Surface</text>
-
-          {/* Callable Parameters Block */}
-          <rect x="150" y="200" width="250" height="150" rx="8" stroke="currentColor" strokeWidth="1" fill="none"/>
-          <text x="160" y="225" className="text-xs font-semibold fill-current">{diagramData.callableParameters.title}</text>
-          {diagramData.callableParameters.list.map((item, index) => (
-            <text key={index} x="170" y={240 + index * 15} className="text-xs fill-current">{`- ${item}`}</text>
-          ))}
-          
-          {/* Our Real-Time, Real-World, Data Engines */}
-          <rect x="350" y="280" width="300" height="40" rx="8" stroke="currentColor" strokeWidth="1" fill="none"/>
-          <text x="500" y="305" textAnchor="middle" className="text-sm font-semibold fill-current">{diagramData.dataEngines}</text>
-
-          {/* Engines and their connections */}
-          {diagramData.engines.map((engine, index) => (
-            <g key={engine.name} transform={`translate(${150 + index * 200}, 350)`}>
-              <rect x="-70" y="0" width="140" height="150" rx="8" stroke="currentColor" strokeWidth="1" fill="none"/>
-              <text x="0" y="25" textAnchor="middle" className="text-sm font-bold fill-current">{engine.name}</text>
-              {engine.details.map((detail, detailIndex) => (
-                <text key={detailIndex} x="0" y={50 + detailIndex * 15} textAnchor="middle" className="text-xs fill-current">{detail}</text>
-              ))}
-            </g>
-          ))}
-          
-        </svg>
-      </div>
+    <div className="bg-gray-100 rounded-3xl p-12 relative overflow-hidden flex items-center justify-center">
+      <style>
+        {`
+        @keyframes pulse {
+          0% { transform: scale(1); opacity: 1; }
+          50% { transform: scale(1.2); opacity: 0.5; }
+          100% { transform: scale(1); opacity: 1; }
+        }
+        .pulse {
+          animation: pulse 2s infinite;
+        }
+        `}
+      </style>
+      <svg ref={svgRef} className="w-full h-full"></svg>
     </div>
   );
 };
@@ -380,7 +419,7 @@ const App = () => {
   // Handles copying the generated API key to the clipboard.
   const copyApiKey = () => {
     if (navigator.clipboard) {
-      navigator.clipboard.writeText(apiKey);
+      document.execCommand('copy');
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
@@ -655,62 +694,10 @@ const App = () => {
           </div>
 
           {/* New Training Ecosystem Diagram */}
-          <div className="mb-20 sm:mb-32 flex justify-center">
-            <div className="bg-white text-gray-800 rounded-3xl p-12 w-full max-w-5xl">
-              <div className="relative w-full h-[600px]">
-                <h3 className="text-4xl sm:text-5xl font-bold mb-8 text-center">Our Training Ecosystem</h3>
-                <svg className="absolute inset-0 w-full h-full text-gray-500" viewBox="0 0 1000 600">
-                  {/* Main Arrows */}
-                  <line x1="500" y1="120" x2="500" y2="180" stroke="currentColor" strokeWidth="2" markerEnd="url(#arrowhead)"/>
-                  <line x1="500" y1="220" x2="500" y2="280" stroke="currentColor" strokeWidth="2" markerEnd="url(#arrowhead)"/>
-                  <line x1="500" y1="220" x2="400" y2="220" stroke="currentColor" strokeWidth="2" markerEnd="url(#arrowhead)"/>
-                  <line x1="500" y1="220" x2="500" y2="180" stroke="currentColor" strokeWidth="2" markerEnd="url(#arrowhead)"/>
-                  <line x1="500" y1="320" x2="500" y2="380" stroke="currentColor" strokeWidth="2" markerEnd="url(#arrowhead)"/>
-                  <line x1="500" y1="380" x2="250" y2="450" stroke="currentColor" strokeWidth="2" markerEnd="url(#arrowhead)"/>
-                  <line x1="500" y1="380" x2="450" y2="450" stroke="currentColor" strokeWidth="2" markerEnd="url(#arrowhead)"/>
-                  <line x1="500" y1="380" x2="550" y2="450" stroke="currentColor" strokeWidth="2" markerEnd="url(#arrowhead)"/>
-                  <line x1="500" y1="380" x2="750" y2="450" stroke="currentColor" strokeWidth="2" markerEnd="url(#arrowhead)"/>
-                  <line x1="400" y1="220" x2="400" y2="280" stroke="currentColor" strokeWidth="2" markerEnd="url(#arrowhead)"/>
-                  
-                  {/* Arrow heads */}
-                  <defs>
-                    <marker id="arrowhead" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto">
-                      <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor" />
-                    </marker>
-                  </defs>
-
-                  {/* GenAI Customer */}
-                  <rect x="425" y="80" width="150" height="40" rx="8" stroke="currentColor" strokeWidth="1" fill="none"/>
-                  <text x="500" y="105" textAnchor="middle" className="text-sm font-semibold fill-current">GenAI Customer</text>
-                  
-                  {/* API Surface */}
-                  <rect x="425" y="180" width="150" height="40" rx="8" stroke="currentColor" strokeWidth="1" fill="none"/>
-                  <text x="500" y="205" textAnchor="middle" className="text-sm font-semibold fill-current">API Surface</text>
-
-                  {/* Callable Parameters Block */}
-                  <rect x="150" y="200" width="250" height="150" rx="8" stroke="currentColor" strokeWidth="1" fill="none"/>
-                  <text x="160" y="225" className="text-xs font-semibold fill-current">{diagramData.callableParameters.title}</text>
-                  {diagramData.callableParameters.list.map((item, index) => (
-                    <text key={index} x="170" y={240 + index * 15} className="text-xs fill-current">{`- ${item}`}</text>
-                  ))}
-                  
-                  {/* Our Real-Time, Real-World, Data Engines */}
-                  <rect x="350" y="280" width="300" height="40" rx="8" stroke="currentColor" strokeWidth="1" fill="none"/>
-                  <text x="500" y="305" textAnchor="middle" className="text-sm font-semibold fill-current">{diagramData.dataEngines}</text>
-
-                  {/* Engines and their connections */}
-                  {diagramData.engines.map((engine, index) => (
-                    <g key={engine.name} transform={`translate(${150 + index * 200}, 450)`}>
-                      <rect x="-70" y="0" width="140" height="150" rx="8" stroke="currentColor" strokeWidth="1" fill="none"/>
-                      <text x="0" y="25" textAnchor="middle" className="text-sm font-bold fill-current">{engine.name}</text>
-                      {engine.details.map((detail, detailIndex) => (
-                        <text key={detailIndex} x="0" y={50 + detailIndex * 15} textAnchor="middle" className="text-xs fill-current">{detail}</text>
-                      ))}
-                    </g>
-                  ))}
-                </svg>
-              </div>
-            </div>
+          <div className="mb-20 sm:mb-32">
+            <h3 className="text-2xl sm:text-3xl font-bold text-black mb-12 sm:mb-16 text-center">Our Training Ecosystem</h3>
+            
+            <TechnologyDiagram />
           </div>
 
           {/* Features and Benefits Grid */}
@@ -1079,6 +1066,334 @@ const App = () => {
           </div>
         </div>
       </main>
+    </div>
+  );
+  
+  // Renders the main generation dashboard page
+  const GenerationPage = () => (
+    <div className="min-h-screen bg-white" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, sans-serif' }}>
+      <header className="px-4 sm:px-6 py-6 sm:py-8 border-b border-gray-100">
+        <div className="max-w-6xl mx-auto flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <button 
+              onClick={() => setCurrentPage('landing')}
+              className="text-gray-500 hover:text-black p-2 hover:bg-gray-50 rounded-full transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+            <h1 className="text-xl sm:text-2xl font-semibold text-black">23 Bulbs</h1>
+          </div>
+          <div className="flex items-center space-x-4">
+            <button 
+              onClick={() => setCurrentPage('marketplace')}
+              className="text-gray-600 hover:text-black px-4 py-2 text-xs sm:text-sm font-medium transition-colors"
+            >
+              Browse Datasets
+            </button>
+            <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
+              <span className="text-xs font-medium text-gray-600">JD</span>
+            </div>
+          </div>
+        </div>
+      </header>
+      <div className="px-4 sm:px-6 py-8 sm:py-16">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-8 sm:mb-12">
+            <div className="flex items-center justify-center space-x-2 mb-4">
+              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+              <span className="text-sm text-gray-600">Signed in as John Doe</span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-bold text-black mb-4 tracking-tight">
+              Create New Project
+            </h2>
+            <p className="text-lg sm:text-xl text-gray-600">
+              Choose a use case to get started with your dataset generation
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center gap-4 mb-8">
+            <div className="flex items-center space-x-2">
+              <span className="text-sm font-medium text-gray-700">Data Type:</span>
+              <button 
+                onClick={() => setSelectedDataType('All')}
+                className={`px-3 py-1 rounded-full text-sm font-medium ${selectedDataType === 'All' ? 'bg-blue-100 text-blue-700' : 'text-gray-600 hover:bg-gray-100'}`}
+              >
+                All
+              </button>
+              <button 
+                onClick={() => setSelectedDataType('Video')}
+                className={`px-3 py-1 rounded-full text-sm ${selectedDataType === 'Video' ? 'bg-blue-100 text-blue-700 font-medium' : 'text-gray-600 hover:bg-gray-100'}`}
+              >
+                Video
+              </button>
+            </div>
+            <div className="flex items-center space-x-2">
+              <span className="text-sm font-medium text-gray-700">Category:</span>
+              <button 
+                onClick={() => setSelectedCategory('All')}
+                className={`px-3 py-1 rounded-full text-sm font-medium ${selectedCategory === 'All' ? 'bg-blue-100 text-blue-700' : 'text-gray-600 hover:bg-gray-100'}`}
+              >
+                All
+              </button>
+              <button 
+                onClick={() => setSelectedCategory('Garments')}
+                className={`px-3 py-1 rounded-full text-sm ${selectedCategory === 'Garments' ? 'bg-blue-100 text-blue-700 font-medium' : 'text-gray-600 hover:bg-gray-100'}`}
+              >
+                Garments
+              </button>
+              <button 
+                onClick={() => setSelectedCategory('Human Body')}
+                className={`px-3 py-1 rounded-full text-sm ${selectedCategory === 'Human Body' ? 'bg-blue-100 text-blue-700 font-medium' : 'text-gray-600 hover:bg-gray-100'}`}
+              >
+                Human Body
+              </button>
+              <button 
+                onClick={() => setSelectedCategory('Animals')}
+                className={`px-3 py-1 rounded-full text-sm ${selectedCategory === 'Animals' ? 'bg-blue-100 text-blue-700 font-medium' : 'text-gray-600 hover:bg-gray-100'}`}
+              >
+                Animals
+              </button>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+            {getFilteredProjects().map((project) => (
+              <div 
+                key={project.id}
+                className="bg-white border border-gray-200 rounded-xl overflow-hidden hover:border-blue-300 hover:shadow-lg transition-all group"
+              >
+                <div className={`h-48 bg-gradient-to-br ${project.gradient} relative overflow-hidden`}>
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-16 h-16 bg-white bg-opacity-10 rounded-xl flex items-center justify-center">
+                      {renderShape(project.shape)}
+                    </div>
+                  </div>
+                  <div className="absolute top-4 left-4">
+                    <span className="px-3 py-1 bg-black bg-opacity-40 text-white text-xs font-medium rounded-full">{project.type}</span>
+                  </div>
+                </div>
+                <div className="p-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">{project.name}</h3>
+                  <p className="text-sm text-gray-600 mb-4 leading-relaxed">{project.description}</p>
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {project.tags.map((tag, index) => (
+                      <span key={index} className="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded-full">{tag}</span>
+                    ))}
+                  </div>
+                  <div className="text-center">
+                    <button 
+                      onClick={() => {
+                        setPromptValue(project.prompt);
+                        setShowModal(true);
+                      }}
+                      className="w-full bg-blue-600 text-white py-2.5 rounded-full font-medium hover:bg-blue-700 transition-colors inline-block text-sm"
+                    >
+                      Configure & Launch Demo
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+            <div className="bg-white border-2 border-dashed border-gray-300 rounded-xl overflow-hidden hover:border-gray-400 hover:bg-gray-50 transition-all group">
+              <div className="h-48 bg-gray-100 relative overflow-hidden flex items-center justify-center">
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-gray-300 rounded-xl flex items-center justify-center mx-auto mb-4">
+                    <div className="w-6 h-6 border-2 border-gray-500 rounded-lg border-dashed"></div>
+                  </div>
+                  <span className="text-gray-600 font-medium">Custom Project</span>
+                </div>
+              </div>
+              <div className="p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Create Custom Dataset</h3>
+                <p className="text-sm text-gray-600 mb-4 leading-relaxed">Configure your own dataset with advanced parameters and specifications</p>
+                <div className="flex flex-wrap gap-2 mb-4">
+                  <span className="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded-full">Advanced</span>
+                  <span className="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded-full">Custom</span>
+                </div>
+                <div className="text-center">
+                  <a 
+                    href="mailto:sales@23bulbs.com?subject=Custom Dataset Inquiry&body=Hi, I'm interested in creating a custom dataset. Please contact me to discuss requirements and pricing."
+                    className="w-full bg-black text-white py-2.5 rounded-full font-medium hover:bg-gray-800 transition-colors inline-block text-sm"
+                  >
+                    Contact Sales
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <div className="bg-gray-100 border border-gray-200 rounded-xl p-6">
+            <div className="flex items-start space-x-4">
+              <div className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center flex-shrink-0">
+                <div className="w-4 h-4 border-2 border-white rounded-full border-dashed"></div>
+              </div>
+              <div>
+                <h3 className="font-semibold text-gray-900 mb-2">Need help starting a project?</h3>
+                <p className="text-gray-600 text-sm mb-4 leading-relaxed">Our team can guide you through the best dataset configuration for your specific AI training needs.</p>
+                <a 
+                  href="mailto:support@23bulbs.com?subject=Project Configuration Help&body=Hi, I need help choosing the right dataset configuration for my AI training project."
+                  className="inline-flex items-center space-x-2 bg-gray-800 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-black transition-colors"
+                >
+                  <span>Get Started</span>
+                  <ArrowRight className="w-4 h-4" />
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-20 flex items-center justify-center p-4 sm:p-6 z-50">
+          <div className="bg-white rounded-2xl sm:rounded-3xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl">
+            <div className="p-4 sm:p-8 border-b border-gray-100 flex-shrink-0">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-xl sm:text-2xl font-bold text-black">Configure Dataset</h3>
+                  <p className="text-gray-600 mt-1 text-sm sm:text-base">"{promptValue}"</p>
+                </div>
+                <button
+                  onClick={handleModalClose}
+                  className="text-gray-400 hover:text-gray-600 p-2 hover:bg-gray-50 rounded-full transition-all"
+                >
+                  <X className="w-5 h-5 sm:w-6 sm:h-6" />
+                </button>
+              </div>
+            </div>
+            <div className="flex-1 overflow-y-auto p-4 sm:p-8" style={{ maxHeight: 'calc(90vh - 200px)' }}>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6 sm:mb-8">
+                {datasetCategories.map((category) => (
+                  <button
+                    key={category.id}
+                    onClick={() => toggleCategory(category.id)}
+                    className={`p-4 rounded-xl border transition-all text-left ${
+                      selectedCategories.includes(category.id)
+                        ? 'border-blue-500 bg-blue-50'
+                        : 'border-gray-200 hover:border-gray-300'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <span className="font-medium text-black">{category.name}</span>
+                        <span className="text-xs text-gray-500 ml-2">({category.paramCount} params)</span>
+                      </div>
+                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                        selectedCategories.includes(category.id)
+                          ? 'border-blue-500 bg-blue-500'
+                          : 'border-gray-300'
+                      }`}>
+                        {selectedCategories.includes(category.id) && (
+                          <div className="w-2 h-2 bg-white rounded-full"></div>
+                        )}
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+              {selectedCategories.length > 0 && (
+                <div className="mb-8 border-t border-gray-100 pt-8">
+                  <h4 className="text-lg font-semibold text-black mb-6">Configuration Options</h4>
+                  <div className="space-y-4">
+                    {selectedCategories.map(categoryId => {
+                      const category = datasetCategories.find(cat => cat.id === categoryId);
+                      const config = categoryConfigs[categoryId] || {};
+                      const isCollapsed = collapsedCategories[categoryId];
+                      
+                      return (
+                        <div key={categoryId} className="bg-gray-50 rounded-xl overflow-hidden">
+                          <button
+                            onClick={() => toggleCategoryCollapse(categoryId)}
+                            className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-100 transition-colors"
+                          >
+                            <div className="flex items-center">
+                              <div className="w-3 h-3 bg-blue-500 rounded-full mr-3"></div>
+                              <h5 className="font-medium text-black">{category.name}</h5>
+                              <span className="text-xs text-gray-500 ml-2">({category.paramCount} parameters)</span>
+                            </div>
+                            <ChevronDown className={`w-5 h-5 text-gray-500 transition-transform ${
+                              isCollapsed ? '-rotate-90' : 'rotate-0'
+                            }`} />
+                          </button>
+                          
+                          {!isCollapsed && (
+                            <div className="px-4 sm:px-6 pb-4 sm:pb-6">
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                {category.options.map(option => (
+                                  <div key={option.id} className="space-y-2">
+                                    <label className="text-sm font-medium text-gray-700">
+                                      {option.name}
+                                      {option.unit && <span className="text-gray-500 ml-1">({option.unit})</span>}
+                                    </label>
+                                    
+                                    {option.type === 'range' && (
+                                      <div className="space-y-1">
+                                        <input
+                                          type="range"
+                                          min={option.min}
+                                          max={option.max}
+                                          step={option.step || 1}
+                                          value={config[option.id] || option.default}
+                                          onChange={(e) => updateCategoryConfig(categoryId, option.id, parseFloat(e.target.value))}
+                                          className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+                                          style={{
+                                            background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${((config[option.id] || option.default) - option.min) / (option.max - option.min) * 100}%, #e5e7eb ${((config[option.id] || option.default) - option.min) / (option.max - option.min) * 100}%, #e5e7eb 100%)`
+                                          }}
+                                        />
+                                        <div className="flex justify-between text-xs text-gray-500">
+                                          <span>{option.min}{option.unit}</span>
+                                          <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded font-medium">
+                                            {config[option.id] || option.default}{option.unit}
+                                          </span>
+                                          <span>{option.max}{option.unit}</span>
+                                        </div>
+                                      </div>
+                                    )}
+                                    
+                                    {option.type === 'select' && (
+                                      <select
+                                        value={config[option.id] || option.default}
+                                        onChange={(e) => updateCategoryConfig(categoryId, option.id, e.target.value)}
+                                        className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                                      >
+                                        {option.options.map(optValue => (
+                                          <option key={optValue} value={optValue}>{optValue}</option>
+                                        ))}
+                                      </select>
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+            <div className="flex flex-col sm:flex-row items-center justify-between p-4 sm:p-8 border-t border-gray-100 flex-shrink-0 space-y-3 sm:space-y-0">
+              <span className="text-gray-600 text-sm sm:text-base">
+                {selectedCategories.length} categories selected ({selectedCategories.reduce((total, catId) => {
+                  const cat = datasetCategories.find(c => c.id === catId);
+                  return total + (cat ? cat.paramCount : 0);
+                }, 0)} total parameters)
+              </span>
+              <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3 w-full sm:w-auto">
+                <button
+                  onClick={handleModalClose}
+                  className="w-full sm:w-auto px-6 py-2.5 text-gray-600 hover:text-black font-medium transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={generateDataset}
+                  disabled={selectedCategories.length === 0}
+                  className="w-full sm:w-auto px-6 py-2.5 bg-blue-600 text-white font-medium rounded-full hover:bg-blue-700 disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed transition-colors"
+                >
+                  Generate Dataset
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 
