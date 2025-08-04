@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ArrowRight, ArrowLeft, X, Check, ChevronDown, Key, Copy, ExternalLink } from 'lucide-react';
+// Changed the d3 import to a standard import
 import * as d3 from 'd3';
 
 // Data structure for the new diagram.
@@ -895,7 +896,7 @@ const App = () => {
                     </div>
                   </div>
                   <div className="absolute top-4 left-4">
-                    <span className="px-3 py-1 bg-black bg-opacity-40 text-white text-xs font-medium rounded-full">Video</span>
+                    <span className="px-3 py-1 bg-black bg-opacity-40 text-white text-xs font-medium rounded-full">{dataset.type}</span>
                   </div>
                 </div>
                 <div className="p-6">
@@ -1069,7 +1070,6 @@ const App = () => {
     </div>
   );
   
-  // Renders the main generation dashboard page
   const GenerationPage = () => (
     <div className="min-h-screen bg-white" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, sans-serif' }}>
       <header className="px-4 sm:px-6 py-6 sm:py-8 border-b border-gray-100">
