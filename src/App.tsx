@@ -1,134 +1,105 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { ArrowRight, ArrowLeft, X, Check, ChevronDown, Key, Copy, ExternalLink } from 'lucide-react';
-// Changed the d3 import to a standard import
-import * as d3 from 'd3';
-
-// Data structure for the new diagram.
-const diagramData = {
-  name: "GenAI Customer",
-  children: [
-    {
-      name: "API Surface",
-      children: [
-        {
-          name: "Callable Parameters (e.g., Cloth)",
-          children: [
-            { name: "Garment" },
-            { name: "Materials" },
-            { name: "Textures" },
-            { name: "Movement Type" },
-            { name: "External Force" },
-            { name: "Background" },
-            { name: "Body/Model/Avatar" },
-            { name: "Sim Seed" },
-          ],
-        },
-        {
-          name: "Our Real-Time, Real-World, Data Engines",
-          children: [
-            { name: "ClothTrain", details: ["PixelThread", "Other Engines"] },
-            { name: "SensorTrain", details: ["SmarThreads", "Motion Capture"] },
-            { name: "VideoTrain", details: ["Time matched to physics and sensor data"] },
-            { name: "ScanTrain", details: ["Gaussian Photogramm"] },
-          ],
-        },
-      ],
-    },
-  ],
-};
 
 const TechnologyDiagram = () => {
-  const svgRef = useRef();
-
-  useEffect(() => {
-    const svg = d3.select(svgRef.current);
-    const container = d3.select(svgRef.current.parentNode);
-    if (!container.node()) return;
-    
-    const width = container.node().getBoundingClientRect().width;
-    const height = 500;
-    
-    svg.attr('viewBox', [0, 0, width, height]);
-    svg.selectAll('*').remove();
-
-    const margin = { top: 40, right: 120, bottom: 40, left: 120 };
-    const innerWidth = width - margin.left - margin.right;
-    const innerHeight = height - margin.top - margin.bottom;
-
-    const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
-
-    const treeLayout = d3.tree().size([innerHeight, innerWidth]);
-
-    const root = d3.hierarchy(diagramData);
-    const treeData = treeLayout(root);
-
-    const linkGenerator = d3.linkHorizontal()
-      .x(d => d.y)
-      .y(d => d.x);
-
-    // Links
-    const links = g.selectAll('.link')
-      .data(treeData.links())
-      .join('path')
-      .attr('class', 'link')
-      .attr('fill', 'none')
-      .attr('stroke', '#e5e7eb')
-      .attr('stroke-width', 2)
-      .attr('d', linkGenerator);
-      
-    // Nodes
-    const nodes = g.selectAll('.node')
-      .data(root.descendants())
-      .join('g')
-      .attr('class', d => `node ${d.children ? 'node--internal' : 'node--leaf'}`)
-      .attr('transform', d => `translate(${d.y},${d.x})`);
-
-    nodes.append('circle')
-      .attr('r', 10)
-      .attr('fill', d => d.children ? '#60a5fa' : '#3b82f6')
-      .attr('stroke', '#e5e7eb')
-      .attr('stroke-width', 2);
-    
-    // Node labels
-    nodes.append('text')
-      .attr('dy', 5)
-      .attr('x', d => d.children ? -12 : 12)
-      .attr('text-anchor', d => d.children ? 'end' : 'start')
-      .text(d => d.data.name)
-      .attr('class', 'text-base font-semibold fill-gray-900')
-      .style('font-family', 'inherit');
-
-    // Add a pulse animation to the main node
-    d3.select(nodes.nodes()[0]).select('circle')
-      .attr('class', 'pulse');
-    
-    // Highlight links on hover
-    nodes.on('mouseover', (event, d) => {
-        links.attr('stroke', '#e5e7eb').attr('stroke-width', 2);
-        const ancestors = d.ancestors();
-        links.filter(l => ancestors.some(a => l.target === a || l.source === a))
-          .attr('stroke', '#3b82f6').attr('stroke-width', 4);
-    }).on('mouseout', () => {
-        links.attr('stroke', '#e5e7eb').attr('stroke-width', 2);
-    });
-
-  }, []);
-
   return (
-    <div className="bg-gray-100 rounded-3xl p-12 relative overflow-hidden flex items-center justify-center">
-      <style>
-        {`
-        @keyframes pulse {
-          0% { transform: scale(1); opacity: 1; }
-          50% { transform: scale(1.2); opacity: 0.5; }
-          100% { transform: scale(1); opacity: 1; }
-        }
-        .pulse {
-          animation: pulse 2s infinite;
-        }
-        `}
-      </style>
-      <svg ref={svgRef} className="w-full h-full"></svg>
+    <div className="bg-white text-gray-800 rounded-3xl p-12">
+      <div className="relative w-full h-[600px]">
+        <h3 className="text-4xl sm:text-5xl font-bold mb-8 text-center text-black">Our Training Ecosystem</h3>
+        <svg className="absolute inset-0 w-full h-full text-gray-500" viewBox="0 0 1000 600">
+          {/* Main Arrows */}
+          <line x1="500" y1="120" x2="500" y2="180" stroke="currentColor" strokeWidth="2" markerEnd="url(#arrowhead)"/>
+          <line x1="500" y1="220" x2="500" y2="280" stroke="currentColor" strokeWidth="2" markerEnd="url(#arrowhead)"/>
+          <line x1="500" y1="220" x2="400" y2="220" stroke="currentColor" strokeWidth="2"/>
+          <line x1="400" y1="220" x2="400" y2="280" stroke="currentColor" strokeWidth="2" markerEnd="url(#arrowhead)"/>
+          <line x1="500" y1="320" x2="500" y2="380" stroke="currentColor" strokeWidth="2" markerEnd="url(#arrowhead)"/>
+          <line x1="500" y1="380" x2="250" y2="450" stroke="currentColor" strokeWidth="2" markerEnd="url(#arrowhead)"/>
+          <line x1="500" y1="380" x2="450" y2="450" stroke="currentColor" strokeWidth="2" markerEnd="url(#arrowhead)"/>
+          <line x1="500" y1="380" x2="550" y2="450" stroke="currentColor" strokeWidth="2" markerEnd="url(#arrowhead)"/>
+          <line x1="500" y1="380" x2="750" y2="450" stroke="currentColor" strokeWidth="2" markerEnd="url(#arrowhead)"/>
+
+          {/* Arrow heads */}
+          <defs>
+            <marker id="arrowhead" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor" />
+            </marker>
+          </defs>
+
+          {/* GenAI Customer Node */}
+          <g className="hover:scale-105 transition-transform duration-300 transform origin-center">
+            <rect x="425" y="80" width="150" height="40" rx="8" stroke="currentColor" strokeWidth="1" fill="#f3f4f6"/>
+            <text x="500" y="105" textAnchor="middle" className="text-sm font-semibold fill-gray-900">GenAI Customer</text>
+          </g>
+          
+          {/* API Surface Node */}
+          <g className="hover:scale-105 transition-transform duration-300 transform origin-center">
+            <rect x="425" y="180" width="150" height="40" rx="8" stroke="currentColor" strokeWidth="1" fill="#f3f4f6"/>
+            <text x="500" y="205" textAnchor="middle" className="text-sm font-semibold fill-gray-900">API Surface</text>
+          </g>
+
+          {/* Callable Parameters Node */}
+          <g className="hover:scale-105 transition-transform duration-300 transform origin-center">
+            <rect x="150" y="200" width="250" height="150" rx="8" stroke="currentColor" strokeWidth="1" fill="#f3f4f6"/>
+            <text x="160" y="225" className="text-xs font-semibold fill-gray-900">Callable Parameters (e.g. Cloth):</text>
+            <text x="170" y="240" className="text-xs fill-gray-600">- Garment</text>
+            <text x="170" y="255" className="text-xs fill-gray-600">- Materials</text>
+            <text x="170" y="270" className="text-xs fill-gray-600">- Textures</text>
+            <text x="170" y="285" className="text-xs fill-gray-600">- Movement Type</text>
+            <text x="170" y="300" className="text-xs fill-gray-600">- External Force</text>
+            <text x="170" y="315" className="text-xs fill-gray-600">- Background</text>
+            <text x="170" y="330" className="text-xs fill-gray-600">- Body/Model/Avatar</text>
+            <text x="170" y="345" className="text-xs fill-gray-600">- Sim Seed</text>
+          </g>
+          
+          {/* Our Real-Time, Real-World, Data Engines Node */}
+          <g className="hover:scale-105 transition-transform duration-300 transform origin-center">
+            <rect x="350" y="280" width="300" height="40" rx="8" stroke="currentColor" strokeWidth="1" fill="#f3f4f6"/>
+            <text x="500" y="305" textAnchor="middle" className="text-sm font-semibold fill-gray-900">Our Real-Time, Real-World, Data Engines</text>
+          </g>
+
+          {/* Engines and their connections */}
+          {/* Engine nodes are hard-coded for simplicity and stability */}
+          
+          {/* ClothTrain */}
+          <g transform="translate(150, 450)" className="hover:scale-105 transition-transform duration-300 transform origin-center">
+            <rect x="-70" y="0" width="140" height="150" rx="8" stroke="currentColor" strokeWidth="1" fill="#f3f4f6"/>
+            <text x="0" y="25" textAnchor="middle" className="text-sm font-bold fill-gray-900">ClothTrain</text>
+            <text x="0" y="50" textAnchor="middle" className="text-xs fill-gray-600">PixelThread</text>
+            <text x="0" y="65" textAnchor="middle" className="text-xs fill-gray-600">Other Engines</text>
+          </g>
+
+          {/* SensorTrain */}
+          <g transform="translate(350, 450)" className="hover:scale-105 transition-transform duration-300 transform origin-center">
+            <rect x="-70" y="0" width="140" height="150" rx="8" stroke="currentColor" strokeWidth="1" fill="#f3f4f6"/>
+            <text x="0" y="25" textAnchor="middle" className="text-sm font-bold fill-gray-900">SensorTrain</text>
+            <text x="0" y="50" textAnchor="middle" className="text-xs fill-gray-600">SmarThreads</text>
+            <text x="0" y="65" textAnchor="middle" className="text-xs fill-gray-600">Motion Capture</text>
+          </g>
+
+          {/* VideoTrain */}
+          <g transform="translate(550, 450)" className="hover:scale-105 transition-transform duration-300 transform origin-center">
+            <rect x="-70" y="0" width="140" height="150" rx="8" stroke="currentColor" strokeWidth="1" fill="#f3f4f6"/>
+            <text x="0" y="25" textAnchor="middle" className="text-sm font-bold fill-gray-900">VideoTrain</text>
+            <text x="0" y="50" textAnchor="middle" className="text-xs fill-gray-600">Time matched to</text>
+            <text x="0" y="65" textAnchor="middle" className="text-xs fill-gray-600">physics and sensor data</text>
+          </g>
+
+          {/* ScanTrain */}
+          <g transform="translate(750, 450)" className="hover:scale-105 transition-transform duration-300 transform origin-center">
+            <rect x="-70" y="0" width="140" height="150" rx="8" stroke="currentColor" strokeWidth="1" fill="#f3f4f6"/>
+            <text x="0" y="25" textAnchor="middle" className="text-sm font-bold fill-gray-900">ScanTrain</text>
+            <text x="0" y="50" textAnchor="middle" className="text-xs fill-gray-600">Gaussian</text>
+            <text x="0" y="65" textAnchor="middle" className="text-xs fill-gray-600">Photogramm</text>
+          </g>
+
+          {/* Arrows from engines */}
+          <line x1="250" y1="350" x2="250" y2="450" stroke="currentColor" strokeWidth="2" markerEnd="url(#arrowhead)"/>
+          <line x1="450" y1="350" x2="450" y2="450" stroke="currentColor" strokeWidth="2" markerEnd="url(#arrowhead)"/>
+          <line x1="550" y1="350" x2="550" y2="450" stroke="currentColor" strokeWidth="2" markerEnd="url(#arrowhead)"/>
+          <line x1="750" y1="350" x2="750" y2="450" stroke="currentColor" strokeWidth="2" markerEnd="url(#arrowhead)"/>
+          
+        </svg>
+      </div>
     </div>
   );
 };
@@ -532,6 +503,7 @@ const App = () => {
                     type="checkbox"
                     id="remember"
                     className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    defaultChecked
                   />
                   <label htmlFor="remember" className="text-sm text-gray-600">
                     Remember me
@@ -698,7 +670,102 @@ const App = () => {
           <div className="mb-20 sm:mb-32">
             <h3 className="text-2xl sm:text-3xl font-bold text-black mb-12 sm:mb-16 text-center">Our Training Ecosystem</h3>
             
-            <TechnologyDiagram />
+            <div className="bg-white text-gray-800 rounded-3xl p-12">
+              <div className="relative w-full h-[600px]">
+                <h3 className="text-4xl sm:text-5xl font-bold mb-8 text-center text-black">Our Training Ecosystem</h3>
+                <svg className="absolute inset-0 w-full h-full text-gray-500" viewBox="0 0 1000 600">
+                  {/* Main Arrows */}
+                  <line x1="500" y1="120" x2="500" y2="180" stroke="currentColor" strokeWidth="2" markerEnd="url(#arrowhead)"/>
+                  <line x1="500" y1="220" x2="500" y2="280" stroke="currentColor" strokeWidth="2" markerEnd="url(#arrowhead)"/>
+                  <line x1="500" y1="220" x2="400" y2="220" stroke="currentColor" strokeWidth="2"/>
+                  <line x1="400" y1="220" x2="400" y2="280" stroke="currentColor" strokeWidth="2" markerEnd="url(#arrowhead)"/>
+                  <line x1="500" y1="320" x2="500" y2="380" stroke="currentColor" strokeWidth="2" markerEnd="url(#arrowhead)"/>
+                  <line x1="500" y1="380" x2="250" y2="450" stroke="currentColor" strokeWidth="2" markerEnd="url(#arrowhead)"/>
+                  <line x1="500" y1="380" x2="450" y2="450" stroke="currentColor" strokeWidth="2" markerEnd="url(#arrowhead)"/>
+                  <line x1="500" y1="380" x2="550" y2="450" stroke="currentColor" strokeWidth="2" markerEnd="url(#arrowhead)"/>
+                  <line x1="500" y1="380" x2="750" y2="450" stroke="currentColor" strokeWidth="2" markerEnd="url(#arrowhead)"/>
+
+                  {/* Arrow heads */}
+                  <defs>
+                    <marker id="arrowhead" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                      <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor" />
+                    </marker>
+                  </defs>
+
+                  {/* GenAI Customer Node */}
+                  <g className="hover:scale-105 transition-transform duration-300 transform origin-center">
+                    <rect x="425" y="80" width="150" height="40" rx="8" stroke="currentColor" strokeWidth="1" fill="#f3f4f6"/>
+                    <text x="500" y="105" textAnchor="middle" className="text-sm font-semibold fill-gray-900">GenAI Customer</text>
+                  </g>
+                  
+                  {/* API Surface Node */}
+                  <g className="hover:scale-105 transition-transform duration-300 transform origin-center">
+                    <rect x="425" y="180" width="150" height="40" rx="8" stroke="currentColor" strokeWidth="1" fill="#f3f4f6"/>
+                    <text x="500" y="205" textAnchor="middle" className="text-sm font-semibold fill-gray-900">API Surface</text>
+                  </g>
+
+                  {/* Callable Parameters Node */}
+                  <g className="hover:scale-105 transition-transform duration-300 transform origin-center">
+                    <rect x="150" y="200" width="250" height="150" rx="8" stroke="currentColor" strokeWidth="1" fill="#f3f4f6"/>
+                    <text x="160" y="225" className="text-xs font-semibold fill-gray-900">Callable Parameters (e.g. Cloth):</text>
+                    <text x="170" y="240" className="text-xs fill-gray-600">- Garment</text>
+                    <text x="170" y="255" className="text-xs fill-gray-600">- Materials</text>
+                    <text x="170" y="270" className="text-xs fill-gray-600">- Textures</text>
+                    <text x="170" y="285" className="text-xs fill-gray-600">- Movement Type</text>
+                    <text x="170" y="300" className="text-xs fill-gray-600">- External Force</text>
+                    <text x="170" y="315" className="text-xs fill-gray-600">- Background</text>
+                    <text x="170" y="330" className="text-xs fill-gray-600">- Body/Model/Avatar</text>
+                    <text x="170" y="345" className="text-xs fill-gray-600">- Sim Seed</text>
+                  </g>
+                  
+                  {/* Our Real-Time, Real-World, Data Engines Node */}
+                  <g className="hover:scale-105 transition-transform duration-300 transform origin-center">
+                    <rect x="350" y="280" width="300" height="40" rx="8" stroke="currentColor" strokeWidth="1" fill="#f3f4f6"/>
+                    <text x="500" y="305" textAnchor="middle" className="text-sm font-semibold fill-gray-900">Our Real-Time, Real-World, Data Engines</text>
+                  </g>
+
+                  {/* Engines and their connections */}
+                  {/* ClothTrain */}
+                  <g transform="translate(150, 450)" className="hover:scale-105 transition-transform duration-300 transform origin-center">
+                    <rect x="-70" y="0" width="140" height="150" rx="8" stroke="currentColor" strokeWidth="1" fill="#f3f4f6"/>
+                    <text x="0" y="25" textAnchor="middle" className="text-sm font-bold fill-gray-900">ClothTrain</text>
+                    <text x="0" y="50" textAnchor="middle" className="text-xs fill-gray-600">PixelThread</text>
+                    <text x="0" y="65" textAnchor="middle" className="text-xs fill-gray-600">Other Engines</text>
+                  </g>
+
+                  {/* SensorTrain */}
+                  <g transform="translate(350, 450)" className="hover:scale-105 transition-transform duration-300 transform origin-center">
+                    <rect x="-70" y="0" width="140" height="150" rx="8" stroke="currentColor" strokeWidth="1" fill="#f3f4f6"/>
+                    <text x="0" y="25" textAnchor="middle" className="text-sm font-bold fill-gray-900">SensorTrain</text>
+                    <text x="0" y="50" textAnchor="middle" className="text-xs fill-gray-600">SmarThreads</text>
+                    <text x="0" y="65" textAnchor="middle" className="text-xs fill-gray-600">Motion Capture</text>
+                  </g>
+
+                  {/* VideoTrain */}
+                  <g transform="translate(550, 450)" className="hover:scale-105 transition-transform duration-300 transform origin-center">
+                    <rect x="-70" y="0" width="140" height="150" rx="8" stroke="currentColor" strokeWidth="1" fill="#f3f4f6"/>
+                    <text x="0" y="25" textAnchor="middle" className="text-sm font-bold fill-gray-900">VideoTrain</text>
+                    <text x="0" y="50" textAnchor="middle" className="text-xs fill-gray-600">Time matched to</text>
+                    <text x="0" y="65" textAnchor="middle" className="text-xs fill-gray-600">physics and sensor data</text>
+                  </g>
+
+                  {/* ScanTrain */}
+                  <g transform="translate(750, 450)" className="hover:scale-105 transition-transform duration-300 transform origin-center">
+                    <rect x="-70" y="0" width="140" height="150" rx="8" stroke="currentColor" strokeWidth="1" fill="#f3f4f6"/>
+                    <text x="0" y="25" textAnchor="middle" className="text-sm font-bold fill-gray-900">ScanTrain</text>
+                    <text x="0" y="50" textAnchor="middle" className="text-xs fill-gray-600">Gaussian</text>
+                    <text x="0" y="65" textAnchor="middle" className="text-xs fill-gray-600">Photogramm</text>
+                  </g>
+
+                  {/* Arrows from engines */}
+                  <line x1="250" y1="350" x2="250" y2="450" stroke="currentColor" strokeWidth="2" markerEnd="url(#arrowhead)"/>
+                  <line x1="450" y1="350" x2="450" y2="450" stroke="currentColor" strokeWidth="2" markerEnd="url(#arrowhead)"/>
+                  <line x1="550" y1="350" x2="550" y2="450" stroke="currentColor" strokeWidth="2" markerEnd="url(#arrowhead)"/>
+                  <line x1="750" y1="350" x2="750" y2="450" stroke="currentColor" strokeWidth="2" markerEnd="url(#arrowhead)"/>
+                  
+                </svg>
+              </div>
+            </div>
           </div>
 
           {/* Features and Benefits Grid */}
@@ -1351,6 +1418,7 @@ const App = () => {
                                         onChange={(e) => updateCategoryConfig(categoryId, option.id, e.target.value)}
                                         className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                                       >
+                                        <option value="">Select a value</option>
                                         {option.options.map(optValue => (
                                           <option key={optValue} value={optValue}>{optValue}</option>
                                         ))}
