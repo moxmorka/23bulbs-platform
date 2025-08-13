@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ArrowRight, ArrowLeft, X, Check, ChevronDown, Key, Copy, ExternalLink, Mail, Lock, User } from 'lucide-react';
 
-const DatasetPlatform = () => {
+export default function DatasetPlatform() {
   const [currentPage, setCurrentPage] = useState('landing');
   const [promptValue, setPromptValue] = useState('');
   const [showModal, setShowModal] = useState(false);
@@ -242,7 +242,7 @@ const DatasetPlatform = () => {
   };
 
   const generateDataset = () => {
-    const newApiKey = '23b_live_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    const newApiKey = '23b_live_' + Math.random().toString(36).substring(2, 15);
     setApiKey(newApiKey);
     
     const dataset = {
@@ -265,14 +265,10 @@ const DatasetPlatform = () => {
     }
   };
 
-  const handleModalClose = () => {
-    setShowModal(false);
-  };
-
   // Landing Page
   if (currentPage === 'landing') {
     return (
-      <div className="min-h-screen bg-white" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, sans-serif' }}>
+      <div className="min-h-screen bg-white">
         <header className="px-4 sm:px-6 py-6 sm:py-8">
           <div className="max-w-6xl mx-auto flex items-center justify-between">
             <h1 className="text-xl sm:text-2xl font-semibold text-black">23 Bulbs</h1>
@@ -327,7 +323,7 @@ const DatasetPlatform = () => {
   // Marketplace Page
   if (currentPage === 'marketplace') {
     return (
-      <div className="min-h-screen bg-white" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, sans-serif' }}>
+      <div className="min-h-screen bg-white">
         <header className="px-4 sm:px-6 py-6 sm:py-8 border-b border-gray-100">
           <div className="max-w-6xl mx-auto flex items-center justify-between">
             <div className="flex items-center space-x-4">
@@ -425,7 +421,7 @@ const DatasetPlatform = () => {
   // Generation Page with Modal
   if (currentPage === 'generation') {
     return (
-      <div className="min-h-screen bg-white" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, sans-serif' }}>
+      <div className="min-h-screen bg-white">
         <header className="px-4 sm:px-6 py-6 sm:py-8 border-b border-gray-100">
           <div className="max-w-6xl mx-auto flex items-center justify-between">
             <div className="flex items-center space-x-4">
@@ -461,7 +457,7 @@ const DatasetPlatform = () => {
                     <p className="text-gray-600 mt-1 text-sm sm:text-base">"{promptValue}"</p>
                   </div>
                   <button
-                    onClick={handleModalClose}
+                    onClick={() => setShowModal(false)}
                     className="text-gray-400 hover:text-gray-600 p-2 hover:bg-gray-50 rounded-full transition-all"
                   >
                     <X className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -518,7 +514,6 @@ const DatasetPlatform = () => {
                               <div className="flex items-center">
                                 <div className="w-3 h-3 bg-blue-500 rounded-full mr-3"></div>
                                 <h5 className="font-medium text-black">{category.name}</h5>
-                                <span className="text-xs text-gray-500 ml-2">({category.paramCount} parameters)</span>
                               </div>
                               <ChevronDown className={`w-5 h-5 text-gray-500 transition-transform ${
                                 isCollapsed ? '-rotate-90' : 'rotate-0'
@@ -544,10 +539,7 @@ const DatasetPlatform = () => {
                                             step={option.step || 1}
                                             value={config[option.id] || option.default}
                                             onChange={(e) => updateCategoryConfig(categoryId, option.id, parseFloat(e.target.value))}
-                                            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
-                                            style={{
-                                              background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${((config[option.id] || option.default) - option.min) / (option.max - option.min) * 100}%, #e5e7eb ${((config[option.id] || option.default) - option.min) / (option.max - option.min) * 100}%, #e5e7eb 100%)`
-                                            }}
+                                            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
                                           />
                                           <div className="flex justify-between text-xs text-gray-500">
                                             <span>{option.min}{option.unit}</span>
@@ -592,7 +584,7 @@ const DatasetPlatform = () => {
                 </span>
                 <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3 w-full sm:w-auto">
                   <button
-                    onClick={handleModalClose}
+                    onClick={() => setShowModal(false)}
                     className="w-full sm:w-auto px-6 py-2.5 text-gray-600 hover:text-black font-medium transition-colors"
                   >
                     Cancel
@@ -646,7 +638,7 @@ result = dataset.create()
 dataset.download("./my_dataset/")`;
 
     return (
-      <div className="min-h-screen bg-white" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, sans-serif' }}>
+      <div className="min-h-screen bg-white">
         <header className="px-4 sm:px-6 py-6 sm:py-8 border-b border-gray-100">
           <div className="max-w-4xl mx-auto flex items-center justify-between">
             <div className="flex items-center space-x-4">
@@ -797,7 +789,7 @@ dataset.download("./my_dataset/")`;
   // Sign In Page
   if (currentPage === 'signin') {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, sans-serif' }}>
+      <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="w-full max-w-md px-6">
           <div className="text-center mb-8">
             <h1 className="text-2xl font-semibold text-black mb-2">23 Bulbs</h1>
@@ -861,7 +853,7 @@ dataset.download("./my_dataset/")`;
   // Sign Up Page
   if (currentPage === 'signup') {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, sans-serif' }}>
+      <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="w-full max-w-md px-6">
           <div className="text-center mb-8">
             <h1 className="text-2xl font-semibold text-black mb-2">23 Bulbs</h1>
@@ -937,7 +929,7 @@ dataset.download("./my_dataset/")`;
   // Technology Page
   if (currentPage === 'technology') {
     return (
-      <div className="min-h-screen bg-white" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, sans-serif' }}>
+      <div className="min-h-screen bg-white">
         <header className="px-4 sm:px-6 py-6 sm:py-8 border-b border-gray-100">
           <div className="max-w-6xl mx-auto flex items-center justify-between">
             <div className="flex items-center space-x-4">
@@ -965,152 +957,46 @@ dataset.download("./my_dataset/")`;
               <p className="text-xl text-gray-600">Physics-aware data generation pipeline</p>
             </div>
 
-            {/* Features and Benefits Section */}
             <div className="grid md:grid-cols-2 gap-8 mb-24">
-              {/* Features Card */}
-              <div className="rounded-3xl p-10" style={{ backgroundColor: '#f0f1f4' }}>
-                <h3 className="text-2xl font-bold mb-10" style={{ color: '#1a1a1a' }}>FEATURES</h3>
-                
+              <div className="rounded-3xl p-10 bg-gray-100">
+                <h3 className="text-2xl font-bold mb-10 text-black">FEATURES</h3>
                 <div className="space-y-8">
                   <div>
-                    <h4 className="font-semibold text-lg mb-3" style={{ color: '#1a1a1a' }}>Physics-Accurate Simulation Engine</h4>
+                    <h4 className="font-semibold text-lg mb-3 text-black">Physics-Accurate Simulation Engine</h4>
                     <p className="text-gray-600 leading-relaxed">
-                      Real-time cloth and motion simulation, customizable through 20+ parameters (e.g., fabric, force, movement type).
+                      Real-time cloth and motion simulation, customizable through 20+ parameters.
                     </p>
                   </div>
-                  
                   <div>
-                    <h4 className="font-semibold text-lg mb-3" style={{ color: '#1a1a1a' }}>On-Demand API with Scalable UI</h4>
+                    <h4 className="font-semibold text-lg mb-3 text-black">On-Demand API</h4>
                     <p className="text-gray-600 leading-relaxed">
-                      Self-serve platform for enterprises to request and receive high-fidelity video training data with seamless API integration.
-                    </p>
-                  </div>
-                  
-                  <div>
-                    <h4 className="font-semibold text-lg mb-3" style={{ color: '#1a1a1a' }}>Multi-Engine Platform</h4>
-                    <p className="text-gray-600 leading-relaxed">
-                      Beyond ClothTrain - a growing suite of engines for human motion, sensor data, and dynamic environments, building a data flywheel.
+                      Self-serve platform for enterprises to request high-fidelity video training data.
                     </p>
                   </div>
                 </div>
               </div>
               
-              {/* Benefits Card */}
-              <div className="rounded-3xl p-10" style={{ backgroundColor: '#e8eaee' }}>
-                <h3 className="text-2xl font-bold mb-10" style={{ color: '#1a1a1a' }}>BENEFITS</h3>
-                
+              <div className="rounded-3xl p-10 bg-gray-200">
+                <h3 className="text-2xl font-bold mb-10 text-black">BENEFITS</h3>
                 <div className="space-y-8">
                   <div>
-                    <h4 className="font-semibold text-lg mb-3" style={{ color: '#1a1a1a' }}>Faster, Cheaper AI Training</h4>
+                    <h4 className="font-semibold text-lg mb-3 text-black">Faster, Cheaper AI Training</h4>
                     <p className="text-gray-600 leading-relaxed">
-                      Specific, tagged data reduces training time and compute load - from 500M to just 500 frames per use case.
+                      Reduce training time from 500M to just 500 frames per use case.
                     </p>
                   </div>
-                  
                   <div>
-                    <h4 className="font-semibold text-lg mb-3" style={{ color: '#1a1a1a' }}>Enterprise-Ready Performance</h4>
+                    <h4 className="font-semibold text-lg mb-3 text-black">Enterprise-Ready Performance</h4>
                     <p className="text-gray-600 leading-relaxed">
-                      Extends video generation beyond the 4-8 second collapse point of current GenAI; stable, predictable, brand-safe.
-                    </p>
-                  </div>
-                  
-                  <div>
-                    <h4 className="font-semibold text-lg mb-3" style={{ color: '#1a1a1a' }}>Massive Revenue & Moat</h4>
-                    <p className="text-gray-600 leading-relaxed">
-                      Recurring revenue from API + per-garment pricing; proprietary tech years in the making that giants like Meta & Snap couldn't build.
+                      Stable, predictable, brand-safe video generation beyond current limits.
                     </p>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Performance Impact Section */}
-            <div className="mb-24">
-              <h2 className="text-3xl font-bold text-center mb-16" style={{ color: '#1a1a1a' }}>Performance Impact</h2>
-              
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-                <div className="text-center">
-                  <div className="mb-3">
-                    <span className="text-4xl font-bold" style={{ color: '#ef4444' }}>500M</span>
-                    <span className="text-2xl mx-2 text-gray-400">→</span>
-                    <span className="text-4xl font-bold" style={{ color: '#22c55e' }}>500</span>
-                  </div>
-                  <p className="text-sm text-gray-600">Training Frames Required</p>
-                </div>
-                
-                <div className="text-center">
-                  <div className="text-4xl font-bold mb-3" style={{ color: '#3b82f6' }}>45TB</div>
-                  <p className="text-sm text-gray-600">Dataset Volume Generated</p>
-                </div>
-                
-                <div className="text-center">
-                  <div className="text-4xl font-bold mb-3" style={{ color: '#3b82f6' }}>8K@60fps</div>
-                  <p className="text-sm text-gray-600">Video Resolution & Frame Rate</p>
-                </div>
-                
-                <div className="text-center">
-                  <div className="text-4xl font-bold mb-3" style={{ color: '#22c55e' }}>4 Years</div>
-                  <p className="text-sm text-gray-600">Technical Development Lead</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Horizontal Pipeline Diagram */}
-            <div className="mb-24">
-              <h3 className="text-2xl font-bold text-center mb-12" style={{ color: '#1a1a1a' }}>Data Generation Pipeline</h3>
-              <div className="relative">
-                {/* Connection Line */}
-                <div className="absolute top-[88px] left-[8.3%] right-[8.3%] h-[1px] bg-gray-300"></div>
-                
-                {/* Process Steps */}
-                <div className="flex justify-between">
-                  {[
-                    {
-                      title: 'Cloth Simulation',
-                      desc: 'Real-time physics engine simulates fabric behavior'
-                    },
-                    {
-                      title: 'Data Capture',
-                      desc: 'Multi-angle 8K capture at 60fps'
-                    },
-                    {
-                      title: 'Learning Process',
-                      desc: 'AI learns physical properties and constraints'
-                    },
-                    {
-                      title: 'Data Sets',
-                      desc: 'Organized, labeled datasets with metadata'
-                    },
-                    {
-                      title: 'API',
-                      desc: 'Simple REST API for data access'
-                    },
-                    {
-                      title: 'Enhanced GenAI',
-                      desc: 'Your AI models with physics understanding'
-                    }
-                  ].map((stage, idx) => (
-                    <div key={idx} className="flex flex-col items-center flex-1 px-2">
-                      {/* Text Above */}
-                      <div className="text-center mb-8 min-h-[60px]">
-                        <div className="font-semibold text-base mb-2" style={{ color: '#1a1a1a' }}>{stage.title}</div>
-                        <div className="text-gray-500 text-sm leading-tight">{stage.desc}</div>
-                      </div>
-                      
-                      {/* Dot */}
-                      <div className="w-3 h-3 rounded-full relative z-10" style={{ backgroundColor: '#3b82f6' }}></div>
-                      
-                      {/* Number Below */}
-                      <div className="mt-4 text-sm text-gray-400">{idx + 1}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Call to Action */}
             <div className="text-center">
-              <div className="inline-block rounded-3xl py-12 px-16" style={{ backgroundColor: '#3b82f6' }}>
+              <div className="inline-block rounded-3xl py-12 px-16 bg-blue-600">
                 <p className="text-4xl font-bold mb-3 text-white">1000x Reduction</p>
                 <p className="text-xl text-white opacity-90">500M frames → 500 frames per use case</p>
               </div>
@@ -1136,6 +1022,4 @@ dataset.download("./my_dataset/")`;
       </div>
     </div>
   );
-};
-
-export default DatasetPlatform;
+}
