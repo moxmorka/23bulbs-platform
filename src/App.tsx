@@ -1,14 +1,8 @@
 import React, { useState } from 'react';
-import { ArrowRight, ArrowLeft, X, Check, ChevronDown, Key, Copy, ExternalLink, Mail, Lock, User } from 'lucide-react';
+import { ArrowRight, ArrowLeft, X, Check, Key, Copy, Mail, Lock, User } from 'lucide-react';
 
 export default function DatasetPlatform() {
   const [currentPage, setCurrentPage] = useState('landing');
-  const [promptValue, setPromptValue] = useState('');
-  const [showModal, setShowModal] = useState(false);
-  const [selectedCategories, setSelectedCategories] = useState([]);
-  const [categoryConfigs, setCategoryConfigs] = useState({});
-  const [collapsedCategories, setCollapsedCategories] = useState({});
-  const [generatedDataset, setGeneratedDataset] = useState(null);
   const [apiKey, setApiKey] = useState('');
   const [copied, setCopied] = useState(false);
   const [meshParams, setMeshParams] = useState({
@@ -17,137 +11,43 @@ export default function DatasetPlatform() {
     position: { x: 0, y: 0, z: 0 },
     material: {
       color: '#4f46e5',
-      metalness: 0.3,
-      roughness: 0.4,
       wireframe: false
     },
     physics: {
       gravity: 9.8,
-      friction: 0.5,
-      bounce: 0.3,
       mass: 1.0
     }
   });
-
-  const datasetCategories = [
-    {
-      id: 'lights',
-      name: 'Lighting',
-      paramCount: 5,
-      options: [
-        { id: 'angle', name: 'Light Angle', type: 'range', min: 0, max: 360, default: 45, unit: '°' },
-        { id: 'count', name: 'Number of Lights', type: 'range', min: 1, max: 8, default: 3, unit: 'lights' },
-        { id: 'intensity', name: 'Light Intensity', type: 'range', min: 0.1, max: 2.0, default: 1.0, unit: 'lux', step: 0.1 },
-        { id: 'color_temp', name: 'Color Temperature', type: 'range', min: 2700, max: 6500, default: 5000, unit: 'K' },
-        { id: 'hdri', name: 'HDRI Environment', type: 'select', options: ['Studio', 'Outdoor', 'Indoor', 'Sunset'], default: 'Studio' }
-      ]
-    },
-    {
-      id: 'materials',
-      name: 'Materials & Textures',
-      paramCount: 5,
-      options: [
-        { id: 'fabric_type', name: 'Fabric Type', type: 'select', options: ['Cotton', 'Denim', 'Silk', 'Polyester', 'Wool', 'Leather'], default: 'Cotton' },
-        { id: 'roughness', name: 'Surface Roughness', type: 'range', min: 0.0, max: 1.0, default: 0.5, step: 0.1 },
-        { id: 'metallic', name: 'Metallic', type: 'range', min: 0.0, max: 1.0, default: 0.0, step: 0.1 },
-        { id: 'subsurface', name: 'Subsurface Scattering', type: 'range', min: 0.0, max: 1.0, default: 0.3, step: 0.1 },
-        { id: 'normal_strength', name: 'Normal Map Strength', type: 'range', min: 0.0, max: 2.0, default: 1.0, step: 0.1 }
-      ]
-    },
-    {
-      id: 'camera',
-      name: 'Camera Setup',
-      paramCount: 5,
-      options: [
-        { id: 'angles', name: 'Camera Angles', type: 'range', min: 1, max: 36, default: 8, unit: 'angles' },
-        { id: 'resolution', name: 'Resolution', type: 'select', options: ['HD', '4K', '8K'], default: '4K' },
-        { id: 'focal_length', name: 'Focal Length', type: 'range', min: 18, max: 200, default: 50, unit: 'mm' },
-        { id: 'depth_of_field', name: 'Depth of Field', type: 'range', min: 0.0, max: 10.0, default: 2.8, unit: 'f' },
-        { id: 'motion_blur', name: 'Motion Blur', type: 'range', min: 0.0, max: 1.0, default: 0.2, step: 0.1 }
-      ]
-    },
-    {
-      id: 'forces',
-      name: 'Physics Forces',
-      paramCount: 5,
-      options: [
-        { id: 'wind_strength', name: 'Wind Strength', type: 'range', min: 0.0, max: 10.0, default: 2.0, unit: 'm/s', step: 0.5 },
-        { id: 'gravity', name: 'Gravity Strength', type: 'range', min: 0.5, max: 2.0, default: 1.0, unit: 'g', step: 0.1 },
-        { id: 'wind_direction', name: 'Wind Direction', type: 'range', min: 0, max: 360, default: 90, unit: '°' },
-        { id: 'air_density', name: 'Air Density', type: 'range', min: 0.5, max: 2.0, default: 1.0, unit: 'kg/m³', step: 0.1 },
-        { id: 'collision_margin', name: 'Collision Margin', type: 'range', min: 0.001, max: 0.1, default: 0.01, unit: 'm', step: 0.001 }
-      ]
-    }
-  ];
 
   const marketplaceDatasets = [
     {
       id: 'pants',
       name: 'Pants Demo',
       description: 'Interactive Demo • 50 samples',
-      gradient: 'from-gray-800 to-black',
-      features: ['8K • 60fps • 36 cameras', 'AOV render passes', 'Wind physics: No wind → Storm', '35+ adjustable parameters'],
+      background: 'bg-gray-800',
+      features: ['8K • 60fps • 36 cameras', 'Wind physics simulation', '35+ adjustable parameters'],
       isDemo: true,
-      badge: 'Demo',
-      shape: 'rectangle'
+      badge: 'Demo'
     },
     {
       id: 'enterprise-3d',
       name: 'Launch Demo 2 Enterprise',
       description: 'Enterprise 3D Demo • Real-time',
-      gradient: 'from-purple-800 to-blue-900',
-      features: ['Real-time 3D simulation', 'Interactive mesh editor', 'Physics parameter control', 'Enterprise-grade tools'],
+      background: 'bg-purple-800',
+      features: ['Real-time 3D simulation', 'Interactive mesh editor', 'Physics parameter control'],
       isDemo: true,
-      badge: 'Enterprise Demo',
-      shape: 'hexagon'
+      badge: 'Enterprise Demo'
     },
     {
       id: 'dresses',
       name: 'Dresses & Skirts',
       description: 'Enterprise • 100K+ samples',
-      gradient: 'from-gray-700 to-gray-900',
-      features: ['Flowing fabric dynamics', 'Complex draping physics', 'Multiple fabric types', 'Full texture variants'],
+      background: 'bg-gray-700',
+      features: ['Flowing fabric dynamics', 'Complex draping physics', 'Multiple fabric types'],
       isDemo: false,
-      badge: 'Enterprise',
-      shape: 'triangle'
+      badge: 'Enterprise'
     }
   ];
-
-  const toggleCategory = (categoryId) => {
-    setSelectedCategories(prev => {
-      if (prev.includes(categoryId)) {
-        const newConfigs = { ...categoryConfigs };
-        delete newConfigs[categoryId];
-        setCategoryConfigs(newConfigs);
-        return prev.filter(id => id !== categoryId);
-      } else {
-        const category = datasetCategories.find(cat => cat.id === categoryId);
-        const defaultConfig = {};
-        category.options.forEach(option => {
-          defaultConfig[option.id] = option.default;
-        });
-        setCategoryConfigs(prev => ({ ...prev, [categoryId]: defaultConfig }));
-        return [...prev, categoryId];
-      }
-    });
-  };
-
-  const updateCategoryConfig = (categoryId, optionId, value) => {
-    setCategoryConfigs(prev => ({
-      ...prev,
-      [categoryId]: {
-        ...prev[categoryId],
-        [optionId]: value
-      }
-    }));
-  };
-
-  const toggleCategoryCollapse = (categoryId) => {
-    setCollapsedCategories(prev => ({
-      ...prev,
-      [categoryId]: !prev[categoryId]
-    }));
-  };
 
   const updateMeshParam = (category, param, value) => {
     setMeshParams(prev => ({
@@ -159,42 +59,9 @@ export default function DatasetPlatform() {
     }));
   };
 
-  const renderShape = (shape) => {
-    const shapeClasses = "w-8 h-8 bg-white bg-opacity-90";
-    
-    switch (shape) {
-      case 'rectangle':
-        return <div className={`${shapeClasses} rounded-sm`}></div>;
-      case 'triangle':
-        return (
-          <div className="w-0 h-0 border-l-[16px] border-r-[16px] border-b-[28px] border-l-transparent border-r-transparent border-b-white opacity-90"></div>
-        );
-      case 'hexagon':
-        return (
-          <div className="relative w-8 h-8">
-            <div className="absolute inset-0 bg-white opacity-90 transform rotate-0" style={{
-              clipPath: 'polygon(30% 0%, 70% 0%, 100% 50%, 70% 100%, 30% 100%, 0% 50%)'
-            }}></div>
-          </div>
-        );
-      default:
-        return <div className={`${shapeClasses} rounded-sm`}></div>;
-    }
-  };
-
   const generateDataset = () => {
-    const newApiKey = '23b_live_' + Math.random().toString(36).substring(2, 15);
+    const newApiKey = '23b_ent_' + Math.random().toString(36).substring(2, 15);
     setApiKey(newApiKey);
-    
-    const dataset = {
-      name: promptValue || 'Pants',
-      categories: selectedCategories,
-      samples: Math.floor(Math.random() * 50000) + 10000,
-      size: `${(Math.random() * 5 + 1).toFixed(1)}GB`,
-      price: selectedCategories.length * 29 + 99
-    };
-    setGeneratedDataset(dataset);
-    setShowModal(false);
     setCurrentPage('api-checkout');
   };
 
@@ -300,10 +167,10 @@ export default function DatasetPlatform() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {marketplaceDatasets.map(dataset => (
                 <div key={dataset.id} className="bg-white border border-gray-200 rounded-2xl overflow-hidden hover:shadow-lg transition-all">
-                  <div className={`h-48 bg-gradient-to-br ${dataset.gradient} relative`}>
+                  <div className={`h-48 ${dataset.background} relative`}>
                     <div className="absolute inset-0 flex items-center justify-center">
                       <div className="w-16 h-16 bg-white bg-opacity-10 rounded-xl flex items-center justify-center">
-                        {renderShape(dataset.shape)}
+                        <div className="w-8 h-8 bg-white bg-opacity-90 rounded-sm"></div>
                       </div>
                     </div>
                     <div className="absolute top-4 left-4">
@@ -334,9 +201,7 @@ export default function DatasetPlatform() {
                               if (dataset.id === 'enterprise-3d') {
                                 setCurrentPage('3d-editor');
                               } else {
-                                setPromptValue('Pants');
                                 setCurrentPage('generation');
-                                setShowModal(true);
                               }
                             }}
                             className="w-full bg-blue-600 text-white py-3 rounded-full font-medium hover:bg-blue-700 transition-colors"
@@ -381,136 +246,100 @@ export default function DatasetPlatform() {
               <h1 className="text-xl sm:text-2xl font-semibold text-black">23 Bulbs</h1>
               <span className="text-sm text-gray-500">• Enterprise 3D Demo</span>
             </div>
-            <div className="flex items-center space-x-4">
-              <button
-                onClick={() => setCurrentPage('marketplace')}
-                className="text-gray-600 hover:text-black px-4 py-2 text-xs sm:text-sm font-medium transition-colors"
-              >
-                Back to Marketplace
-              </button>
-              <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
-                <span className="text-xs font-medium text-gray-600">JD</span>
-              </div>
+            <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
+              <span className="text-xs font-medium text-gray-600">JD</span>
             </div>
           </div>
         </header>
 
         <div className="flex h-[calc(100vh-88px)]">
-          {/* 3D Editor Window */}
-          <div className="flex-1 bg-gray-900 relative">
+          <div className="flex-1 bg-gray-800 relative">
             <div className="absolute inset-0 flex items-center justify-center">
-              <div 
-                className="w-full h-full"
-                style={{
-                  background: 'linear-gradient(135deg, #1f2937 0%, #111827 100%)'
-                }}
-              >
-                <div className="relative w-full h-full flex items-center justify-center">
-                  <div className="relative">
-                    <div className="absolute inset-0 w-96 h-96 opacity-20">
-                      <svg width="100%" height="100%" className="text-gray-400">
-                        <defs>
-                          <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
-                            <path d="M 20 0 L 0 0 0 20" fill="none" stroke="currentColor" strokeWidth="0.5"/>
-                          </pattern>
-                        </defs>
-                        <rect width="100%" height="100%" fill="url(#grid)" />
-                      </svg>
-                    </div>
-                    
+              <div className="relative">
+                <div 
+                  className="relative transition-all duration-300 ease-in-out"
+                  style={{
+                    transform: `
+                      scale(${meshParams.scale.x}, ${meshParams.scale.y}) 
+                      rotateX(${meshParams.rotation.x}deg) 
+                      rotateY(${meshParams.rotation.y}deg) 
+                      rotateZ(${meshParams.rotation.z}deg)
+                      translate3d(${meshParams.position.x * 10}px, ${meshParams.position.y * -10}px, ${meshParams.position.z * 10}px)
+                    `,
+                    transformStyle: 'preserve-3d'
+                  }}
+                >
+                  <div 
+                    className="w-32 h-32 relative"
+                    style={{
+                      transform: 'rotateX(-15deg) rotateY(30deg)',
+                      transformStyle: 'preserve-3d'
+                    }}
+                  >
                     <div 
-                      className="relative transition-all duration-300 ease-in-out"
+                      className="absolute w-32 h-32 border-2 border-white border-opacity-30"
                       style={{
-                        transform: `
-                          scale(${meshParams.scale.x}, ${meshParams.scale.y}) 
-                          rotateX(${meshParams.rotation.x}deg) 
-                          rotateY(${meshParams.rotation.y}deg) 
-                          rotateZ(${meshParams.rotation.z}deg)
-                          translate3d(${meshParams.position.x * 10}px, ${meshParams.position.y * -10}px, ${meshParams.position.z * 10}px)
-                        `,
-                        transformStyle: 'preserve-3d'
+                        backgroundColor: meshParams.material.color,
+                        opacity: meshParams.material.wireframe ? 0.3 : 0.8,
+                        transform: 'translateZ(64px)'
                       }}
-                    >
-                      <div 
-                        className="w-32 h-32 relative"
-                        style={{
-                          transform: 'rotateX(-15deg) rotateY(30deg)',
-                          transformStyle: 'preserve-3d'
-                        }}
-                      >
-                        <div 
-                          className="absolute w-32 h-32 border-2 border-white border-opacity-30"
-                          style={{
-                            backgroundColor: meshParams.material.color,
-                            opacity: meshParams.material.wireframe ? 0.3 : 0.8,
-                            transform: 'translateZ(64px)'
-                          }}
-                        ></div>
-                        <div 
-                          className="absolute w-32 h-32 border-2 border-white border-opacity-30"
-                          style={{
-                            backgroundColor: meshParams.material.color,
-                            opacity: meshParams.material.wireframe ? 0.2 : 0.6,
-                            transform: 'translateZ(-64px) rotateY(180deg)'
-                          }}
-                        ></div>
-                        <div 
-                          className="absolute w-32 h-32 border-2 border-white border-opacity-30"
-                          style={{
-                            backgroundColor: meshParams.material.color,
-                            opacity: meshParams.material.wireframe ? 0.25 : 0.7,
-                            transform: 'rotateY(90deg) translateZ(64px)'
-                          }}
-                        ></div>
-                        <div 
-                          className="absolute w-32 h-32 border-2 border-white border-opacity-30"
-                          style={{
-                            backgroundColor: meshParams.material.color,
-                            opacity: meshParams.material.wireframe ? 0.2 : 0.5,
-                            transform: 'rotateY(-90deg) translateZ(64px)'
-                          }}
-                        ></div>
-                        <div 
-                          className="absolute w-32 h-32 border-2 border-white border-opacity-30"
-                          style={{
-                            backgroundColor: meshParams.material.color,
-                            opacity: meshParams.material.wireframe ? 0.3 : 0.9,
-                            transform: 'rotateX(90deg) translateZ(64px)'
-                          }}
-                        ></div>
-                        <div 
-                          className="absolute w-32 h-32 border-2 border-white border-opacity-30"
-                          style={{
-                            backgroundColor: meshParams.material.color,
-                            opacity: meshParams.material.wireframe ? 0.15 : 0.4,
-                            transform: 'rotateX(-90deg) translateZ(64px)'
-                          }}
-                        ></div>
-                      </div>
-                    </div>
+                    ></div>
+                    <div 
+                      className="absolute w-32 h-32 border-2 border-white border-opacity-30"
+                      style={{
+                        backgroundColor: meshParams.material.color,
+                        opacity: meshParams.material.wireframe ? 0.2 : 0.6,
+                        transform: 'translateZ(-64px) rotateY(180deg)'
+                      }}
+                    ></div>
+                    <div 
+                      className="absolute w-32 h-32 border-2 border-white border-opacity-30"
+                      style={{
+                        backgroundColor: meshParams.material.color,
+                        opacity: meshParams.material.wireframe ? 0.25 : 0.7,
+                        transform: 'rotateY(90deg) translateZ(64px)'
+                      }}
+                    ></div>
+                    <div 
+                      className="absolute w-32 h-32 border-2 border-white border-opacity-30"
+                      style={{
+                        backgroundColor: meshParams.material.color,
+                        opacity: meshParams.material.wireframe ? 0.2 : 0.5,
+                        transform: 'rotateY(-90deg) translateZ(64px)'
+                      }}
+                    ></div>
+                    <div 
+                      className="absolute w-32 h-32 border-2 border-white border-opacity-30"
+                      style={{
+                        backgroundColor: meshParams.material.color,
+                        opacity: meshParams.material.wireframe ? 0.3 : 0.9,
+                        transform: 'rotateX(90deg) translateZ(64px)'
+                      }}
+                    ></div>
+                    <div 
+                      className="absolute w-32 h-32 border-2 border-white border-opacity-30"
+                      style={{
+                        backgroundColor: meshParams.material.color,
+                        opacity: meshParams.material.wireframe ? 0.15 : 0.4,
+                        transform: 'rotateX(-90deg) translateZ(64px)'
+                      }}
+                    ></div>
                   </div>
-                  
-                  <div className="absolute top-4 left-4 text-white text-sm bg-black bg-opacity-50 rounded-lg p-3">
-                    <div>Scene: Enterprise Mesh Demo</div>
-                    <div>Renderer: WebGL 2.0</div>
-                    <div>Objects: 1 Cube</div>
-                  </div>
-                  
-                  <div className="absolute bottom-4 left-4 text-white text-xs bg-black bg-opacity-50 rounded-lg p-3">
-                    <div>Use Inspector Panel to modify mesh properties</div>
-                    <div>Real-time physics simulation active</div>
-                  </div>
+                </div>
+                
+                <div className="absolute top-4 left-4 text-white text-sm bg-black bg-opacity-50 rounded-lg p-3">
+                  <div>Scene: Enterprise Mesh Demo</div>
+                  <div>Renderer: WebGL 2.0</div>
+                  <div>Objects: 1 Cube</div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Inspector Panel */}
           <div className="w-80 bg-gray-50 border-l border-gray-200 overflow-y-auto">
             <div className="p-6">
               <h3 className="text-lg font-semibold text-black mb-6">Mesh Inspector</h3>
               
-              {/* Transform Section */}
               <div className="mb-8">
                 <h4 className="font-medium text-black mb-4 flex items-center">
                   <div className="w-3 h-3 bg-blue-500 rounded-full mr-2"></div>
@@ -575,7 +404,6 @@ export default function DatasetPlatform() {
                 </div>
               </div>
               
-              {/* Material Section */}
               <div className="mb-8">
                 <h4 className="font-medium text-black mb-4 flex items-center">
                   <div className="w-3 h-3 bg-purple-500 rounded-full mr-2"></div>
@@ -605,7 +433,6 @@ export default function DatasetPlatform() {
                 </div>
               </div>
               
-              {/* Physics Section */}
               <div className="mb-8">
                 <h4 className="font-medium text-black mb-4 flex items-center">
                   <div className="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
@@ -643,22 +470,9 @@ export default function DatasetPlatform() {
                 </div>
               </div>
               
-              {/* Action Buttons */}
               <div className="space-y-3">
                 <button 
-                  onClick={() => {
-                    const newApiKey = '23b_ent_' + Math.random().toString(36).substring(2, 15);
-                    setApiKey(newApiKey);
-                    const dataset = {
-                      name: '3D Mesh Simulation',
-                      categories: ['transform', 'material', 'physics'],
-                      samples: Math.floor(Math.random() * 100000) + 50000,
-                      size: `${(Math.random() * 10 + 5).toFixed(1)}GB`,
-                      price: 299
-                    };
-                    setGeneratedDataset(dataset);
-                    setCurrentPage('api-checkout');
-                  }}
+                  onClick={generateDataset}
                   className="w-full bg-purple-600 text-white py-3 rounded-lg font-medium hover:bg-purple-700 transition-colors"
                 >
                   Generate Enterprise Dataset
@@ -672,14 +486,10 @@ export default function DatasetPlatform() {
                       position: { x: 0, y: 0, z: 0 },
                       material: {
                         color: '#4f46e5',
-                        metalness: 0.3,
-                        roughness: 0.4,
                         wireframe: false
                       },
                       physics: {
                         gravity: 9.8,
-                        friction: 0.5,
-                        bounce: 0.3,
                         mass: 1.0
                       }
                     });
@@ -696,236 +506,15 @@ export default function DatasetPlatform() {
     );
   }
 
-  // Generation Page with Modal
-  if (currentPage === 'generation') {
-    return (
-      <div className="min-h-screen bg-white">
-        <header className="px-4 sm:px-6 py-6 sm:py-8 border-b border-gray-100">
-          <div className="max-w-6xl mx-auto flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <button
-                onClick={() => setCurrentPage('marketplace')}
-                className="text-gray-500 hover:text-black p-2 hover:bg-gray-50 rounded-full transition-colors"
-              >
-                <ArrowLeft className="w-5 h-5" />
-              </button>
-              <h1 className="text-xl sm:text-2xl font-semibold text-black">23 Bulbs</h1>
-            </div>
-            <div className="flex items-center space-x-4">
-              <button
-                onClick={() => setCurrentPage('marketplace')}
-                className="text-gray-600 hover:text-black px-4 py-2 text-xs sm:text-sm font-medium transition-colors"
-              >
-                Browse Datasets
-              </button>
-              <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
-                <span className="text-xs font-medium text-gray-600">JD</span>
-              </div>
-            </div>
-          </div>
-        </header>
-
-        {showModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-20 flex items-center justify-center p-4 sm:p-6 z-50">
-            <div className="bg-white rounded-2xl sm:rounded-3xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl">
-              <div className="p-4 sm:p-8 border-b border-gray-100 flex-shrink-0">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-xl sm:text-2xl font-bold text-black">Configure Dataset</h3>
-                    <p className="text-gray-600 mt-1 text-sm sm:text-base">"{promptValue}"</p>
-                  </div>
-                  <button
-                    onClick={() => setShowModal(false)}
-                    className="text-gray-400 hover:text-gray-600 p-2 hover:bg-gray-50 rounded-full transition-all"
-                  >
-                    <X className="w-5 h-5 sm:w-6 sm:h-6" />
-                  </button>
-                </div>
-              </div>
-              
-              <div className="flex-1 overflow-y-auto p-4 sm:p-8" style={{ maxHeight: 'calc(90vh - 200px)' }}>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6 sm:mb-8">
-                  {datasetCategories.map((category) => (
-                    <button
-                      key={category.id}
-                      onClick={() => toggleCategory(category.id)}
-                      className={`p-4 rounded-xl border transition-all text-left ${
-                        selectedCategories.includes(category.id)
-                          ? 'border-blue-500 bg-blue-50'
-                          : 'border-gray-200 hover:border-gray-300'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <span className="font-medium text-black">{category.name}</span>
-                          <span className="text-xs text-gray-500 ml-2">({category.paramCount} params)</span>
-                        </div>
-                        <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                          selectedCategories.includes(category.id)
-                            ? 'border-blue-500 bg-blue-500'
-                            : 'border-gray-300'
-                        }`}>
-                          {selectedCategories.includes(category.id) && (
-                            <div className="w-2 h-2 bg-white rounded-full"></div>
-                          )}
-                        </div>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-
-                {selectedCategories.length > 0 && (
-                  <div className="mb-8 border-t border-gray-100 pt-8">
-                    <h4 className="text-lg font-semibold text-black mb-6">Configuration Options</h4>
-                    <div className="space-y-4">
-                      {selectedCategories.map(categoryId => {
-                        const category = datasetCategories.find(cat => cat.id === categoryId);
-                        const config = categoryConfigs[categoryId] || {};
-                        const isCollapsed = collapsedCategories[categoryId];
-                        
-                        return (
-                          <div key={categoryId} className="bg-gray-50 rounded-xl overflow-hidden">
-                            <button
-                              onClick={() => toggleCategoryCollapse(categoryId)}
-                              className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-100 transition-colors"
-                            >
-                              <div className="flex items-center">
-                                <div className="w-3 h-3 bg-blue-500 rounded-full mr-3"></div>
-                                <h5 className="font-medium text-black">{category.name}</h5>
-                                <span className="text-xs text-gray-500 ml-2">({category.paramCount} parameters)</span>
-                              </div>
-                              <ChevronDown className={`w-5 h-5 text-gray-500 transition-transform ${
-                                isCollapsed ? '-rotate-90' : 'rotate-0'
-                              }`} />
-                            </button>
-                            
-                            {!isCollapsed && (
-                              <div className="px-4 sm:px-6 pb-4 sm:pb-6">
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                  {category.options.map(option => (
-                                    <div key={option.id} className="space-y-2">
-                                      <label className="text-sm font-medium text-gray-700">
-                                        {option.name}
-                                        {option.unit && <span className="text-gray-500 ml-1">({option.unit})</span>}
-                                      </label>
-                                      
-                                      {option.type === 'range' && (
-                                        <div className="space-y-1">
-                                          <input
-                                            type="range"
-                                            min={option.min}
-                                            max={option.max}
-                                            step={option.step || 1}
-                                            value={config[option.id] || option.default}
-                                            onChange={(e) => updateCategoryConfig(categoryId, option.id, parseFloat(e.target.value))}
-                                            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-                                          />
-                                          <div className="flex justify-between text-xs text-gray-500">
-                                            <span>{option.min}{option.unit}</span>
-                                            <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded font-medium">
-                                              {config[option.id] || option.default}{option.unit}
-                                            </span>
-                                            <span>{option.max}{option.unit}</span>
-                                          </div>
-                                        </div>
-                                      )}
-                                      
-                                      {option.type === 'select' && (
-                                        <select
-                                          value={config[option.id] || option.default}
-                                          onChange={(e) => updateCategoryConfig(categoryId, option.id, e.target.value)}
-                                          className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                                        >
-                                          {option.options.map(optValue => (
-                                            <option key={optValue} value={optValue}>{optValue}</option>
-                                          ))}
-                                        </select>
-                                      )}
-                                    </div>
-                                  ))}
-                                </div>
-                              </div>
-                            )}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
-              </div>
-                
-              <div className="flex flex-col sm:flex-row items-center justify-between p-4 sm:p-8 border-t border-gray-100 flex-shrink-0 space-y-3 sm:space-y-0">
-                <span className="text-gray-600 text-sm sm:text-base">
-                  {selectedCategories.length} categories selected ({selectedCategories.reduce((total, catId) => {
-                    const cat = datasetCategories.find(c => c.id === catId);
-                    return total + (cat ? cat.paramCount : 0);
-                  }, 0)} total parameters)
-                </span>
-                <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3 w-full sm:w-auto">
-                  <button
-                    onClick={() => setShowModal(false)}
-                    className="w-full sm:w-auto px-6 py-2.5 text-gray-600 hover:text-black font-medium transition-colors"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={generateDataset}
-                    disabled={selectedCategories.length === 0}
-                    className="w-full sm:w-auto px-6 py-2.5 bg-blue-600 text-white font-medium rounded-full hover:bg-blue-700 disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed transition-colors"
-                  >
-                    Generate Dataset
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        <div className="px-4 sm:px-6 py-8 sm:py-16">
-          <div className="max-w-6xl mx-auto text-center">
-            <div className="flex items-center justify-center space-x-2 mb-4">
-              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-              <span className="text-sm text-gray-600">Signed in as John Doe</span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl font-bold text-black mb-4 tracking-tight">
-              Interactive Demo
-            </h2>
-            <p className="text-lg sm:text-xl text-gray-600 mb-8">
-              Configure physics parameters for pants simulation
-            </p>
-            <button
-              onClick={() => setShowModal(true)}
-              className="bg-blue-600 text-white px-8 py-3 rounded-full font-medium hover:bg-blue-700 transition-colors"
-            >
-              Configure Parameters
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   // API Checkout Page
   if (currentPage === 'api-checkout') {
-    const codeExample1 = `from twentythreebulbs import Client
-
-client = Client(api_key="${apiKey ? apiKey.substring(0, 20) + '...' : 'your-api-key'}")
-dataset = client.generate("${generatedDataset?.name?.toLowerCase() || 'pants'}")`;
-
-    const codeExample2 = `# Generate and download your dataset
-result = dataset.create()
-dataset.download("./my_dataset/")`;
-
     return (
       <div className="min-h-screen bg-white">
         <header className="px-4 sm:px-6 py-6 sm:py-8 border-b border-gray-100">
           <div className="max-w-4xl mx-auto flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <button
-                onClick={() => {
-                  setCurrentPage('generation');
-                  setShowModal(true);
-                }}
+                onClick={() => setCurrentPage('3d-editor')}
                 className="text-gray-500 hover:text-black p-2 hover:bg-gray-50 rounded-full transition-colors"
               >
                 <ArrowLeft className="w-5 h-5" />
@@ -942,10 +531,10 @@ dataset.download("./my_dataset/")`;
                 <Key className="w-8 h-8 text-green-600" />
               </div>
               <h2 className="text-3xl font-bold text-black mb-4">API Access Generated</h2>
-              <p className="text-lg text-gray-600">Your dataset configuration is ready! Use this API key to access your custom "{generatedDataset?.name}" dataset.</p>
+              <p className="text-lg text-gray-600">Your enterprise dataset configuration is ready!</p>
             </div>
 
-            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl p-8 mb-8">
+            <div className="bg-blue-50 border border-blue-200 rounded-2xl p-8 mb-8">
               <h3 className="text-xl font-semibold text-black mb-6 flex items-center">
                 <Key className="w-5 h-5 mr-2" />
                 Your API Key
@@ -965,12 +554,6 @@ dataset.download("./my_dataset/")`;
                   </button>
                 </div>
               </div>
-
-              <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
-                <p className="text-sm text-amber-800">
-                  <strong>Important:</strong> Store this API key securely. For security reasons, we won't show it again.
-                </p>
-              </div>
             </div>
 
             <div className="bg-gray-50 rounded-2xl p-8 mb-8">
@@ -978,86 +561,121 @@ dataset.download("./my_dataset/")`;
               <div className="space-y-4">
                 <div className="flex justify-between">
                   <span className="text-gray-600">Dataset Type</span>
-                  <span className="font-medium text-black">{generatedDataset?.name}</span>
+                  <span className="font-medium text-black">3D Mesh Simulation</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Categories</span>
-                  <span className="font-medium text-black">{generatedDataset?.categories?.length} selected</span>
+                  <span className="font-medium text-black">3 selected</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Estimated Samples</span>
-                  <span className="font-medium text-black">{generatedDataset?.samples?.toLocaleString()}</span>
+                  <span className="font-medium text-black">75,000</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Data Volume</span>
-                  <span className="font-medium text-black">{generatedDataset?.size}</span>
-                </div>
-                <div className="flex justify-between border-t border-gray-200 pt-4">
-                  <span className="text-gray-600">API Endpoint</span>
-                  <span className="font-mono text-sm text-blue-600">api.23bulbs.com/v1/generate</span>
+                  <span className="font-medium text-black">8.5GB</span>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white border border-gray-200 rounded-2xl p-8 mb-8">
-              <h3 className="text-xl font-semibold text-black mb-6">Quick Start Guide</h3>
-              <div className="space-y-6">
-                <div>
-                  <h4 className="font-medium text-black mb-3">1. Install the SDK</h4>
-                  <div className="bg-gray-900 text-gray-100 rounded-lg p-4">
-                    <code className="text-sm">pip install twentythreebulbs</code>
-                  </div>
-                </div>
-                
-                <div>
-                  <h4 className="font-medium text-black mb-3">2. Initialize the Client</h4>
-                  <div className="bg-gray-900 text-gray-100 rounded-lg p-4 overflow-x-auto">
-                    <pre className="text-sm"><code>{codeExample1}</code></pre>
-                  </div>
-                </div>
-                
-                <div>
-                  <h4 className="font-medium text-black mb-3">3. Generate Your Dataset</h4>
-                  <div className="bg-gray-900 text-gray-100 rounded-lg p-4 overflow-x-auto">
-                    <pre className="text-sm"><code>{codeExample2}</code></pre>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <button 
+              onClick={() => setCurrentPage('3d-editor')}
+              className="w-full bg-blue-600 text-white py-3 rounded-full font-medium hover:bg-blue-700 transition-colors"
+            >
+              Create Another Dataset
+            </button>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
-            <div className="flex flex-col sm:flex-row gap-4">
-              <a 
-                href="https://docs.23bulbs.com/quickstart"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex-1 bg-blue-600 text-white py-3 rounded-full font-medium hover:bg-blue-700 transition-colors inline-flex items-center justify-center space-x-2"
+  // Technology Page
+  if (currentPage === 'technology') {
+    return (
+      <div className="min-h-screen bg-white">
+        <header className="px-4 sm:px-6 py-6 sm:py-8 border-b border-gray-100">
+          <div className="max-w-6xl mx-auto flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <button
+                onClick={() => setCurrentPage('landing')}
+                className="text-gray-500 hover:text-black p-2 hover:bg-gray-50 rounded-full transition-colors"
               >
-                <span>View Full Documentation</span>
-                <ExternalLink className="w-4 h-4" />
-              </a>
-              <button 
-                onClick={() => {
-                  setCurrentPage('generation');
-                  setShowModal(true);
-                }}
-                className="flex-1 bg-gray-100 text-gray-900 py-3 rounded-full font-medium hover:bg-gray-200 transition-colors"
-              >
-                Create Another Dataset
+                <ArrowLeft className="w-5 h-5" />
               </button>
+              <h1 className="text-xl sm:text-2xl font-semibold text-black">23 Bulbs</h1>
+            </div>
+            <button
+              onClick={() => setCurrentPage('signin')}
+              className="bg-black text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-medium hover:bg-gray-800 transition-colors"
+            >
+              Sign In
+            </button>
+          </div>
+        </header>
+
+        <main className="px-6 py-16">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-20">
+              <h2 className="text-4xl font-bold text-black mb-4 tracking-tight">Our Technology</h2>
+              <p className="text-xl text-gray-600">Physics-aware data generation pipeline</p>
             </div>
 
-            <div className="text-center mt-8 p-6 bg-blue-50 rounded-xl">
-              <h4 className="font-semibold text-black mb-2">Need Help?</h4>
-              <p className="text-sm text-gray-600 mb-4">
-                Our technical team is here to help you integrate and optimize your dataset generation.
-              </p>
-              <a 
-                href={`mailto:support@23bulbs.com?subject=API Integration Help&body=Hi, I need help integrating the dataset.`}
-                className="inline-flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
-              >
-                <span>Contact Support</span>
-                <ArrowRight className="w-4 h-4" />
-              </a>
+            <div className="grid md:grid-cols-2 gap-8 mb-24">
+              <div className="rounded-3xl p-10 bg-gray-100">
+                <h3 className="text-2xl font-bold mb-10 text-black">FEATURES</h3>
+                <div className="space-y-8">
+                  <div>
+                    <h4 className="font-semibold text-lg mb-3 text-black">Physics-Accurate Simulation Engine</h4>
+                    <p className="text-gray-600 leading-relaxed">
+                      Real-time cloth and motion simulation, customizable through 20+ parameters.
+                    </p>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-lg mb-3 text-black">On-Demand API</h4>
+                    <p className="text-gray-600 leading-relaxed">
+                      Self-serve platform for enterprises to request high-fidelity video training data.
+                    </p>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-lg mb-3 text-black">Multi-Engine Platform</h4>
+                    <p className="text-gray-600 leading-relaxed">
+                      Growing suite of engines for human motion, sensor data, and dynamic environments.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="rounded-3xl p-10 bg-gray-200">
+                <h3 className="text-2xl font-bold mb-10 text-black">BENEFITS</h3>
+                <div className="space-y-8">
+                  <div>
+                    <h4 className="font-semibold text-lg mb-3 text-black">Faster, Cheaper AI Training</h4>
+                    <p className="text-gray-600 leading-relaxed">
+                      Reduce training time from 500M to just 500 frames per use case.
+                    </p>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-lg mb-3 text-black">Enterprise-Ready Performance</h4>
+                    <p className="text-gray-600 leading-relaxed">
+                      Stable, predictable, brand-safe video generation beyond current limits.
+                    </p>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-lg mb-3 text-black">Massive Revenue & Moat</h4>
+                    <p className="text-gray-600 leading-relaxed">
+                      Proprietary tech years in the making that giants couldn't build.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="text-center">
+              <div className="inline-block rounded-3xl py-12 px-16 bg-blue-600">
+                <p className="text-4xl font-bold mb-3 text-white">1000x Reduction</p>
+                <p className="text-xl text-white opacity-90">500M frames → 500 frames per use case</p>
+              </div>
             </div>
           </div>
         </main>
@@ -1102,7 +720,7 @@ dataset.download("./my_dataset/")`;
             </div>
             
             <button 
-              onClick={() => setCurrentPage('generation')}
+              onClick={() => setCurrentPage('marketplace')}
               className="w-full bg-blue-600 text-white py-3 rounded-full font-medium hover:bg-blue-700 transition-colors"
             >
               Sign In
@@ -1114,6 +732,82 @@ dataset.download("./my_dataset/")`;
                 className="text-blue-600 hover:text-blue-700 text-sm font-medium"
               >
                 Don't have an account? Sign up
+              </button>
+            </div>
+            
+            <button 
+              onClick={() => setCurrentPage('landing')}
+              className="w-full text-gray-600 hover:text-black py-2 text-sm font-medium"
+            >
+              Back to Home
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Sign Up Page
+  if (currentPage === 'signup') {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="w-full max-w-md px-6">
+          <div className="text-center mb-8">
+            <h1 className="text-2xl font-semibold text-black mb-2">23 Bulbs</h1>
+            <h2 className="text-3xl font-bold text-black mb-2">Create account</h2>
+            <p className="text-gray-600">Start generating physics-aware datasets</p>
+          </div>
+          
+          <div className="space-y-4">
+            <div>
+              <label className="text-sm font-medium text-gray-700 block mb-2">Full Name</label>
+              <div className="relative">
+                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <input 
+                  type="text" 
+                  defaultValue="John Doe"
+                  className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                />
+              </div>
+            </div>
+            
+            <div>
+              <label className="text-sm font-medium text-gray-700 block mb-2">Email</label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <input 
+                  type="email" 
+                  defaultValue="john.doe@company.com"
+                  className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                />
+              </div>
+            </div>
+            
+            <div>
+              <label className="text-sm font-medium text-gray-700 block mb-2">Password</label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <input 
+                  type="password" 
+                  placeholder="Create a strong password"
+                  className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                />
+              </div>
+            </div>
+            
+            <button 
+              onClick={() => setCurrentPage('marketplace')}
+              className="w-full bg-blue-600 text-white py-3 rounded-full font-medium hover:bg-blue-700 transition-colors"
+            >
+              Create Account
+            </button>
+            
+            <div className="text-center">
+              <button 
+                onClick={() => setCurrentPage('signin')}
+                className="text-blue-600 hover:text-blue-700 text-sm font-medium"
+              >
+                Already have an account? Sign in
               </button>
             </div>
             
