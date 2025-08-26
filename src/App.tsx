@@ -5,123 +5,55 @@ export default function DatasetPlatform() {
   const [currentPage, setCurrentPage] = useState('landing');
   const [apiKey, setApiKey] = useState('');
   const [copied, setCopied] = useState(false);
+  const [selectedCategories, setSelectedCategories] = useState(['lighting', 'materials', 'camera', 'physics']);
+  const [parameters, setParameters] = useState({
+    lighting: { lightAngle: 45, numLights: 3, intensity: 0.8, colorTemp: 5500, hdri: 'studio' },
+    materials: { fabricType: 'cotton', roughness: 0.4, metallic: 0.1, subsurface: 0.3, normalStrength: 0.5 },
+    camera: { angles: 36, resolution: '8K', focalLength: 50, dof: 0.2, motionBlur: 0.1 },
+    physics: { windStrength: 0.6, gravity: 9.8, windDirection: 180, airDensity: 1.0, collisionMargin: 0.01, bounce: 0.3 }
+  });
   const [meshParams, setMeshParams] = useState({
-    scale: { x: 1, y: 1, z: 1 },
-    rotation: { x: 0, y: 0, z: 0 },
-    position: { x: 0, y: 0, z: 0 },
-    material: {
-      color: '#475569',
-      wireframe: false,
-      opacity: 1.0,
-      metalness: 0.3,
-      roughness: 0.4
-    },
-    physics: {
-      gravity: 9.8,
-      mass: 1.0,
-      friction: 0.5,
-      bounce: 0.3
-    },
+    material: { color: '#475569', wireframe: false, opacity: 1.0, metalness: 0.3, roughness: 0.4 },
+    camera: { position: { x: 0, y: 0, z: 5 }, rotation: { x: -15, y: 30, z: 0 }, fov: 50, zoom: 1.0 },
+    viewMode: 'orbit',
     animation: {
-      isPlaying: false,
-      currentFrame: 0,
-      totalFrames: 120,
-      speed: 1.0
+      isPlaying: false, currentFrame: 0, totalFrames: 120, speed: 1.0,
+      cameraKeyframes: [
+        { frame: 0, position: { x: 0, y: 0, z: 5 }, rotation: { x: -15, y: 30, z: 0 }, fov: 50 },
+        { frame: 40, position: { x: 3, y: 2, z: 4 }, rotation: { x: -10, y: 45, z: 0 }, fov: 60 },
+        { frame: 80, position: { x: -2, y: 1, z: 6 }, rotation: { x: -20, y: 60, z: 0 }, fov: 45 }
+      ]
     }
   });
 
   const marketplaceDatasets = [
-    {
-      id: 'pants',
-      name: 'Pants Demo',
-      description: 'Interactive Demo • 50 samples',
-      background: 'bg-gray-800',
-      features: ['8K • 60fps • 36 cameras', 'Wind physics simulation', '35+ adjustable parameters'],
-      isDemo: true,
-      badge: 'Demo'
-    },
-    {
-      id: 'enterprise-3d',
-      name: 'Launch Demo 2 Enterprise',
-      description: 'Enterprise 3D Demo • Real-time',
-      background: 'bg-slate-700',
-      features: ['Real-time 3D simulation', 'Interactive mesh editor', 'Physics parameter control'],
-      isDemo: true,
-      badge: 'Enterprise Demo'
-    },
-    {
-      id: 'dresses',
-      name: 'Dresses & Skirts',
-      description: 'Enterprise • 100K+ samples',
-      background: 'bg-gray-700',
-      features: ['Flowing fabric dynamics', 'Complex draping physics', 'Multiple fabric types'],
-      isDemo: false,
-      badge: 'Enterprise'
-    },
-    {
-      id: 'jackets',
-      name: 'Jackets & Coats',
-      description: 'Enterprise • 150K+ samples',
-      background: 'bg-slate-800',
-      features: ['Heavy fabric simulation', 'Collar & sleeve dynamics', 'Button & zipper physics'],
-      isDemo: false,
-      badge: 'Enterprise'
-    },
-    {
-      id: 'sportswear',
-      name: 'Athletic Wear',
-      description: 'Enterprise • 80K+ samples',
-      background: 'bg-gray-600',
-      features: ['Stretch fabric dynamics', 'Moisture simulation', 'Performance materials'],
-      isDemo: false,
-      badge: 'Enterprise'
-    },
-    {
-      id: 'furniture',
-      name: 'Furniture & Upholstery',
-      description: 'Enterprise • 120K+ samples',
-      background: 'bg-slate-600',
-      features: ['Cushion deformation', 'Leather & fabric textures', 'Structural physics'],
-      isDemo: false,
-      badge: 'Enterprise'
-    },
-    {
-      id: 'curtains',
-      name: 'Curtains & Drapes',
-      description: 'Enterprise • 90K+ samples',
-      background: 'bg-gray-900',
-      features: ['Wind interaction', 'Hanging dynamics', 'Light filtering effects'],
-      isDemo: false,
-      badge: 'Enterprise'
-    },
-    {
-      id: 'automotive',
-      name: 'Automotive Interiors',
-      description: 'Enterprise • 200K+ samples',
-      background: 'bg-black',
-      features: ['Seat deformation', 'Dashboard materials', 'Safety simulation'],
-      isDemo: false,
-      badge: 'Enterprise'
-    },
-    {
-      id: 'medical',
-      name: 'Medical Textiles',
-      description: 'Enterprise • 60K+ samples',
-      background: 'bg-slate-900',
-      features: ['Surgical drapes', 'Patient positioning', 'Sterile environments'],
-      isDemo: false,
-      badge: 'Enterprise'
-    }
+    { id: 'pants', name: 'Pants Demo', description: 'Interactive Demo • 50 samples', background: 'bg-gray-800', features: ['8K • 60fps • 36 cameras', 'Wind physics simulation', '35+ adjustable parameters'], isDemo: true, badge: 'Demo' },
+    { id: 'enterprise-3d', name: 'Launch Demo 2 Enterprise', description: 'Enterprise 3D Demo • Real-time', background: 'bg-slate-700', features: ['Real-time 3D simulation', 'Interactive mesh editor', 'Physics parameter control'], isDemo: true, badge: 'Enterprise Demo' },
+    { id: 'dresses', name: 'Dresses & Skirts', description: 'Enterprise • 100K+ samples', background: 'bg-gray-700', features: ['Flowing fabric dynamics', 'Complex draping physics', 'Multiple fabric types'], isDemo: false, badge: 'Enterprise' },
+    { id: 'jackets', name: 'Jackets & Coats', description: 'Enterprise • 150K+ samples', background: 'bg-slate-800', features: ['Heavy fabric simulation', 'Collar & sleeve dynamics', 'Button & zipper physics'], isDemo: false, badge: 'Enterprise' },
+    { id: 'sportswear', name: 'Athletic Wear', description: 'Enterprise • 80K+ samples', background: 'bg-gray-600', features: ['Stretch fabric dynamics', 'Moisture simulation', 'Performance materials'], isDemo: false, badge: 'Enterprise' },
+    { id: 'furniture', name: 'Furniture & Upholstery', description: 'Enterprise • 120K+ samples', background: 'bg-slate-600', features: ['Cushion deformation', 'Leather & fabric textures', 'Structural physics'], isDemo: false, badge: 'Enterprise' },
+    { id: 'curtains', name: 'Curtains & Drapes', description: 'Enterprise • 90K+ samples', background: 'bg-gray-900', features: ['Wind interaction', 'Hanging dynamics', 'Light filtering effects'], isDemo: false, badge: 'Enterprise' },
+    { id: 'automotive', name: 'Automotive Interiors', description: 'Enterprise • 200K+ samples', background: 'bg-black', features: ['Seat deformation', 'Dashboard materials', 'Safety simulation'], isDemo: false, badge: 'Enterprise' },
+    { id: 'medical', name: 'Medical Textiles', description: 'Enterprise • 60K+ samples', background: 'bg-slate-900', features: ['Surgical drapes', 'Patient positioning', 'Sterile environments'], isDemo: false, badge: 'Enterprise' }
   ];
 
+  const updateParameter = (category, key, value) => {
+    setParameters(prev => ({ ...prev, [category]: { ...prev[category], [key]: value } }));
+  };
+
   const updateMeshParam = (category, param, value) => {
-    setMeshParams(prev => ({
-      ...prev,
-      [category]: {
-        ...prev[category],
-        [param]: value
-      }
-    }));
+    if (category === 'viewMode') {
+      setMeshParams(prev => ({ ...prev, viewMode: value }));
+    } else {
+      setMeshParams(prev => ({ ...prev, [category]: { ...prev[category], [param]: value } }));
+    }
+  };
+
+  const generatePantsDataset = () => {
+    const newApiKey = '23b_demo_' + Math.random().toString(36).substring(2, 15);
+    setApiKey(newApiKey);
+    setCurrentPage('api-checkout');
   };
 
   const generateDataset = () => {
@@ -138,54 +70,23 @@ export default function DatasetPlatform() {
     }
   };
 
-  // Landing Page
   if (currentPage === 'landing') {
     return (
       <div className="min-h-screen bg-white">
         <header className="px-4 sm:px-6 py-6 sm:py-8">
           <div className="max-w-6xl mx-auto flex items-center justify-between">
             <h1 className="text-xl sm:text-2xl font-semibold text-black">23 Bulbs</h1>
-            <button
-              onClick={() => setCurrentPage('signin')}
-              className="bg-black text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-medium hover:bg-gray-800 transition-colors"
-            >
-              Sign In
-            </button>
+            <button onClick={() => setCurrentPage('signin')} className="bg-black text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-medium hover:bg-gray-800 transition-colors">Sign In</button>
           </div>
         </header>
-
         <main className="px-4 sm:px-6 pt-12 sm:pt-24 pb-16 sm:pb-32">
           <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-4xl sm:text-6xl font-bold text-black mb-6 sm:mb-8 leading-tight tracking-tight">
-              Physics-Aware Datasets<br />
-              for Enterprise GenAI
-            </h2>
-            
-            <p className="text-lg sm:text-xl text-gray-600 mb-12 sm:mb-16 max-w-2xl mx-auto leading-relaxed px-4">
-              Power the next generation of AI with real-world fidelity. Our breakthrough 
-              real-time simulation engine delivers physics-accurate training data that unlocks GenAI for enterprise use.
-            </p>
-
+            <h2 className="text-4xl sm:text-6xl font-bold text-black mb-6 sm:mb-8 leading-tight tracking-tight">Physics-Aware Datasets<br />for Enterprise GenAI</h2>
+            <p className="text-lg sm:text-xl text-gray-600 mb-12 sm:mb-16 max-w-2xl mx-auto leading-relaxed px-4">Power the next generation of AI with real-world fidelity. Our breakthrough real-time simulation engine delivers physics-accurate training data that unlocks GenAI for enterprise use.</p>
             <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4 px-4">
-              <button 
-                onClick={() => setCurrentPage('signup')}
-                className="bg-blue-600 text-white w-full sm:w-52 py-3.5 rounded-full text-base font-semibold hover:bg-blue-700 transition-all duration-200 inline-flex items-center justify-center space-x-2 shadow-sm"
-              >
-                <span>Sign Up</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
-              <button 
-                onClick={() => setCurrentPage('marketplace')}
-                className="bg-black text-white w-full sm:w-52 py-3.5 rounded-full text-base font-semibold hover:bg-gray-800 transition-all duration-200 shadow-sm"
-              >
-                Browse Datasets
-              </button>
-              <button 
-                onClick={() => setCurrentPage('technology')}
-                className="bg-gray-100 text-gray-900 w-full sm:w-52 py-3.5 rounded-full text-base font-semibold hover:bg-gray-200 transition-all duration-200 shadow-sm"
-              >
-                Technology
-              </button>
+              <button onClick={() => setCurrentPage('signup')} className="bg-blue-600 text-white w-full sm:w-52 py-3.5 rounded-full text-base font-semibold hover:bg-blue-700 transition-all duration-200 inline-flex items-center justify-center space-x-2 shadow-sm"><span>Sign Up</span><ArrowRight className="w-4 h-4" /></button>
+              <button onClick={() => setCurrentPage('marketplace')} className="bg-black text-white w-full sm:w-52 py-3.5 rounded-full text-base font-semibold hover:bg-gray-800 transition-all duration-200 shadow-sm">Browse Datasets</button>
+              <button onClick={() => setCurrentPage('technology')} className="bg-gray-100 text-gray-900 w-full sm:w-52 py-3.5 rounded-full text-base font-semibold hover:bg-gray-200 transition-all duration-200 shadow-sm">Technology</button>
             </div>
           </div>
         </main>
@@ -193,42 +94,24 @@ export default function DatasetPlatform() {
     );
   }
 
-  // Marketplace Page
   if (currentPage === 'marketplace') {
     return (
       <div className="min-h-screen bg-white">
         <header className="px-4 sm:px-6 py-6 sm:py-8 border-b border-gray-100">
           <div className="max-w-6xl mx-auto flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <button
-                onClick={() => setCurrentPage('landing')}
-                className="text-gray-500 hover:text-black p-2 hover:bg-gray-50 rounded-full transition-colors"
-              >
-                <ArrowLeft className="w-5 h-5" />
-              </button>
+              <button onClick={() => setCurrentPage('landing')} className="text-gray-500 hover:text-black p-2 hover:bg-gray-50 rounded-full transition-colors"><ArrowLeft className="w-5 h-5" /></button>
               <h1 className="text-xl sm:text-2xl font-semibold text-black">23 Bulbs</h1>
             </div>
-            <button
-              onClick={() => setCurrentPage('signin')}
-              className="bg-black text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-medium hover:bg-gray-800 transition-colors"
-            >
-              Sign In
-            </button>
+            <button onClick={() => setCurrentPage('signin')} className="bg-black text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-medium hover:bg-gray-800 transition-colors">Sign In</button>
           </div>
         </header>
-
         <main className="px-6 py-16">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold text-black mb-4 tracking-tight">
-                Pre-Built Datasets
-              </h2>
-              <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                Enterprise-grade physics-aware datasets that unlock GenAI for real-world applications. 
-                Reduce training time from 500M to 500 frames per use case.
-              </p>
+              <h2 className="text-4xl font-bold text-black mb-4 tracking-tight">Pre-Built Datasets</h2>
+              <p className="text-xl text-gray-600 max-w-2xl mx-auto">Enterprise-grade physics-aware datasets that unlock GenAI for real-world applications. Reduce training time from 500M to 500 frames per use case.</p>
             </div>
-
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {marketplaceDatasets.map(dataset => (
                 <div key={dataset.id} className="bg-white border border-gray-200 rounded-2xl overflow-hidden hover:shadow-lg transition-all">
@@ -239,9 +122,7 @@ export default function DatasetPlatform() {
                       </div>
                     </div>
                     <div className="absolute top-4 left-4">
-                      <span className={`px-3 py-1 ${dataset.isDemo ? 'bg-blue-600' : 'bg-black'} bg-opacity-80 text-white text-xs font-medium rounded-full`}>
-                        {dataset.badge}
-                      </span>
+                      <span className={`px-3 py-1 ${dataset.isDemo ? 'bg-blue-600' : 'bg-black'} bg-opacity-80 text-white text-xs font-medium rounded-full`}>{dataset.badge}</span>
                     </div>
                   </div>
                   <div className="p-6">
@@ -249,39 +130,19 @@ export default function DatasetPlatform() {
                     <p className="text-gray-600 mb-4">{dataset.description}</p>
                     <ul className="space-y-2 mb-6">
                       {dataset.features.map((feature, idx) => (
-                        <li key={idx} className="text-sm text-gray-600 flex items-center">
-                          <Check className="w-4 h-4 text-green-500 mr-2 flex-shrink-0" />
-                          {feature}
-                        </li>
+                        <li key={idx} className="text-sm text-gray-600 flex items-center"><Check className="w-4 h-4 text-green-500 mr-2 flex-shrink-0" />{feature}</li>
                       ))}
                     </ul>
                     <div className="text-center">
                       {dataset.isDemo ? (
                         <>
-                          <p className="text-lg font-semibold text-blue-900 mb-4">
-                            {dataset.id === 'enterprise-3d' ? 'Try Enterprise 3D Demo' : 'Try Interactive Demo'}
-                          </p>
-                          <button 
-                            onClick={() => {
-                              if (dataset.id === 'enterprise-3d') {
-                                setCurrentPage('3d-editor');
-                              } else {
-                                setCurrentPage('generation');
-                              }
-                            }}
-                            className="w-full bg-blue-600 text-white py-3 rounded-full font-medium hover:bg-blue-700 transition-colors"
-                          >
-                            {dataset.id === 'enterprise-3d' ? 'Launch Demo 2 Enterprise' : 'Launch Demo'}
-                          </button>
+                          <p className="text-lg font-semibold text-blue-900 mb-4">{dataset.id === 'enterprise-3d' ? 'Try Enterprise 3D Demo' : 'Try Interactive Demo'}</p>
+                          <button onClick={() => setCurrentPage(dataset.id === 'enterprise-3d' ? '3d-editor' : 'generation')} className="w-full bg-blue-600 text-white py-3 rounded-full font-medium hover:bg-blue-700 transition-colors">{dataset.id === 'enterprise-3d' ? 'Launch Demo 2 Enterprise' : 'Launch Demo'}</button>
                         </>
                       ) : (
                         <>
                           <p className="text-lg font-semibold text-gray-900 mb-4">Enterprise License</p>
-                          <button 
-                            className="w-full bg-black text-white py-3 rounded-full font-medium hover:bg-gray-800 transition-colors"
-                          >
-                            Contact Sales
-                          </button>
+                          <button className="w-full bg-black text-white py-3 rounded-full font-medium hover:bg-gray-800 transition-colors">Contact Sales</button>
                         </>
                       )}
                     </div>
@@ -295,19 +156,142 @@ export default function DatasetPlatform() {
     );
   }
 
-  // 3D Editor Page
+  if (currentPage === 'generation') {
+    const categoryConfig = {
+      lighting: { title: 'Lighting', color: 'bg-yellow-500', description: 'Light angles, intensity, color temperature', params: [
+        { key: 'lightAngle', label: 'Light Angle', type: 'range', min: 0, max: 90, unit: '°' },
+        { key: 'numLights', label: 'Number of Lights', type: 'range', min: 1, max: 8, unit: '' },
+        { key: 'intensity', label: 'Light Intensity', type: 'range', min: 0.1, max: 2.0, step: 0.1, unit: '' },
+        { key: 'colorTemp', label: 'Color Temperature', type: 'range', min: 2700, max: 8000, unit: 'K' },
+        { key: 'hdri', label: 'HDRI Environment', type: 'select', options: ['studio', 'outdoor', 'indoor', 'sunset'] }
+      ]},
+      materials: { title: 'Materials & Textures', color: 'bg-gray-500', description: 'Fabric types, surface properties, textures', params: [
+        { key: 'fabricType', label: 'Fabric Type', type: 'select', options: ['cotton', 'silk', 'denim', 'leather', 'synthetic'] },
+        { key: 'roughness', label: 'Surface Roughness', type: 'range', min: 0, max: 1, step: 0.01, unit: '' },
+        { key: 'metallic', label: 'Metallic', type: 'range', min: 0, max: 1, step: 0.01, unit: '' },
+        { key: 'subsurface', label: 'Subsurface Scattering', type: 'range', min: 0, max: 1, step: 0.01, unit: '' },
+        { key: 'normalStrength', label: 'Normal Map Strength', type: 'range', min: 0, max: 2, step: 0.01, unit: '' }
+      ]},
+      camera: { title: 'Camera Setup', color: 'bg-gray-600', description: 'Angles, resolution, focal length, effects', params: [
+        { key: 'angles', label: 'Camera Angles', type: 'range', min: 8, max: 64, unit: '' },
+        { key: 'resolution', label: 'Resolution', type: 'select', options: ['4K', '8K', '12K'] },
+        { key: 'focalLength', label: 'Focal Length', type: 'range', min: 24, max: 200, unit: 'mm' },
+        { key: 'dof', label: 'Depth of Field', type: 'range', min: 0, max: 1, step: 0.01, unit: '' },
+        { key: 'motionBlur', label: 'Motion Blur', type: 'range', min: 0, max: 1, step: 0.01, unit: '' }
+      ]},
+      physics: { title: 'Physics Forces', color: 'bg-black', description: 'Wind, gravity, air density, collisions', params: [
+        { key: 'windStrength', label: 'Wind Strength', type: 'range', min: 0, max: 2, step: 0.1, unit: 'm/s' },
+        { key: 'gravity', label: 'Gravity Strength', type: 'range', min: 0, max: 20, step: 0.1, unit: 'm/s²' },
+        { key: 'windDirection', label: 'Wind Direction', type: 'range', min: 0, max: 360, unit: '°' },
+        { key: 'airDensity', label: 'Air Density', type: 'range', min: 0.5, max: 2.0, step: 0.1, unit: 'kg/m³' },
+        { key: 'collisionMargin', label: 'Collision Margin', type: 'range', min: 0.001, max: 0.1, step: 0.001, unit: 'm' }
+      ]}
+    };
+
+    const toggleCategory = (categoryKey) => {
+      if (selectedCategories.includes(categoryKey)) {
+        setSelectedCategories(prev => prev.filter(cat => cat !== categoryKey));
+      } else {
+        setSelectedCategories(prev => [...prev, categoryKey]);
+      }
+    };
+
+    const selectedParamCount = selectedCategories.reduce((total, cat) => total + categoryConfig[cat].params.length, 0);
+
+    return (
+      <div className="min-h-screen bg-white">
+        <header className="px-4 sm:px-6 py-6 sm:py-8 border-b border-gray-100">
+          <div className="max-w-7xl mx-auto flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <button onClick={() => setCurrentPage('marketplace')} className="text-gray-500 hover:text-black p-2 hover:bg-gray-50 rounded-full transition-colors"><ArrowLeft className="w-5 h-5" /></button>
+              <h1 className="text-xl sm:text-2xl font-semibold text-black">23 Bulbs</h1>
+              <span className="text-sm text-gray-500">• Configure Parameters</span>
+            </div>
+            <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
+              <span className="text-xs font-medium text-gray-600">JD</span>
+            </div>
+          </div>
+        </header>
+        <div className="px-6 py-12">
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold text-black mb-4">Choose Parameter Categories</h2>
+              <p className="text-lg text-gray-600">Select which aspects of the simulation you'd like to customize</p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+              {Object.entries(categoryConfig).map(([categoryKey, category]) => (
+                <div key={categoryKey} className="space-y-6">
+                  <div onClick={() => toggleCategory(categoryKey)} className={`border-2 rounded-2xl p-6 cursor-pointer transition-all hover:shadow-lg ${selectedCategories.includes(categoryKey) ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'}`}>
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex items-center space-x-3">
+                        <div className={`w-4 h-4 ${category.color} rounded-full`}></div>
+                        <h3 className="text-xl font-semibold text-black">{category.title}</h3>
+                      </div>
+                      <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${selectedCategories.includes(categoryKey) ? 'bg-blue-500 border-blue-500' : 'border-gray-300'}`}>
+                        {selectedCategories.includes(categoryKey) && <Check className="w-4 h-4 text-white" />}
+                      </div>
+                    </div>
+                    <p className="text-gray-600 mb-4">{category.description}</p>
+                    <div className="text-sm text-gray-500">{category.params.length} parameters available</div>
+                  </div>
+                  {selectedCategories.includes(categoryKey) && (
+                    <div className="bg-white border border-gray-200 rounded-2xl p-6">
+                      <h4 className="text-lg font-semibold text-black mb-4 flex items-center">
+                        <div className={`w-3 h-3 ${category.color} rounded-full mr-2`}></div>
+                        {category.title} Parameters
+                      </h4>
+                      <div className="space-y-4">
+                        {category.params.map(param => {
+                          const currentValue = parameters[categoryKey][param.key];
+                          return (
+                            <div key={param.key} className="space-y-2">
+                              <div className="flex justify-between items-center">
+                                <label className="text-sm font-medium text-gray-700">{param.label}</label>
+                                <span className="text-sm text-gray-500">{currentValue}{param.unit || ''}</span>
+                              </div>
+                              {param.type === 'range' ? (
+                                <input type="range" min={param.min} max={param.max} step={param.step || 1} value={currentValue} onChange={(e) => updateParameter(categoryKey, param.key, parseFloat(e.target.value))} className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" />
+                              ) : (
+                                <select value={currentValue} onChange={(e) => updateParameter(categoryKey, param.key, e.target.value)} className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+                                  {param.options.map(option => <option key={option} value={option}>{option}</option>)}
+                                </select>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+            <div className="bg-gray-50 rounded-2xl p-8 mb-8">
+              <div className="text-center">
+                <h3 className="text-xl font-semibold text-black mb-4">Selection Summary</h3>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div><div className="text-2xl font-bold text-blue-600">{selectedCategories.length}</div><div className="text-sm text-gray-600">Categories</div></div>
+                  <div><div className="text-2xl font-bold text-blue-600">{selectedParamCount}</div><div className="text-sm text-gray-600">Parameters</div></div>
+                  <div><div className="text-2xl font-bold text-blue-600">{Math.floor(selectedParamCount * 2.5)}K</div><div className="text-sm text-gray-600">Est. Samples</div></div>
+                  <div><div className="text-2xl font-bold text-blue-600">{(selectedParamCount * 0.26).toFixed(1)}GB</div><div className="text-sm text-gray-600">Data Volume</div></div>
+                </div>
+              </div>
+            </div>
+            <div className="text-center">
+              <button onClick={generatePantsDataset} disabled={selectedCategories.length === 0} className={`px-12 py-4 rounded-full text-lg font-semibold transition-colors shadow-sm ${selectedCategories.length > 0 ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`}>Generate Dataset ({selectedParamCount} parameters)</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (currentPage === '3d-editor') {
     return (
       <div className="min-h-screen bg-white">
         <header className="px-4 sm:px-6 py-6 sm:py-8 border-b border-gray-100">
           <div className="max-w-7xl mx-auto flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <button
-                onClick={() => setCurrentPage('marketplace')}
-                className="text-gray-500 hover:text-black p-2 hover:bg-gray-50 rounded-full transition-colors"
-              >
-                <ArrowLeft className="w-5 h-5" />
-              </button>
+              <button onClick={() => setCurrentPage('marketplace')} className="text-gray-500 hover:text-black p-2 hover:bg-gray-50 rounded-full transition-colors"><ArrowLeft className="w-5 h-5" /></button>
               <h1 className="text-xl sm:text-2xl font-semibold text-black">23 Bulbs</h1>
               <span className="text-sm text-gray-500">• Enterprise 3D Demo</span>
             </div>
@@ -316,376 +300,176 @@ export default function DatasetPlatform() {
             </div>
           </div>
         </header>
-
         <div className="flex h-[calc(100vh-88px)]">
           <div className="flex-1 bg-gray-100 relative">
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="relative">
-                <div 
-                  className="relative transition-all duration-300 ease-in-out"
-                  style={{
-                    transform: `
-                      scale(${meshParams.scale.x}, ${meshParams.scale.y}) 
-                      rotateX(${meshParams.rotation.x}deg) 
-                      rotateY(${meshParams.rotation.y}deg) 
-                      rotateZ(${meshParams.rotation.z}deg)
-                      translate3d(${meshParams.position.x * 10}px, ${meshParams.position.y * -10}px, ${meshParams.position.z * 10}px)
-                    `,
-                    transformStyle: 'preserve-3d'
-                  }}
-                >
-                  <div 
-                    className="w-32 h-32 relative"
-                    style={{
-                      transform: 'rotateX(-15deg) rotateY(30deg)',
-                      transformStyle: 'preserve-3d'
-                    }}
-                  >
-                    <div 
-                      className="absolute w-32 h-32 border-2"
-                      style={{
-                        backgroundColor: meshParams.material.color,
-                        opacity: meshParams.material.wireframe ? 0.3 : meshParams.material.opacity * 0.8,
-                        borderColor: meshParams.material.wireframe ? '#374151' : 'rgba(55, 65, 81, 0.3)',
-                        transform: 'translateZ(64px)'
-                      }}
-                    ></div>
-                    <div 
-                      className="absolute w-32 h-32 border-2"
-                      style={{
-                        backgroundColor: meshParams.material.color,
-                        opacity: meshParams.material.wireframe ? 0.2 : meshParams.material.opacity * 0.6,
-                        borderColor: meshParams.material.wireframe ? '#374151' : 'rgba(55, 65, 81, 0.3)',
-                        transform: 'translateZ(-64px) rotateY(180deg)'
-                      }}
-                    ></div>
-                    <div 
-                      className="absolute w-32 h-32 border-2"
-                      style={{
-                        backgroundColor: meshParams.material.color,
-                        opacity: meshParams.material.wireframe ? 0.25 : meshParams.material.opacity * 0.7,
-                        borderColor: meshParams.material.wireframe ? '#374151' : 'rgba(55, 65, 81, 0.3)',
-                        transform: 'rotateY(90deg) translateZ(64px)'
-                      }}
-                    ></div>
-                    <div 
-                      className="absolute w-32 h-32 border-2"
-                      style={{
-                        backgroundColor: meshParams.material.color,
-                        opacity: meshParams.material.wireframe ? 0.2 : meshParams.material.opacity * 0.5,
-                        borderColor: meshParams.material.wireframe ? '#374151' : 'rgba(55, 65, 81, 0.3)',
-                        transform: 'rotateY(-90deg) translateZ(64px)'
-                      }}
-                    ></div>
-                    <div 
-                      className="absolute w-32 h-32 border-2"
-                      style={{
-                        backgroundColor: meshParams.material.color,
-                        opacity: meshParams.material.wireframe ? 0.3 : meshParams.material.opacity * 0.9,
-                        borderColor: meshParams.material.wireframe ? '#374151' : 'rgba(55, 65, 81, 0.3)',
-                        transform: 'rotateX(90deg) translateZ(64px)'
-                      }}
-                    ></div>
-                    <div 
-                      className="absolute w-32 h-32 border-2"
-                      style={{
-                        backgroundColor: meshParams.material.color,
-                        opacity: meshParams.material.wireframe ? 0.15 : meshParams.material.opacity * 0.4,
-                        borderColor: meshParams.material.wireframe ? '#374151' : 'rgba(55, 65, 81, 0.3)',
-                        transform: 'rotateX(-90deg) translateZ(64px)'
-                      }}
-                    ></div>
-                  </div>
-                </div>
+            {/* View Mode Toggle */}
+            <div className="absolute top-4 left-4 z-10">
+              <div className="bg-white rounded-lg shadow-md p-2 flex space-x-2">
+                <button onClick={() => setMeshParams(prev => ({...prev, viewMode: 'orbit'}))} className={`px-3 py-1 text-xs rounded ${meshParams.viewMode === 'orbit' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'}`}>Orbit View</button>
+                <button onClick={() => setMeshParams(prev => ({...prev, viewMode: 'camera'}))} className={`px-3 py-1 text-xs rounded ${meshParams.viewMode === 'camera' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'}`}>Camera View</button>
               </div>
             </div>
             
-            {/* Animation Timeline */}
+            {/* 3D Scene */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="relative" style={{transform: meshParams.viewMode === 'orbit' ? `perspective(1000px) translateZ(${meshParams.camera.position.z * -30}px) rotateX(${meshParams.camera.rotation.x}deg) rotateY(${meshParams.camera.rotation.y}deg) scale(${meshParams.camera.zoom})` : `perspective(1000px) translateZ(-200px) rotateX(${-meshParams.camera.rotation.x}deg) rotateY(${-meshParams.camera.rotation.y + 180}deg) scale(1.5)`, transformStyle: 'preserve-3d'}}>
+                {/* The 3D Cube */}
+                <div className="w-32 h-32 relative" style={{transformStyle: 'preserve-3d', transform: `rotateX(${meshParams.animation.isPlaying ? Math.sin(meshParams.animation.currentFrame * 0.05) * 10 : 0}deg) rotateY(${meshParams.animation.isPlaying ? meshParams.animation.currentFrame * 2 : 0}deg)`}}>
+                  <div className="absolute w-32 h-32 border-2" style={{backgroundColor: meshParams.material.color, opacity: meshParams.material.wireframe ? 0.3 : 0.9, borderColor: meshParams.material.wireframe ? '#374151' : 'rgba(0,0,0,0.2)', transform: 'translateZ(64px)'}} />
+                  <div className="absolute w-32 h-32 border-2" style={{backgroundColor: meshParams.material.color, opacity: meshParams.material.wireframe ? 0.2 : 0.7, borderColor: meshParams.material.wireframe ? '#374151' : 'rgba(0,0,0,0.2)', transform: 'translateZ(-64px) rotateY(180deg)'}} />
+                  <div className="absolute w-32 h-32 border-2" style={{backgroundColor: meshParams.material.color, opacity: meshParams.material.wireframe ? 0.25 : 0.8, borderColor: meshParams.material.wireframe ? '#374151' : 'rgba(0,0,0,0.2)', transform: 'rotateY(90deg) translateZ(64px)'}} />
+                  <div className="absolute w-32 h-32 border-2" style={{backgroundColor: meshParams.material.color, opacity: meshParams.material.wireframe ? 0.2 : 0.6, borderColor: meshParams.material.wireframe ? '#374151' : 'rgba(0,0,0,0.2)', transform: 'rotateY(-90deg) translateZ(64px)'}} />
+                  <div className="absolute w-32 h-32 border-2" style={{backgroundColor: meshParams.material.color, opacity: meshParams.material.wireframe ? 0.3 : 0.85, borderColor: meshParams.material.wireframe ? '#374151' : 'rgba(0,0,0,0.2)', transform: 'rotateX(90deg) translateZ(64px)'}} />
+                  <div className="absolute w-32 h-32 border-2" style={{backgroundColor: meshParams.material.color, opacity: meshParams.material.wireframe ? 0.15 : 0.5, borderColor: meshParams.material.wireframe ? '#374151' : 'rgba(0,0,0,0.2)', transform: 'rotateX(-90deg) translateZ(64px)'}} />
+                </div>
+
+                {/* Camera Visualizations - only show in orbit mode */}
+                {meshParams.viewMode === 'orbit' && (
+                  <>
+                    <div className="absolute" style={{transform: `translate3d(${meshParams.camera.position.x * 40}px, ${meshParams.camera.position.y * -40}px, ${meshParams.camera.position.z * 40}px) rotateX(${meshParams.camera.rotation.x}deg) rotateY(${meshParams.camera.rotation.y}deg)`, transformStyle: 'preserve-3d'}}>
+                      <div className="w-8 h-6 bg-blue-600 border border-blue-800 rounded" />
+                      <div className="absolute w-4 h-4 bg-blue-800 rounded-full border border-blue-900" style={{transform: 'translateZ(6px) translateX(2px) translateY(1px)'}} />
+                    </div>
+                    {meshParams.animation.cameraKeyframes.map((keyframe, index) => (
+                      <div key={index} className="absolute" style={{transform: `translate3d(${keyframe.position.x * 40}px, ${keyframe.position.y * -40}px, ${keyframe.position.z * 40}px) rotateX(${keyframe.rotation.x}deg) rotateY(${keyframe.rotation.y}deg)`, transformStyle: 'preserve-3d', opacity: 0.6}}>
+                        <div className="w-6 h-4 bg-green-500 border border-green-700 rounded" />
+                        <div className="absolute text-xs text-green-700 font-bold bg-white px-1 rounded" style={{transform: 'translateZ(10px) translateX(-8px) translateY(-12px)', fontSize: '8px'}}>{keyframe.frame}</div>
+                      </div>
+                    ))}
+                  </>
+                )}
+              </div>
+            </div>
+
+            {/* Mouse Controls */}
+            {meshParams.viewMode === 'orbit' && (
+              <div className="absolute inset-0 cursor-grab active:cursor-grabbing" onMouseDown={(e) => {
+                const startX = e.clientX;
+                const startY = e.clientY;
+                const startRotX = meshParams.camera.rotation.x;
+                const startRotY = meshParams.camera.rotation.y;
+                const handleMouseMove = (moveEvent) => {
+                  const deltaX = moveEvent.clientX - startX;
+                  const deltaY = moveEvent.clientY - startY;
+                  updateMeshParam('camera', 'rotation', {...meshParams.camera.rotation, x: Math.max(-90, Math.min(90, startRotX - deltaY * 0.5)), y: startRotY + deltaX * 0.5});
+                };
+                const handleMouseUp = () => {
+                  document.removeEventListener('mousemove', handleMouseMove);
+                  document.removeEventListener('mouseup', handleMouseUp);
+                };
+                document.addEventListener('mousemove', handleMouseMove);
+                document.addEventListener('mouseup', handleMouseUp);
+              }} onWheel={(e) => {
+                e.preventDefault();
+                const newZ = Math.max(1, Math.min(20, meshParams.camera.position.z + e.deltaY * 0.01));
+                updateMeshParam('camera', 'position', {...meshParams.camera.position, z: newZ});
+              }} />
+            )}
+            
+            {/* Timeline */}
             <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4">
               <div className="flex items-center space-x-4">
-                <button
-                  onClick={() => updateMeshParam('animation', 'isPlaying', !meshParams.animation.isPlaying)}
-                  className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
-                >
-                  {meshParams.animation.isPlaying ? 'Pause' : 'Play'}
-                </button>
-                
+                <button onClick={() => updateMeshParam('animation', 'isPlaying', !meshParams.animation.isPlaying)} className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">{meshParams.animation.isPlaying ? 'Pause' : 'Play'}</button>
                 <div className="flex-1">
                   <div className="flex items-center space-x-2 mb-1">
                     <span className="text-xs text-gray-500">Frame:</span>
                     <span className="text-xs font-mono text-gray-700">{meshParams.animation.currentFrame} / {meshParams.animation.totalFrames}</span>
                   </div>
-                  <input
-                    type="range"
-                    min="0"
-                    max={meshParams.animation.totalFrames}
-                    value={meshParams.animation.currentFrame}
-                    onChange={(e) => updateMeshParam('animation', 'currentFrame', parseInt(e.target.value))}
-                    className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-                  />
+                  <input type="range" min="0" max={meshParams.animation.totalFrames} value={meshParams.animation.currentFrame} onChange={(e) => updateMeshParam('animation', 'currentFrame', parseInt(e.target.value))} className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" />
                 </div>
-                
                 <div className="flex items-center space-x-2">
                   <span className="text-xs text-gray-500">Speed:</span>
-                  <input
-                    type="range"
-                    min="0.1"
-                    max="3.0"
-                    step="0.1"
-                    value={meshParams.animation.speed}
-                    onChange={(e) => updateMeshParam('animation', 'speed', parseFloat(e.target.value))}
-                    className="w-16 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-                  />
+                  <input type="range" min="0.1" max="3.0" step="0.1" value={meshParams.animation.speed} onChange={(e) => updateMeshParam('animation', 'speed', parseFloat(e.target.value))} className="w-16 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" />
                   <span className="text-xs font-mono text-gray-700 w-8">{meshParams.animation.speed}x</span>
                 </div>
               </div>
             </div>
           </div>
 
+          {/* Inspector Panel */}
           <div className="w-80 bg-gray-50 border-l border-gray-200 overflow-y-auto">
-            <div className="p-6">
-              <h3 className="text-lg font-semibold text-black mb-6">Mesh Inspector</h3>
+            <div className="p-4">
+              <h3 className="text-lg font-semibold text-black mb-4">Inspector</h3>
               
-              <div className="mb-8">
-                <h4 className="font-medium text-black mb-4 flex items-center">
+              {/* Camera Section */}
+              <div className="mb-6">
+                <h4 className="font-medium text-black mb-3 flex items-center">
                   <div className="w-3 h-3 bg-blue-500 rounded-full mr-2"></div>
-                  Transform
+                  Camera
                 </h4>
-                
-                <div className="space-y-3 mb-4">
-                  <label className="text-sm font-medium text-gray-700">Position</label>
-                  {['x', 'y', 'z'].map(axis => (
-                    <div key={axis} className="flex items-center space-x-2">
-                      <span className="text-xs text-gray-500 w-4">{axis.toUpperCase()}</span>
-                      <input
-                        type="range"
-                        min="-5"
-                        max="5"
-                        step="0.1"
-                        value={meshParams.position[axis]}
-                        onChange={(e) => updateMeshParam('position', axis, parseFloat(e.target.value))}
-                        className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-                      />
-                      <span className="text-xs text-gray-600 w-8">{meshParams.position[axis]}</span>
-                    </div>
-                  ))}
-                </div>
-                
-                <div className="space-y-3 mb-4">
-                  <label className="text-sm font-medium text-gray-700">Rotation (degrees)</label>
-                  {['x', 'y', 'z'].map(axis => (
-                    <div key={axis} className="flex items-center space-x-2">
-                      <span className="text-xs text-gray-500 w-4">{axis.toUpperCase()}</span>
-                      <input
-                        type="range"
-                        min="0"
-                        max="360"
-                        step="1"
-                        value={meshParams.rotation[axis]}
-                        onChange={(e) => updateMeshParam('rotation', axis, parseInt(e.target.value))}
-                        className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-                      />
-                      <span className="text-xs text-gray-600 w-8">{meshParams.rotation[axis]}</span>
-                    </div>
-                  ))}
-                </div>
-                
                 <div className="space-y-3">
-                  <label className="text-sm font-medium text-gray-700">Scale</label>
-                  {['x', 'y', 'z'].map(axis => (
-                    <div key={axis} className="flex items-center space-x-2">
-                      <span className="text-xs text-gray-500 w-4">{axis.toUpperCase()}</span>
-                      <input
-                        type="range"
-                        min="0.1"
-                        max="3"
-                        step="0.1"
-                        value={meshParams.scale[axis]}
-                        onChange={(e) => updateMeshParam('scale', axis, parseFloat(e.target.value))}
-                        className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-                      />
-                      <span className="text-xs text-gray-600 w-8">{meshParams.scale[axis]}</span>
+                  <div>
+                    <label className="text-xs font-medium text-gray-600 block mb-1">Position</label>
+                    <div className="grid grid-cols-3 gap-1">
+                      {['x', 'y', 'z'].map(axis => (
+                        <input key={axis} type="number" value={meshParams.camera.position[axis].toFixed(1)} onChange={(e) => updateMeshParam('camera', 'position', {...meshParams.camera.position, [axis]: parseFloat(e.target.value) || 0})} className="w-full px-2 py-1 text-xs border border-gray-300 rounded" step="0.1" />
+                      ))}
                     </div>
-                  ))}
+                  </div>
+                  <button onClick={() => {
+                    const newKeyframe = {frame: meshParams.animation.currentFrame, position: {...meshParams.camera.position}, rotation: {...meshParams.camera.rotation}, fov: meshParams.camera.fov};
+                    const existingIndex = meshParams.animation.cameraKeyframes.findIndex(kf => kf.frame === meshParams.animation.currentFrame);
+                    let newKeyframes;
+                    if (existingIndex >= 0) {
+                      newKeyframes = [...meshParams.animation.cameraKeyframes];
+                      newKeyframes[existingIndex] = newKeyframe;
+                    } else {
+                      newKeyframes = [...meshParams.animation.cameraKeyframes, newKeyframe].sort((a, b) => a.frame - b.frame);
+                    }
+                    updateMeshParam('animation', 'cameraKeyframes', newKeyframes);
+                  }} className="w-full bg-blue-600 text-white py-1 px-2 rounded text-xs hover:bg-blue-700">Set Keyframe</button>
                 </div>
               </div>
-              
-              <div className="mb-8">
-                <h4 className="font-medium text-black mb-4 flex items-center">
-                  <div className="w-3 h-3 bg-slate-600 rounded-full mr-2"></div>
+
+              {/* Material Section */}
+              <div className="mb-6">
+                <h4 className="font-medium text-black mb-3 flex items-center">
+                  <div className="w-3 h-3 bg-purple-500 rounded-full mr-2"></div>
                   Material
                 </h4>
-                
                 <div className="space-y-3">
                   <div>
-                    <label className="text-sm font-medium text-gray-700 block mb-2">Color</label>
-                    <input
-                      type="color"
-                      value={meshParams.material.color}
-                      onChange={(e) => updateMeshParam('material', 'color', e.target.value)}
-                      className="w-full h-10 rounded-lg border border-gray-200 cursor-pointer"
-                    />
+                    <label className="text-xs font-medium text-gray-600 block mb-1">Color</label>
+                    <input type="color" value={meshParams.material.color} onChange={(e) => updateMeshParam('material', 'color', e.target.value)} className="w-full h-8 rounded border cursor-pointer" />
                   </div>
-                  
-                  <div>
-                    <label className="text-sm font-medium text-gray-700 block mb-2">Opacity</label>
-                    <input
-                      type="range"
-                      min="0.1"
-                      max="1"
-                      step="0.1"
-                      value={meshParams.material.opacity}
-                      onChange={(e) => updateMeshParam('material', 'opacity', parseFloat(e.target.value))}
-                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-                    />
-                    <span className="text-xs text-gray-600">{meshParams.material.opacity}</span>
-                  </div>
-                  
-                  <div>
-                    <label className="text-sm font-medium text-gray-700 block mb-2">Metalness</label>
-                    <input
-                      type="range"
-                      min="0"
-                      max="1"
-                      step="0.01"
-                      value={meshParams.material.metalness}
-                      onChange={(e) => updateMeshParam('material', 'metalness', parseFloat(e.target.value))}
-                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-                    />
-                    <span className="text-xs text-gray-600">{meshParams.material.metalness}</span>
-                  </div>
-                  
-                  <div>
-                    <label className="text-sm font-medium text-gray-700 block mb-2">Roughness</label>
-                    <input
-                      type="range"
-                      min="0"
-                      max="1"
-                      step="0.01"
-                      value={meshParams.material.roughness}
-                      onChange={(e) => updateMeshParam('material', 'roughness', parseFloat(e.target.value))}
-                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-                    />
-                    <span className="text-xs text-gray-600">{meshParams.material.roughness}</span>
-                  </div>
-                  
                   <div className="flex items-center space-x-2">
-                    <input
-                      type="checkbox"
-                      checked={meshParams.material.wireframe}
-                      onChange={(e) => updateMeshParam('material', 'wireframe', e.target.checked)}
-                      className="rounded"
-                    />
-                    <label className="text-sm font-medium text-gray-700">Wireframe Mode</label>
+                    <input type="checkbox" checked={meshParams.material.wireframe} onChange={(e) => updateMeshParam('material', 'wireframe', e.target.checked)} className="rounded" />
+                    <label className="text-xs font-medium text-gray-600">Wireframe</label>
                   </div>
                 </div>
               </div>
-              
-              <div className="mb-8">
-                <h4 className="font-medium text-black mb-4 flex items-center">
-                  <div className="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
-                  Physics Forces
+
+              {/* Lighting Section */}
+              <div className="mb-6">
+                <h4 className="font-medium text-black mb-3 flex items-center">
+                  <div className="w-3 h-3 bg-yellow-500 rounded-full mr-2"></div>
+                  Lighting
                 </h4>
-                
                 <div className="space-y-3">
                   <div>
-                    <label className="text-sm font-medium text-gray-700 block mb-2">Gravity (m/s²)</label>
-                    <input
-                      type="range"
-                      min="0"
-                      max="20"
-                      step="0.1"
-                      value={meshParams.physics.gravity}
-                      onChange={(e) => updateMeshParam('physics', 'gravity', parseFloat(e.target.value))}
-                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-                    />
-                    <span className="text-xs text-gray-600">{meshParams.physics.gravity} m/s²</span>
+                    <label className="text-xs font-medium text-gray-600 block mb-1">Intensity</label>
+                    <input type="range" min="0.1" max="3.0" step="0.1" value={parameters.lighting.intensity} onChange={(e) => updateParameter('lighting', 'intensity', parseFloat(e.target.value))} className="w-full h-1 bg-gray-200 rounded appearance-none cursor-pointer" />
+                    <span className="text-xs text-gray-600">{parameters.lighting.intensity}</span>
                   </div>
-                  
+                </div>
+              </div>
+
+              {/* Physics Section */}
+              <div className="mb-6">
+                <h4 className="font-medium text-black mb-3 flex items-center">
+                  <div className="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
+                  Physics
+                </h4>
+                <div className="space-y-3">
                   <div>
-                    <label className="text-sm font-medium text-gray-700 block mb-2">Mass (kg)</label>
-                    <input
-                      type="range"
-                      min="0.1"
-                      max="10"
-                      step="0.1"
-                      value={meshParams.physics.mass}
-                      onChange={(e) => updateMeshParam('physics', 'mass', parseFloat(e.target.value))}
-                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-                    />
-                    <span className="text-xs text-gray-600">{meshParams.physics.mass} kg</span>
-                  </div>
-                  
-                  <div>
-                    <label className="text-sm font-medium text-gray-700 block mb-2">Friction</label>
-                    <input
-                      type="range"
-                      min="0"
-                      max="1"
-                      step="0.01"
-                      value={meshParams.physics.friction}
-                      onChange={(e) => updateMeshParam('physics', 'friction', parseFloat(e.target.value))}
-                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-                    />
-                    <span className="text-xs text-gray-600">{meshParams.physics.friction}</span>
-                  </div>
-                  
-                  <div>
-                    <label className="text-sm font-medium text-gray-700 block mb-2">Bounce</label>
-                    <input
-                      type="range"
-                      min="0"
-                      max="1"
-                      step="0.01"
-                      value={meshParams.physics.bounce}
-                      onChange={(e) => updateMeshParam('physics', 'bounce', parseFloat(e.target.value))}
-                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-                    />
-                    <span className="text-xs text-gray-600">{meshParams.physics.bounce}</span>
+                    <label className="text-xs font-medium text-gray-600 block mb-1">Gravity</label>
+                    <input type="range" min="0" max="20" step="0.1" value={parameters.physics.gravity} onChange={(e) => updateParameter('physics', 'gravity', parseFloat(e.target.value))} className="w-full h-1 bg-gray-200 rounded appearance-none cursor-pointer" />
+                    <span className="text-xs text-gray-600">{parameters.physics.gravity} m/s²</span>
                   </div>
                 </div>
               </div>
               
-              <div className="space-y-3">
-                <button 
-                  onClick={generateDataset}
-                  className="w-full bg-slate-700 text-white py-3 rounded-lg font-medium hover:bg-black transition-colors"
-                >
-                  Generate Enterprise Dataset
-                </button>
-                
-                <button 
-                  onClick={() => {
-                    setMeshParams({
-                      scale: { x: 1, y: 1, z: 1 },
-                      rotation: { x: 0, y: 0, z: 0 },
-                      position: { x: 0, y: 0, z: 0 },
-                      material: {
-                        color: '#475569',
-                        wireframe: false,
-                        opacity: 1.0,
-                        metalness: 0.3,
-                        roughness: 0.4
-                      },
-                      physics: {
-                        gravity: 9.8,
-                        mass: 1.0,
-                        friction: 0.5,
-                        bounce: 0.3
-                      },
-                      animation: {
-                        isPlaying: false,
-                        currentFrame: 0,
-                        totalFrames: 120,
-                        speed: 1.0
-                      }
-                    });
-                  }}
-                  className="w-full bg-gray-600 text-white py-3 rounded-lg font-medium hover:bg-gray-700 transition-colors"
-                >
-                  Reset to Defaults
-                </button>
-              </div>
+              <button onClick={generateDataset} className="w-full bg-blue-600 text-white py-2 rounded font-medium hover:bg-blue-700 transition-colors text-sm">Generate Dataset</button>
             </div>
           </div>
         </div>
@@ -693,24 +477,17 @@ export default function DatasetPlatform() {
     );
   }
 
-  // API Checkout Page
   if (currentPage === 'api-checkout') {
     return (
       <div className="min-h-screen bg-white">
         <header className="px-4 sm:px-6 py-6 sm:py-8 border-b border-gray-100">
           <div className="max-w-4xl mx-auto flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <button
-                onClick={() => setCurrentPage('3d-editor')}
-                className="text-gray-500 hover:text-black p-2 hover:bg-gray-50 rounded-full transition-colors"
-              >
-                <ArrowLeft className="w-5 h-5" />
-              </button>
+              <button onClick={() => setCurrentPage('marketplace')} className="text-gray-500 hover:text-black p-2 hover:bg-gray-50 rounded-full transition-colors"><ArrowLeft className="w-5 h-5" /></button>
               <h1 className="text-xl sm:text-2xl font-semibold text-black">23 Bulbs</h1>
             </div>
           </div>
         </header>
-
         <main className="px-6 py-16">
           <div className="max-w-2xl mx-auto">
             <div className="text-center mb-12">
@@ -718,146 +495,73 @@ export default function DatasetPlatform() {
                 <Key className="w-8 h-8 text-green-600" />
               </div>
               <h2 className="text-3xl font-bold text-black mb-4">API Access Generated</h2>
-              <p className="text-lg text-gray-600">Your enterprise dataset configuration is ready!</p>
+              <p className="text-lg text-gray-600">Your dataset configuration is ready!</p>
             </div>
-
             <div className="bg-blue-50 border border-blue-200 rounded-2xl p-8 mb-8">
               <h3 className="text-xl font-semibold text-black mb-6 flex items-center">
                 <Key className="w-5 h-5 mr-2" />
                 Your API Key
               </h3>
-              
               <div className="bg-white border border-gray-200 rounded-xl p-4 mb-6">
                 <div className="flex items-center justify-between">
                   <div className="flex-1 mr-4">
                     <code className="text-sm font-mono text-gray-800 break-all">{apiKey}</code>
                   </div>
-                  <button 
-                    onClick={copyApiKey}
-                    className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
-                  >
+                  <button onClick={copyApiKey} className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">
                     <Copy className="w-4 h-4" />
                     <span>{copied ? 'Copied!' : 'Copy'}</span>
                   </button>
                 </div>
               </div>
             </div>
-
-            <div className="bg-gray-50 rounded-2xl p-8 mb-8">
-              <h3 className="text-xl font-semibold text-black mb-6">Dataset Configuration</h3>
-              <div className="space-y-4">
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Dataset Type</span>
-                  <span className="font-medium text-black">3D Mesh Simulation</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Categories</span>
-                  <span className="font-medium text-black">3 selected</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Estimated Samples</span>
-                  <span className="font-medium text-black">75,000</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Data Volume</span>
-                  <span className="font-medium text-black">8.5GB</span>
-                </div>
-              </div>
-            </div>
-
-            <button 
-              onClick={() => setCurrentPage('3d-editor')}
-              className="w-full bg-blue-600 text-white py-3 rounded-full font-medium hover:bg-blue-700 transition-colors"
-            >
-              Create Another Dataset
-            </button>
+            <button onClick={() => setCurrentPage('marketplace')} className="w-full bg-blue-600 text-white py-3 rounded-full font-medium hover:bg-blue-700 transition-colors">Create Another Dataset</button>
           </div>
         </main>
       </div>
     );
   }
 
-  // Technology Page
   if (currentPage === 'technology') {
     return (
       <div className="min-h-screen bg-white">
         <header className="px-4 sm:px-6 py-6 sm:py-8 border-b border-gray-100">
           <div className="max-w-6xl mx-auto flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <button
-                onClick={() => setCurrentPage('landing')}
-                className="text-gray-500 hover:text-black p-2 hover:bg-gray-50 rounded-full transition-colors"
-              >
-                <ArrowLeft className="w-5 h-5" />
-              </button>
+              <button onClick={() => setCurrentPage('landing')} className="text-gray-500 hover:text-black p-2 hover:bg-gray-50 rounded-full transition-colors"><ArrowLeft className="w-5 h-5" /></button>
               <h1 className="text-xl sm:text-2xl font-semibold text-black">23 Bulbs</h1>
             </div>
-            <button
-              onClick={() => setCurrentPage('signin')}
-              className="bg-black text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-medium hover:bg-gray-800 transition-colors"
-            >
-              Sign In
-            </button>
           </div>
         </header>
-
         <main className="px-6 py-16">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-20">
               <h2 className="text-4xl font-bold text-black mb-4 tracking-tight">Our Technology</h2>
               <p className="text-xl text-gray-600">Physics-aware data generation pipeline</p>
             </div>
-
             <div className="grid md:grid-cols-2 gap-8 mb-24">
               <div className="rounded-3xl p-10 bg-gray-100">
                 <h3 className="text-2xl font-bold mb-10 text-black">FEATURES</h3>
                 <div className="space-y-8">
                   <div>
                     <h4 className="font-semibold text-lg mb-3 text-black">Physics-Accurate Simulation Engine</h4>
-                    <p className="text-gray-600 leading-relaxed">
-                      Real-time cloth and motion simulation, customizable through 20+ parameters.
-                    </p>
+                    <p className="text-gray-600 leading-relaxed">Real-time cloth and motion simulation, customizable through 20+ parameters.</p>
                   </div>
                   <div>
                     <h4 className="font-semibold text-lg mb-3 text-black">On-Demand API</h4>
-                    <p className="text-gray-600 leading-relaxed">
-                      Self-serve platform for enterprises to request high-fidelity video training data.
-                    </p>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-lg mb-3 text-black">Multi-Engine Platform</h4>
-                    <p className="text-gray-600 leading-relaxed">
-                      Growing suite of engines for human motion, sensor data, and dynamic environments.
-                    </p>
+                    <p className="text-gray-600 leading-relaxed">Self-serve platform for enterprises to request high-fidelity video training data.</p>
                   </div>
                 </div>
               </div>
-              
               <div className="rounded-3xl p-10 bg-gray-200">
                 <h3 className="text-2xl font-bold mb-10 text-black">BENEFITS</h3>
                 <div className="space-y-8">
                   <div>
                     <h4 className="font-semibold text-lg mb-3 text-black">Faster, Cheaper AI Training</h4>
-                    <p className="text-gray-600 leading-relaxed">
-                      Reduce training time from 500M to just 500 frames per use case.
-                    </p>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-lg mb-3 text-black">Enterprise-Ready Performance</h4>
-                    <p className="text-gray-600 leading-relaxed">
-                      Stable, predictable, brand-safe video generation beyond current limits.
-                    </p>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-lg mb-3 text-black">Massive Revenue & Moat</h4>
-                    <p className="text-gray-600 leading-relaxed">
-                      Proprietary tech years in the making that giants couldn't build.
-                    </p>
+                    <p className="text-gray-600 leading-relaxed">Reduce training time from 500M to just 500 frames per use case.</p>
                   </div>
                 </div>
               </div>
             </div>
-
             <div className="text-center">
               <div className="inline-block rounded-3xl py-12 px-16 bg-blue-600">
                 <p className="text-4xl font-bold mb-3 text-white">1000x Reduction</p>
@@ -870,7 +574,6 @@ export default function DatasetPlatform() {
     );
   }
 
-  // Sign In Page
   if (currentPage === 'signin') {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
@@ -880,61 +583,15 @@ export default function DatasetPlatform() {
             <h2 className="text-3xl font-bold text-black mb-2">Welcome back</h2>
             <p className="text-gray-600">Sign in to your account</p>
           </div>
-          
           <div className="space-y-4">
-            <div>
-              <label className="text-sm font-medium text-gray-700 block mb-2">Email</label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <input 
-                  type="email" 
-                  defaultValue="john.doe@company.com"
-                  className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                />
-              </div>
-            </div>
-            
-            <div>
-              <label className="text-sm font-medium text-gray-700 block mb-2">Password</label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <input 
-                  type="password" 
-                  defaultValue="password123"
-                  className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                />
-              </div>
-            </div>
-            
-            <button 
-              onClick={() => setCurrentPage('marketplace')}
-              className="w-full bg-blue-600 text-white py-3 rounded-full font-medium hover:bg-blue-700 transition-colors"
-            >
-              Sign In
-            </button>
-            
-            <div className="text-center">
-              <button 
-                onClick={() => setCurrentPage('signup')}
-                className="text-blue-600 hover:text-blue-700 text-sm font-medium"
-              >
-                Don't have an account? Sign up
-              </button>
-            </div>
-            
-            <button 
-              onClick={() => setCurrentPage('landing')}
-              className="w-full text-gray-600 hover:text-black py-2 text-sm font-medium"
-            >
-              Back to Home
-            </button>
+            <button onClick={() => setCurrentPage('marketplace')} className="w-full bg-blue-600 text-white py-3 rounded-full font-medium hover:bg-blue-700 transition-colors">Sign In</button>
+            <button onClick={() => setCurrentPage('landing')} className="w-full text-gray-600 hover:text-black py-2 text-sm font-medium">Back to Home</button>
           </div>
         </div>
       </div>
     );
   }
 
-  // Sign Up Page
   if (currentPage === 'signup') {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
@@ -944,84 +601,20 @@ export default function DatasetPlatform() {
             <h2 className="text-3xl font-bold text-black mb-2">Create account</h2>
             <p className="text-gray-600">Start generating physics-aware datasets</p>
           </div>
-          
           <div className="space-y-4">
-            <div>
-              <label className="text-sm font-medium text-gray-700 block mb-2">Full Name</label>
-              <div className="relative">
-                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <input 
-                  type="text" 
-                  defaultValue="John Doe"
-                  className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                />
-              </div>
-            </div>
-            
-            <div>
-              <label className="text-sm font-medium text-gray-700 block mb-2">Email</label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <input 
-                  type="email" 
-                  defaultValue="john.doe@company.com"
-                  className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                />
-              </div>
-            </div>
-            
-            <div>
-              <label className="text-sm font-medium text-gray-700 block mb-2">Password</label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <input 
-                  type="password" 
-                  placeholder="Create a strong password"
-                  className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                />
-              </div>
-            </div>
-            
-            <button 
-              onClick={() => setCurrentPage('marketplace')}
-              className="w-full bg-blue-600 text-white py-3 rounded-full font-medium hover:bg-blue-700 transition-colors"
-            >
-              Create Account
-            </button>
-            
-            <div className="text-center">
-              <button 
-                onClick={() => setCurrentPage('signin')}
-                className="text-blue-600 hover:text-blue-700 text-sm font-medium"
-              >
-                Already have an account? Sign in
-              </button>
-            </div>
-            
-            <button 
-              onClick={() => setCurrentPage('landing')}
-              className="w-full text-gray-600 hover:text-black py-2 text-sm font-medium"
-            >
-              Back to Home
-            </button>
+            <button onClick={() => setCurrentPage('marketplace')} className="w-full bg-blue-600 text-white py-3 rounded-full font-medium hover:bg-blue-700 transition-colors">Create Account</button>
+            <button onClick={() => setCurrentPage('landing')} className="w-full text-gray-600 hover:text-black py-2 text-sm font-medium">Back to Home</button>
           </div>
         </div>
       </div>
     );
   }
 
-  // Default fallback
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">
       <div className="text-center">
         <h1 className="text-2xl font-semibold text-gray-800 mb-4">23 Bulbs Dataset Platform</h1>
-        <p className="text-gray-600 mb-6">Page not found: {currentPage}</p>
-        <button
-          onClick={() => setCurrentPage('landing')}
-          className="bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition-colors"
-        >
-          Back to Landing
-        </button>
+        <button onClick={() => setCurrentPage('landing')} className="bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition-colors">Back to Landing</button>
       </div>
     </div>
   );
