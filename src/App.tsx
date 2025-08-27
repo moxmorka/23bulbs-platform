@@ -1,868 +1,900 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowRight, ArrowLeft, Check, Key, Copy } from 'lucide-react';
 
-export default function DatasetPlatform() {
-  const [currentPage, setCurrentPage] = useState('landing');
-  const [apiKey, setApiKey] = useState('');
-  const [copied, setCopied] = useState(false);
-  const [selectedCategories, setSelectedCategories] = useState(['lighting', 'materials', 'camera', 'physics']);
-  
-  const [parameters, setParameters] = useState({
-    lighting: { lightAngle: 45, numLights: 3, intensity: 0.8, colorTemp: 5500, hdri: 'studio' },
-    materials: { fabricType: 'cotton', roughness: 0.4, metallic: 0.1, subsurface: 0.3, normalStrength: 0.5 },
-    camera: { angles: 36, resolution: '8K', focalLength: 50, dof: 0.2, motionBlur: 0.1 },
-    physics: { windStrength: 0.6, gravity: 9.8, windDirection: 180, airDensity: 1.0, collisionMargin: 0.01, bounce: 0.3 }
-  });
+// Main component for the 23 Bulbs enterprise platform.
+// It manages the state for different pages and component parameters.
+export default function App() {
+  // State to manage the current page being displayed.
+  const [currentPage, setCurrentPage] = useState('landing');
+  // State for the generated API key and copy functionality.
+  const [apiKey, setApiKey] = useState('');
+  const [copied, setCopied] = useState(false);
+  // State to track which parameter categories are selected for dataset generation.
+  const [selectedCategories, setSelectedCategories] = useState(['lighting', 'materials', 'camera', 'physics']);
+  
+  // State for the default parameters on the generation page.
+  const [parameters, setParameters] = useState({
+    lighting: { lightAngle: 45, numLights: 3, intensity: 0.8, colorTemp: 5500, hdri: 'studio' },
+    materials: { fabricType: 'cotton', roughness: 0.4, metallic: 0.1, subsurface: 0.3, normalStrength: 0.5 },
+    camera: { angles: 36, resolution: '8K', focalLength: 50, dof: 0.2, motionBlur: 0.1 },
+    physics: { windStrength: 0.6, gravity: 9.8, windDirection: 180, airDensity: 1.0, collisionMargin: 0.01, bounce: 0.3 }
+  });
 
-  const [meshParams, setMeshParams] = useState({
-    material: { 
-      color: '#475569', wireframe: false, opacity: 1.0, metalness: 0.3, roughness: 0.4,
-      transmission: 0.0, ior: 1.5
-    },
-    cameras: [
-      { id: 'main', name: 'Main Camera', type: 'perspective', position: { x: 0, y: 0, z: 5 }, rotation: { x: -15, y: 30, z: 0 }, fov: 50 },
-      { id: 'side', name: 'Side Camera', type: 'perspective', position: { x: 8, y: 0, z: 0 }, rotation: { x: 0, y: 90, z: 0 }, fov: 45 },
-      { id: 'top', name: 'Top Camera', type: 'orthographic', position: { x: 0, y: 8, z: 0 }, rotation: { x: -90, y: 0, z: 0 }, fov: 60 }
-    ],
-    lights: [
-      { id: 'key', name: 'Key Light', type: 'directional', position: { x: 5, y: 5, z: 5 }, intensity: 1.0, color: '#ffffff', castShadows: true },
-      { id: 'fill', name: 'Fill Light', type: 'directional', position: { x: -3, y: 2, z: 4 }, intensity: 0.6, color: '#ffffff', castShadows: false },
-      { id: 'rim', name: 'Rim Light', type: 'directional', position: { x: 0, y: 3, z: -5 }, intensity: 0.8, color: '#cceeff', castShadows: false }
-    ],
-    physics: {
-      gravity: 9.8, windStrength: 0.6, windDirection: 180, clothStiffness: 0.8, friction: 0.4, selfCollision: true
-    },
-    viewMode: 'orbit',
-    selectedCamera: 'main',
-    selectedLight: 'key',
-    animation: {
-      isPlaying: false, currentFrame: 0, totalFrames: 120, speed: 1.0,
-      cameraKeyframes: [
-        { frame: 0, cameraId: 'main', position: { x: 0, y: 0, z: 5 }, rotation: { x: -15, y: 30, z: 0 }, fov: 50 },
-        { frame: 40, cameraId: 'main', position: { x: 3, y: 2, z: 4 }, rotation: { x: -10, y: 45, z: 0 }, fov: 60 },
-        { frame: 80, cameraId: 'main', position: { x: -2, y: 1, z: 6 }, rotation: { x: -20, y: 60, z: 0 }, fov: 45 }
-      ],
-      lightKeyframes: [],
-      materialKeyframes: []
-    }
-  });
+  // State for the interactive 3D editor's mesh, camera, light, and physics properties.
+  const [meshParams, setMeshParams] = useState({
+    material: { 
+      color: '#475569', wireframe: false, opacity: 1.0, metalness: 0.3, roughness: 0.4,
+      transmission: 0.0, ior: 1.5
+    },
+    cameras: [
+      { id: 'main', name: 'Main Camera', type: 'perspective', position: { x: 0, y: 0, z: 5 }, rotation: { x: -15, y: 30, z: 0 }, fov: 50 },
+      { id: 'side', name: 'Side Camera', type: 'perspective', position: { x: 8, y: 0, z: 0 }, rotation: { x: 0, y: 90, z: 0 }, fov: 45 },
+      { id: 'top', name: 'Top Camera', type: 'orthographic', position: { x: 0, y: 8, z: 0 }, rotation: { x: -90, y: 0, z: 0 }, fov: 60 }
+    ],
+    lights: [
+      { id: 'key', name: 'Key Light', type: 'directional', position: { x: 5, y: 5, z: 5 }, intensity: 1.0, color: '#ffffff', castShadows: true },
+      { id: 'fill', name: 'Fill Light', type: 'directional', position: { x: -3, y: 2, z: 4 }, intensity: 0.6, color: '#ffffff', castShadows: false },
+      { id: 'rim', name: 'Rim Light', type: 'directional', position: { x: 0, y: 3, z: -5 }, intensity: 0.8, color: '#cceeff', castShadows: false }
+    ],
+    physics: {
+      gravity: 9.8, windStrength: 0.6, windDirection: 180, clothStiffness: 0.8, friction: 0.4, selfCollision: true
+    },
+    viewMode: 'orbit',
+    selectedCamera: 'main',
+    selectedLight: 'key',
+    animation: {
+      isPlaying: false, currentFrame: 0, totalFrames: 120, speed: 1.0,
+      cameraKeyframes: [
+        { frame: 0, cameraId: 'main', position: { x: 0, y: 0, z: 5 }, rotation: { x: -15, y: 30, z: 0 }, fov: 50 },
+        { frame: 40, cameraId: 'main', position: { x: 3, y: 2, z: 4 }, rotation: { x: -10, y: 45, z: 0 }, fov: 60 },
+        { frame: 80, cameraId: 'main', position: { x: -2, y: 1, z: 6 }, rotation: { x: -20, y: 60, z: 0 }, fov: 45 }
+      ],
+      lightKeyframes: [],
+      materialKeyframes: []
+    }
+  });
 
-  const marketplaceDatasets = [
-    { id: 'pants', name: 'Pants Demo', description: 'Interactive Demo • 50 samples', background: 'bg-gray-800', features: ['8K • 60fps • 36 cameras', 'Wind physics simulation', '35+ adjustable parameters'], isDemo: true, badge: 'Demo' },
-    { id: 'enterprise-3d', name: 'Launch Demo 2 Enterprise', description: 'Enterprise 3D Demo • Real-time', background: 'bg-slate-700', features: ['Real-time 3D simulation', 'Interactive mesh editor', 'Physics parameter control'], isDemo: true, badge: 'Enterprise Demo' },
-    { id: 'dresses', name: 'Dresses & Skirts', description: 'Enterprise • 100K+ samples', background: 'bg-gray-700', features: ['Flowing fabric dynamics', 'Complex draping physics', 'Multiple fabric types'], isDemo: false, badge: 'Enterprise' },
-    { id: 'jackets', name: 'Jackets & Coats', description: 'Enterprise • 150K+ samples', background: 'bg-slate-800', features: ['Heavy fabric simulation', 'Collar & sleeve dynamics', 'Button & zipper physics'], isDemo: false, badge: 'Enterprise' },
-    { id: 'sportswear', name: 'Athletic Wear', description: 'Enterprise • 80K+ samples', background: 'bg-gray-600', features: ['Stretch fabric dynamics', 'Moisture simulation', 'Performance materials'], isDemo: false, badge: 'Enterprise' },
-    { id: 'furniture', name: 'Furniture & Upholstery', description: 'Enterprise • 120K+ samples', background: 'bg-slate-600', features: ['Cushion deformation', 'Leather & fabric textures', 'Structural physics'], isDemo: false, badge: 'Enterprise' },
-    { id: 'curtains', name: 'Curtains & Drapes', description: 'Enterprise • 90K+ samples', background: 'bg-gray-900', features: ['Wind interaction', 'Hanging dynamics', 'Light filtering effects'], isDemo: false, badge: 'Enterprise' },
-    { id: 'automotive', name: 'Automotive Interiors', description: 'Enterprise • 200K+ samples', background: 'bg-black', features: ['Seat deformation', 'Dashboard materials', 'Safety simulation'], isDemo: false, badge: 'Enterprise' },
-    { id: 'medical', name: 'Medical Textiles', description: 'Enterprise • 60K+ samples', background: 'bg-slate-900', features: ['Surgical drapes', 'Patient positioning', 'Sterile environments'], isDemo: false, badge: 'Enterprise' }
-  ];
+  // Hardcoded data for the marketplace page.
+  const marketplaceDatasets = [
+    { id: 'pants', name: 'Pants Demo', description: 'Interactive Demo • 50 samples', background: 'bg-gray-800', features: ['8K • 60fps • 36 cameras', 'Wind physics simulation', '35+ adjustable parameters'], isDemo: true, badge: 'Demo' },
+    { id: 'enterprise-3d', name: 'Launch Demo 2 Enterprise', description: 'Enterprise 3D Demo • Real-time', background: 'bg-slate-700', features: ['Real-time 3D simulation', 'Interactive mesh editor', 'Physics parameter control'], isDemo: true, badge: 'Enterprise Demo' },
+    { id: 'dresses', name: 'Dresses & Skirts', description: 'Enterprise • 100K+ samples', background: 'bg-gray-700', features: ['Flowing fabric dynamics', 'Complex draping physics', 'Multiple fabric types'], isDemo: false, badge: 'Enterprise' },
+    { id: 'jackets', name: 'Jackets & Coats', description: 'Enterprise • 150K+ samples', background: 'bg-slate-800', features: ['Heavy fabric simulation', 'Collar & sleeve dynamics', 'Button & zipper physics'], isDemo: false, badge: 'Enterprise' },
+    { id: 'sportswear', name: 'Athletic Wear', description: 'Enterprise • 80K+ samples', background: 'bg-gray-600', features: ['Stretch fabric dynamics', 'Moisture simulation', 'Performance materials'], isDemo: false, badge: 'Enterprise' },
+    { id: 'furniture', name: 'Furniture & Upholstery', description: 'Enterprise • 120K+ samples', background: 'bg-slate-600', features: ['Cushion deformation', 'Leather & fabric textures', 'Structural physics'], isDemo: false, badge: 'Enterprise' },
+    { id: 'curtains', name: 'Curtains & Drapes', description: 'Enterprise • 90K+ samples', background: 'bg-gray-900', features: ['Wind interaction', 'Hanging dynamics', 'Light filtering effects'], isDemo: false, badge: 'Enterprise' },
+    { id: 'automotive', name: 'Automotive Interiors', description: 'Enterprise • 200K+ samples', background: 'bg-black', features: ['Seat deformation', 'Dashboard materials', 'Safety simulation'], isDemo: false, badge: 'Enterprise' },
+    { id: 'medical', name: 'Medical Textiles', description: 'Enterprise • 60K+ samples', background: 'bg-slate-900', features: ['Surgical drapes', 'Patient positioning', 'Sterile environments'], isDemo: false, badge: 'Enterprise' }
+  ];
 
-  const updateParameter = (category, key, value) => {
-    setParameters(prev => ({ ...prev, [category]: { ...prev[category], [key]: value } }));
-  };
+  // Function to update parameters on the generation page.
+  const updateParameter = (category, key, value) => {
+    setParameters(prev => ({ ...prev, [category]: { ...prev[category], [key]: value } }));
+  };
 
-  const updateMeshParam = (category, param, value, id) => {
-    if (category === 'viewMode') {
-      setMeshParams(prev => ({ ...prev, viewMode: value }));
-    } else if (category === 'selectedCamera') {
-      setMeshParams(prev => ({ ...prev, selectedCamera: value }));
-    } else if (category === 'selectedLight') {
-      setMeshParams(prev => ({ ...prev, selectedLight: value }));
-    } else if (category === 'cameras') {
-      setMeshParams(prev => ({
-        ...prev,
-        cameras: prev.cameras.map(cam => 
-          cam.id === id ? { ...cam, [param]: typeof value === 'object' ? { ...cam[param], ...value } : value } : cam
-        )
-      }));
-    } else if (category === 'lights') {
-      setMeshParams(prev => ({
-        ...prev,
-        lights: prev.lights.map(light => 
-          light.id === id ? { ...light, [param]: typeof value === 'object' ? { ...light[param], ...value } : value } : light
-        )
-      }));
-    } else if (category === 'physics') {
-      setMeshParams(prev => ({ ...prev, physics: { ...prev.physics, [param]: value } }));
-    } else if (category === 'animation') {
-      setMeshParams(prev => ({ ...prev, animation: { ...prev.animation, [param]: value } }));
-    } else {
-      setMeshParams(prev => ({ ...prev, [category]: { ...prev[category], [param]: value } }));
-    }
-  };
+  // Function to update parameters in the 3D editor.
+  const updateMeshParam = (category, param, value, id) => {
+    if (category === 'viewMode') {
+      setMeshParams(prev => ({ ...prev, viewMode: value }));
+    } else if (category === 'selectedCamera') {
+      setMeshParams(prev => ({ ...prev, selectedCamera: value }));
+    } else if (category === 'selectedLight') {
+      setMeshParams(prev => ({ ...prev, selectedLight: value }));
+    } else if (category === 'cameras') {
+      setMeshParams(prev => ({
+        ...prev,
+        cameras: prev.cameras.map(cam => 
+          cam.id === id ? { ...cam, [param]: typeof value === 'object' ? { ...cam[param], ...value } : value } : cam
+        )
+      }));
+    } else if (category === 'lights') {
+      setMeshParams(prev => ({
+        ...prev,
+        lights: prev.lights.map(light => 
+          light.id === id ? { ...light, [param]: typeof value === 'object' ? { ...light[param], ...value } : value } : light
+        )
+      }));
+    } else if (category === 'physics') {
+      setMeshParams(prev => ({ ...prev, physics: { ...prev.physics, [param]: value } }));
+    } else if (category === 'animation') {
+      setMeshParams(prev => ({ ...prev, animation: { ...prev.animation, [param]: value } }));
+    } else {
+      setMeshParams(prev => ({ ...prev, [category]: { ...prev[category], [param]: value } }));
+    }
+  };
 
-  const addCamera = () => {
-    const newId = 'cam_' + Math.random().toString(36).substring(2, 8);
-    const newCamera = {
-      id: newId, name: `Camera ${meshParams.cameras.length + 1}`, type: 'perspective',
-      position: { x: 5, y: 2, z: 3 }, rotation: { x: -10, y: 45, z: 0 }, fov: 50
-    };
-    setMeshParams(prev => ({ ...prev, cameras: [...prev.cameras, newCamera], selectedCamera: newId }));
-  };
+  // Functions to add, delete, and manage cameras and lights.
+  const addCamera = () => {
+    const newId = 'cam_' + Math.random().toString(36).substring(2, 8);
+    const newCamera = {
+      id: newId, name: `Camera ${meshParams.cameras.length + 1}`, type: 'perspective',
+      position: { x: 5, y: 2, z: 3 }, rotation: { x: -10, y: 45, z: 0 }, fov: 50
+    };
+    setMeshParams(prev => ({ ...prev, cameras: [...prev.cameras, newCamera], selectedCamera: newId }));
+  };
 
-  const addLight = () => {
-    const newId = 'light_' + Math.random().toString(36).substring(2, 8);
-    const newLight = {
-      id: newId, name: `Light ${meshParams.lights.length + 1}`, type: 'directional',
-      position: { x: 3, y: 3, z: 3 }, intensity: 1.0, color: '#ffffff', castShadows: false
-    };
-    setMeshParams(prev => ({ ...prev, lights: [...prev.lights, newLight], selectedLight: newId }));
-  };
+  const addLight = () => {
+    const newId = 'light_' + Math.random().toString(36).substring(2, 8);
+    const newLight = {
+      id: newId, name: `Light ${meshParams.lights.length + 1}`, type: 'directional',
+      position: { x: 3, y: 3, z: 3 }, intensity: 1.0, color: '#ffffff', castShadows: false
+    };
+    setMeshParams(prev => ({ ...prev, lights: [...prev.lights, newLight], selectedLight: newId }));
+  };
 
-  const deleteCamera = (cameraId) => {
-    if (meshParams.cameras.length <= 1) return;
-    setMeshParams(prev => {
-      const newCameras = prev.cameras.filter(cam => cam.id !== cameraId);
-      return {
-        ...prev,
-        cameras: newCameras,
-        selectedCamera: prev.selectedCamera === cameraId ? newCameras[0].id : prev.selectedCamera
-      };
-    });
-  };
+  const deleteCamera = (cameraId) => {
+    if (meshParams.cameras.length <= 1) return;
+    setMeshParams(prev => {
+      const newCameras = prev.cameras.filter(cam => cam.id !== cameraId);
+      return {
+        ...prev,
+        cameras: newCameras,
+        selectedCamera: prev.selectedCamera === cameraId ? newCameras[0].id : prev.selectedCamera
+      };
+    });
+  };
 
-  const deleteLight = (lightId) => {
-    if (meshParams.lights.length <= 1) return;
-    setMeshParams(prev => {
-      const newLights = prev.lights.filter(light => light.id !== lightId);
-      return {
-        ...prev,
-        lights: newLights,
-        selectedLight: prev.selectedLight === lightId ? newLights[0].id : prev.selectedLight
-      };
-    });
-  };
+  const deleteLight = (lightId) => {
+    if (meshParams.lights.length <= 1) return;
+    setMeshParams(prev => {
+      const newLights = prev.lights.filter(light => light.id !== lightId);
+      return {
+        ...prev,
+        lights: newLights,
+        selectedLight: prev.selectedLight === lightId ? newLights[0].id : prev.selectedLight
+      };
+    });
+  };
 
-  const generatePantsDataset = () => {
-    const newApiKey = '23b_demo_' + Math.random().toString(36).substring(2, 15);
-    setApiKey(newApiKey);
-    setCurrentPage('api-checkout');
-  };
+  // Functions for dataset generation and API key management.
+  const generatePantsDataset = () => {
+    const newApiKey = '23b_demo_' + Math.random().toString(36).substring(2, 15);
+    setApiKey(newApiKey);
+    setCurrentPage('api-checkout');
+  };
 
-  const generateDataset = () => {
-    const newApiKey = '23b_ent_' + Math.random().toString(36).substring(2, 15);
-    setApiKey(newApiKey);
-    setCurrentPage('api-checkout');
-  };
+  const generateDataset = () => {
+    const newApiKey = '23b_ent_' + Math.random().toString(36).substring(2, 15);
+    setApiKey(newApiKey);
+    setCurrentPage('api-checkout');
+  };
 
-  const copyApiKey = () => {
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(apiKey);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
-  };
+  const copyApiKey = () => {
+    // Note: document.execCommand('copy') is used for clipboard access
+    // because navigator.clipboard.writeText may be restricted in some environments.
+    const tempInput = document.createElement('input');
+    tempInput.value = apiKey;
+    document.body.appendChild(tempInput);
+    tempInput.select();
+    document.execCommand('copy');
+    document.body.removeChild(tempInput);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
-  // Auto-advance animation frames when playing
-  useEffect(() => {
-    let interval;
-    if (meshParams.animation.isPlaying) {
-      interval = setInterval(() => {
-        setMeshParams(prev => ({
-          ...prev,
-          animation: {
-            ...prev.animation,
-            currentFrame: (prev.animation.currentFrame + prev.animation.speed) % prev.animation.totalFrames
-          }
-        }));
-      }, 50);
-    }
-    return () => clearInterval(interval);
-  }, [meshParams.animation.isPlaying, meshParams.animation.speed]);
+  // Effect hook to handle animation playback.
+  useEffect(() => {
+    let interval;
+    if (meshParams.animation.isPlaying) {
+      interval = setInterval(() => {
+        setMeshParams(prev => ({
+          ...prev,
+          animation: {
+            ...prev.animation,
+            currentFrame: (prev.animation.currentFrame + prev.animation.speed) % prev.animation.totalFrames
+          }
+        }));
+      }, 50);
+    }
+    return () => clearInterval(interval);
+  }, [meshParams.animation.isPlaying, meshParams.animation.speed]);
 
-  if (currentPage === 'landing') {
-    return (
-      <div className="min-h-screen bg-white">
-        <header className="px-4 sm:px-6 py-6 sm:py-8">
-          <div className="max-w-6xl mx-auto flex items-center justify-between">
-            <h1 className="text-xl sm:text-2xl font-semibold text-black">23 Bulbs</h1>
-            <button onClick={() => setCurrentPage('signin')} className="bg-black text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-medium hover:bg-gray-800 transition-colors">Sign In</button>
-          </div>
-        </header>
-        <main className="px-4 sm:px-6 pt-12 sm:pt-24 pb-16 sm:pb-32">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-4xl sm:text-6xl font-bold text-black mb-6 sm:mb-8 leading-tight tracking-tight">Physics-Aware Datasets<br />for Enterprise GenAI</h2>
-            <p className="text-lg sm:text-xl text-gray-600 mb-12 sm:mb-16 max-w-2xl mx-auto leading-relaxed px-4">Power the next generation of AI with real-world fidelity. Our breakthrough real-time simulation engine delivers physics-accurate training data that unlocks GenAI for enterprise use.</p>
-            <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4 px-4">
-              <button onClick={() => setCurrentPage('signup')} className="bg-blue-600 text-white w-full sm:w-52 py-3.5 rounded-full text-base font-semibold hover:bg-blue-700 transition-all duration-200 inline-flex items-center justify-center space-x-2 shadow-sm"><span>Sign Up</span><ArrowRight className="w-4 h-4" /></button>
-              <button onClick={() => setCurrentPage('marketplace')} className="bg-black text-white w-full sm:w-52 py-3.5 rounded-full text-base font-semibold hover:bg-gray-800 transition-all duration-200 shadow-sm">Browse Datasets</button>
-              <button onClick={() => setCurrentPage('technology')} className="bg-gray-100 text-gray-900 w-full sm:w-52 py-3.5 rounded-full text-base font-semibold hover:bg-gray-200 transition-all duration-200 shadow-sm">Technology</button>
-            </div>
-          </div>
-        </main>
-      </div>
-    );
-  }
+  // Main page routing logic based on the currentPage state.
+  if (currentPage === 'landing') {
+    return (
+      <div className="min-h-screen bg-white font-sans">
+        {/* Landing Page Header */}
+        <header className="px-4 sm:px-6 py-6 sm:py-8">
+          <div className="max-w-6xl mx-auto flex items-center justify-between">
+            <h1 className="text-xl sm:text-2xl font-semibold text-black">23 Bulbs</h1>
+            <button onClick={() => setCurrentPage('signin')} className="bg-black text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-medium hover:bg-gray-800 transition-colors">Sign In</button>
+          </div>
+        </header>
+        {/* Landing Page Content */}
+        <main className="px-4 sm:px-6 pt-12 sm:pt-24 pb-16 sm:pb-32">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-4xl sm:text-6xl font-bold text-black mb-6 sm:mb-8 leading-tight tracking-tight">Physics-Aware Datasets<br />for Enterprise GenAI</h2>
+            <p className="text-lg sm:text-xl text-gray-600 mb-12 sm:mb-16 max-w-2xl mx-auto leading-relaxed px-4">Power the next generation of AI with real-world fidelity. Our breakthrough real-time simulation engine delivers physics-accurate training data that unlocks GenAI for enterprise use.</p>
+            <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4 px-4">
+              <button onClick={() => setCurrentPage('signup')} className="bg-blue-600 text-white w-full sm:w-52 py-3.5 rounded-full text-base font-semibold hover:bg-blue-700 transition-all duration-200 inline-flex items-center justify-center space-x-2 shadow-sm"><span>Sign Up</span><ArrowRight className="w-4 h-4" /></button>
+              <button onClick={() => setCurrentPage('marketplace')} className="bg-black text-white w-full sm:w-52 py-3.5 rounded-full text-base font-semibold hover:bg-gray-800 transition-all duration-200 shadow-sm">Browse Datasets</button>
+              <button onClick={() => setCurrentPage('technology')} className="bg-gray-100 text-gray-900 w-full sm:w-52 py-3.5 rounded-full text-base font-semibold hover:bg-gray-200 transition-all duration-200 shadow-sm">Technology</button>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
-  if (currentPage === 'marketplace') {
-    return (
-      <div className="min-h-screen bg-white">
-        <header className="px-4 sm:px-6 py-6 sm:py-8 border-b border-gray-100">
-          <div className="max-w-6xl mx-auto flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <button onClick={() => setCurrentPage('landing')} className="text-gray-500 hover:text-black p-2 hover:bg-gray-50 rounded-full transition-colors"><ArrowLeft className="w-5 h-5" /></button>
-              <h1 className="text-xl sm:text-2xl font-semibold text-black">23 Bulbs</h1>
-            </div>
-            <button onClick={() => setCurrentPage('signin')} className="bg-black text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-medium hover:bg-gray-800 transition-colors">Sign In</button>
-          </div>
-        </header>
-        <main className="px-6 py-16">
-          <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold text-black mb-4 tracking-tight">Pre-Built Datasets</h2>
-              <p className="text-xl text-gray-600 max-w-2xl mx-auto">Enterprise-grade physics-aware datasets that unlock GenAI for real-world applications. Reduce training time from 500M to 500 frames per use case.</p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {marketplaceDatasets.map(dataset => (
-                <div key={dataset.id} className="bg-white border border-gray-200 rounded-2xl overflow-hidden hover:shadow-lg transition-all">
-                  <div className={`h-48 ${dataset.background} relative`}>
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-16 h-16 bg-white bg-opacity-10 rounded-xl flex items-center justify-center">
-                        <div className="w-8 h-8 bg-white bg-opacity-90 rounded-sm"></div>
-                      </div>
-                    </div>
-                    <div className="absolute top-4 left-4">
-                      <span className={`px-3 py-1 ${dataset.isDemo ? 'bg-blue-600' : 'bg-black'} bg-opacity-80 text-white text-xs font-medium rounded-full`}>{dataset.badge}</span>
-                    </div>
-                  </div>
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold text-black mb-2">{dataset.name}</h3>
-                    <p className="text-gray-600 mb-4">{dataset.description}</p>
-                    <ul className="space-y-2 mb-6">
-                      {dataset.features.map((feature, idx) => (
-                        <li key={idx} className="text-sm text-gray-600 flex items-center"><Check className="w-4 h-4 text-green-500 mr-2 flex-shrink-0" />{feature}</li>
-                      ))}
-                    </ul>
-                    <div className="text-center">
-                      {dataset.isDemo ? (
-                        <>
-                          <p className="text-lg font-semibold text-blue-900 mb-4">{dataset.id === 'enterprise-3d' ? 'Try Enterprise 3D Demo' : 'Try Interactive Demo'}</p>
-                          <button onClick={() => setCurrentPage(dataset.id === 'enterprise-3d' ? '3d-editor' : 'generation')} className="w-full bg-blue-600 text-white py-3 rounded-full font-medium hover:bg-blue-700 transition-colors">{dataset.id === 'enterprise-3d' ? 'Launch Demo 2 Enterprise' : 'Launch Demo'}</button>
-                        </>
-                      ) : (
-                        <>
-                          <p className="text-lg font-semibold text-gray-900 mb-4">Enterprise License</p>
-                          <button className="w-full bg-black text-white py-3 rounded-full font-medium hover:bg-gray-800 transition-colors">Contact Sales</button>
-                        </>
-                      )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </main>
-      </div>
-    );
-  }
+  if (currentPage === 'marketplace') {
+    return (
+      <div className="min-h-screen bg-white font-sans">
+        {/* Marketplace Header */}
+        <header className="px-4 sm:px-6 py-6 sm:py-8 border-b border-gray-100">
+          <div className="max-w-6xl mx-auto flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <button onClick={() => setCurrentPage('landing')} className="text-gray-500 hover:text-black p-2 hover:bg-gray-50 rounded-full transition-colors"><ArrowLeft className="w-5 h-5" /></button>
+              <h1 className="text-xl sm:text-2xl font-semibold text-black">23 Bulbs</h1>
+            </div>
+            <button onClick={() => setCurrentPage('signin')} className="bg-black text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-medium hover:bg-gray-800 transition-colors">Sign In</button>
+          </div>
+        </header>
+        {/* Marketplace Content */}
+        <main className="px-6 py-16">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl font-bold text-black mb-4 tracking-tight">Pre-Built Datasets</h2>
+              <p className="text-xl text-gray-600 max-w-2xl mx-auto">Enterprise-grade physics-aware datasets that unlock GenAI for real-world applications. Reduce training time from 500M to 500 frames per use case.</p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {marketplaceDatasets.map(dataset => (
+                <div key={dataset.id} className="bg-white border border-gray-200 rounded-2xl overflow-hidden hover:shadow-lg transition-all">
+                  <div className={`h-48 ${dataset.background} relative`}>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="w-16 h-16 bg-white bg-opacity-10 rounded-xl flex items-center justify-center">
+                        <div className="w-8 h-8 bg-white bg-opacity-90 rounded-sm"></div>
+                      </div>
+                    </div>
+                    <div className="absolute top-4 left-4">
+                      <span className={`px-3 py-1 ${dataset.isDemo ? 'bg-blue-600' : 'bg-black'} bg-opacity-80 text-white text-xs font-medium rounded-full`}>{dataset.badge}</span>
+                    </div>
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold text-black mb-2">{dataset.name}</h3>
+                    <p className="text-gray-600 mb-4">{dataset.description}</p>
+                    <ul className="space-y-2 mb-6">
+                      {dataset.features.map((feature, idx) => (
+                        <li key={idx} className="text-sm text-gray-600 flex items-center"><Check className="w-4 h-4 text-green-500 mr-2 flex-shrink-0" />{feature}</li>
+                      ))}
+                    </ul>
+                    <div className="text-center">
+                      {dataset.isDemo ? (
+                        <>
+                          <p className="text-lg font-semibold text-blue-900 mb-4">{dataset.id === 'enterprise-3d' ? 'Try Enterprise 3D Demo' : 'Try Interactive Demo'}</p>
+                          <button onClick={() => setCurrentPage(dataset.id === 'enterprise-3d' ? '3d-editor' : 'generation')} className="w-full bg-blue-600 text-white py-3 rounded-full font-medium hover:bg-blue-700 transition-colors">{dataset.id === 'enterprise-3d' ? 'Launch Demo 2 Enterprise' : 'Launch Demo'}</button>
+                        </>
+                      ) : (
+                        <>
+                          <p className="text-lg font-semibold text-gray-900 mb-4">Enterprise License</p>
+                          <button className="w-full bg-black text-white py-3 rounded-full font-medium hover:bg-gray-800 transition-colors">Contact Sales</button>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
-  if (currentPage === 'generation') {
-    const categoryConfig = {
-      lighting: { title: 'Lighting', color: 'bg-yellow-500', description: 'Light angles, intensity, color temperature', params: [
-        { key: 'lightAngle', label: 'Light Angle', type: 'range', min: 0, max: 90, unit: '°' },
-        { key: 'numLights', label: 'Number of Lights', type: 'range', min: 1, max: 8, unit: '' },
-        { key: 'intensity', label: 'Light Intensity', type: 'range', min: 0.1, max: 2.0, step: 0.1, unit: '' },
-        { key: 'colorTemp', label: 'Color Temperature', type: 'range', min: 2700, max: 8000, unit: 'K' },
-        { key: 'hdri', label: 'HDRI Environment', type: 'select', options: ['studio', 'outdoor', 'indoor', 'sunset'] }
-      ]},
-      materials: { title: 'Materials & Textures', color: 'bg-gray-500', description: 'Fabric types, surface properties, textures', params: [
-        { key: 'fabricType', label: 'Fabric Type', type: 'select', options: ['cotton', 'silk', 'denim', 'leather', 'synthetic'] },
-        { key: 'roughness', label: 'Surface Roughness', type: 'range', min: 0, max: 1, step: 0.01, unit: '' },
-        { key: 'metallic', label: 'Metallic', type: 'range', min: 0, max: 1, step: 0.01, unit: '' },
-        { key: 'subsurface', label: 'Subsurface Scattering', type: 'range', min: 0, max: 1, step: 0.01, unit: '' },
-        { key: 'normalStrength', label: 'Normal Map Strength', type: 'range', min: 0, max: 2, step: 0.01, unit: '' }
-      ]},
-      camera: { title: 'Camera Setup', color: 'bg-gray-600', description: 'Angles, resolution, focal length, effects', params: [
-        { key: 'angles', label: 'Camera Angles', type: 'range', min: 8, max: 64, unit: '' },
-        { key: 'resolution', label: 'Resolution', type: 'select', options: ['4K', '8K', '12K'] },
-        { key: 'focalLength', label: 'Focal Length', type: 'range', min: 24, max: 200, unit: 'mm' },
-        { key: 'dof', label: 'Depth of Field', type: 'range', min: 0, max: 1, step: 0.01, unit: '' },
-        { key: 'motionBlur', label: 'Motion Blur', type: 'range', min: 0, max: 1, step: 0.01, unit: '' }
-      ]},
-      physics: { title: 'Physics Forces', color: 'bg-black', description: 'Wind, gravity, air density, collisions', params: [
-        { key: 'windStrength', label: 'Wind Strength', type: 'range', min: 0, max: 2, step: 0.1, unit: 'm/s' },
-        { key: 'gravity', label: 'Gravity Strength', type: 'range', min: 0, max: 20, step: 0.1, unit: 'm/s²' },
-        { key: 'windDirection', label: 'Wind Direction', type: 'range', min: 0, max: 360, unit: '°' },
-        { key: 'airDensity', label: 'Air Density', type: 'range', min: 0.5, max: 2.0, step: 0.1, unit: 'kg/m³' },
-        { key: 'collisionMargin', label: 'Collision Margin', type: 'range', min: 0.001, max: 0.1, step: 0.001, unit: 'm' }
-      ]}
-    };
+  // The code block that was missing a closing curly brace.
+  if (currentPage === 'generation') {
+    const categoryConfig = {
+      lighting: { title: 'Lighting', color: 'bg-yellow-500', description: 'Light angles, intensity, color temperature', params: [
+        { key: 'lightAngle', label: 'Light Angle', type: 'range', min: 0, max: 90, unit: '°' },
+        { key: 'numLights', label: 'Number of Lights', type: 'range', min: 1, max: 8, unit: '' },
+        { key: 'intensity', label: 'Light Intensity', type: 'range', min: 0.1, max: 2.0, step: 0.1, unit: '' },
+        { key: 'colorTemp', label: 'Color Temperature', type: 'range', min: 2700, max: 8000, unit: 'K' },
+        { key: 'hdri', label: 'HDRI Environment', type: 'select', options: ['studio', 'outdoor', 'indoor', 'sunset'] }
+      ]},
+      materials: { title: 'Materials & Textures', color: 'bg-gray-500', description: 'Fabric types, surface properties, textures', params: [
+        { key: 'fabricType', label: 'Fabric Type', type: 'select', options: ['cotton', 'silk', 'denim', 'leather', 'synthetic'] },
+        { key: 'roughness', label: 'Surface Roughness', type: 'range', min: 0, max: 1, step: 0.01, unit: '' },
+        { key: 'metallic', label: 'Metallic', type: 'range', min: 0, max: 1, step: 0.01, unit: '' },
+        { key: 'subsurface', label: 'Subsurface Scattering', type: 'range', min: 0, max: 1, step: 0.01, unit: '' },
+        { key: 'normalStrength', label: 'Normal Map Strength', type: 'range', min: 0, max: 2, step: 0.01, unit: '' }
+      ]},
+      camera: { title: 'Camera Setup', color: 'bg-gray-600', description: 'Angles, resolution, focal length, effects', params: [
+        { key: 'angles', label: 'Camera Angles', type: 'range', min: 8, max: 64, unit: '' },
+        { key: 'resolution', label: 'Resolution', type: 'select', options: ['4K', '8K', '12K'] },
+        { key: 'focalLength', label: 'Focal Length', type: 'range', min: 24, max: 200, unit: 'mm' },
+        { key: 'dof', label: 'Depth of Field', type: 'range', min: 0, max: 1, step: 0.01, unit: '' },
+        { key: 'motionBlur', label: 'Motion Blur', type: 'range', min: 0, max: 1, step: 0.01, unit: '' }
+      ]},
+      physics: { title: 'Physics Forces', color: 'bg-black', description: 'Wind, gravity, air density, collisions', params: [
+        { key: 'windStrength', label: 'Wind Strength', type: 'range', min: 0, max: 2, step: 0.1, unit: 'm/s' },
+        { key: 'gravity', label: 'Gravity Strength', type: 'range', min: 0, max: 20, step: 0.1, unit: 'm/s²' },
+        { key: 'windDirection', label: 'Wind Direction', type: 'range', min: 0, max: 360, unit: '°' },
+        { key: 'airDensity', label: 'Air Density', type: 'range', min: 0.5, max: 2.0, step: 0.1, unit: 'kg/m³' },
+        { key: 'collisionMargin', label: 'Collision Margin', type: 'range', min: 0.001, max: 0.1, step: 0.001, unit: 'm' }
+      ]}
+    };
 
-    const toggleCategory = (categoryKey) => {
-      if (selectedCategories.includes(categoryKey)) {
-        setSelectedCategories(prev => prev.filter(cat => cat !== categoryKey));
-      } else {
-        setSelectedCategories(prev => [...prev, categoryKey]);
-      }
-    };
+    const toggleCategory = (categoryKey) => {
+      if (selectedCategories.includes(categoryKey)) {
+        setSelectedCategories(prev => prev.filter(cat => cat !== categoryKey));
+      } else {
+        setSelectedCategories(prev => [...prev, categoryKey]);
+      }
+    };
 
-    const selectedParamCount = selectedCategories.reduce((total, cat) => total + categoryConfig[cat].params.length, 0);
+    const selectedParamCount = selectedCategories.reduce((total, cat) => total + categoryConfig[cat].params.length, 0);
 
-    return (
-      <div className="min-h-screen bg-white">
-        <header className="px-4 sm:px-6 py-6 sm:py-8 border-b border-gray-100">
-          <div className="max-w-7xl mx-auto flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <button onClick={() => setCurrentPage('marketplace')} className="text-gray-500 hover:text-black p-2 hover:bg-gray-50 rounded-full transition-colors"><ArrowLeft className="w-5 h-5" /></button>
-              <h1 className="text-xl sm:text-2xl font-semibold text-black">23 Bulbs</h1>
-              <span className="text-sm text-gray-500">• Configure Parameters</span>
-            </div>
-            <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
-              <span className="text-xs font-medium text-gray-600">JD</span>
-            </div>
-          </div>
-        </header>
-        <div className="px-6 py-12">
-          <div className="max-w-4xl mx-auto">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-black mb-4">Choose Parameter Categories</h2>
-              <p className="text-lg text-gray-600">Select which aspects of the simulation you'd like to customize</p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-              {Object.entries(categoryConfig).map(([categoryKey, category]) => (
-                <div key={categoryKey} className="space-y-6">
-                  <div onClick={() => toggleCategory(categoryKey)} className={`border-2 rounded-2xl p-6 cursor-pointer transition-all hover:shadow-lg ${selectedCategories.includes(categoryKey) ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'}`}>
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="flex items-center space-x-3">
-                        <div className={`w-4 h-4 ${category.color} rounded-full`}></div>
-                        <h3 className="text-xl font-semibold text-black">{category.title}</h3>
-                      </div>
-                      <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${selectedCategories.includes(categoryKey) ? 'bg-blue-500 border-blue-500' : 'border-gray-300'}`}>
-                        {selectedCategories.includes(categoryKey) && <Check className="w-4 h-4 text-white" />}
-                      </div>
-                    </div>
-                    <p className="text-gray-600 mb-4">{category.description}</p>
-                    <div className="text-sm text-gray-500">{category.params.length} parameters available</div>
-                  </div>
-                  {selectedCategories.includes(categoryKey) && (
-                    <div className="bg-white border border-gray-200 rounded-2xl p-6">
-                      <h4 className="text-lg font-semibold text-black mb-4 flex items-center">
-                        <div className={`w-3 h-3 ${category.color} rounded-full mr-2`}></div>
-                        {category.title} Parameters
-                      </h4>
-                      <div className="space-y-4">
-                        {category.params.map(param => {
-                          const currentValue = parameters[categoryKey][param.key];
-                          return (
-                            <div key={param.key} className="space-y-2">
-                              <div className="flex justify-between items-center">
-                                <label className="text-sm font-medium text-gray-700">{param.label}</label>
-                                <span className="text-sm text-gray-500">{currentValue}{param.unit || ''}</span>
-                              </div>
-                              {param.type === 'range' ? (
-                                <input type="range" min={param.min} max={param.max} step={param.step || 1} value={currentValue} onChange={(e) => updateParameter(categoryKey, param.key, parseFloat(e.target.value))} className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" />
-                              ) : (
-                                <select value={currentValue} onChange={(e) => updateParameter(categoryKey, param.key, e.target.value)} className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
-                                  {param.options.map(option => <option key={option} value={option}>{option}</option>)}
-                                </select>
-                              )}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-            <div className="bg-gray-50 rounded-2xl p-8 mb-8">
-              <div className="text-center">
-                <h3 className="text-xl font-semibold text-black mb-4">Selection Summary</h3>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div><div className="text-2xl font-bold text-blue-600">{selectedCategories.length}</div><div className="text-sm text-gray-600">Categories</div></div>
-                  <div><div className="text-2xl font-bold text-blue-600">{selectedParamCount}</div><div className="text-sm text-gray-600">Parameters</div></div>
-                  <div><div className="text-2xl font-bold text-blue-600">{Math.floor(selectedParamCount * 2.5)}K</div><div className="text-sm text-gray-600">Est. Samples</div></div>
-                  <div><div className="text-2xl font-bold text-blue-600">{(selectedParamCount * 0.26).toFixed(1)}GB</div><div className="text-sm text-gray-600">Data Volume</div></div>
-                </div>
-              </div>
-            </div>
-            <div className="text-center">
-              <button onClick={generatePantsDataset} disabled={selectedCategories.length === 0} className={`px-12 py-4 rounded-full text-lg font-semibold transition-colors shadow-sm ${selectedCategories.length > 0 ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`}>Generate Dataset ({selectedParamCount} parameters)</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+    return (
+      <div className="min-h-screen bg-white font-sans">
+        {/* Generation Page Header */}
+        <header className="px-4 sm:px-6 py-6 sm:py-8 border-b border-gray-100">
+          <div className="max-w-7xl mx-auto flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <button onClick={() => setCurrentPage('marketplace')} className="text-gray-500 hover:text-black p-2 hover:bg-gray-50 rounded-full transition-colors"><ArrowLeft className="w-5 h-5" /></button>
+              <h1 className="text-xl sm:text-2xl font-semibold text-black">23 Bulbs</h1>
+              <span className="text-sm text-gray-500">• Configure Parameters</span>
+            </div>
+            <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
+              <span className="text-xs font-medium text-gray-600">JD</span>
+            </div>
+          </div>
+        </header>
+        {/* Generation Page Content */}
+        <div className="px-6 py-12">
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold text-black mb-4">Choose Parameter Categories</h2>
+              <p className="text-lg text-gray-600">Select which aspects of the simulation you'd like to customize</p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+              {Object.entries(categoryConfig).map(([categoryKey, category]) => (
+                <div key={categoryKey} className="space-y-6">
+                  <div onClick={() => toggleCategory(categoryKey)} className={`border-2 rounded-2xl p-6 cursor-pointer transition-all hover:shadow-lg ${selectedCategories.includes(categoryKey) ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'}`}>
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex items-center space-x-3">
+                        <div className={`w-4 h-4 ${category.color} rounded-full`}></div>
+                        <h3 className="text-xl font-semibold text-black">{category.title}</h3>
+                      </div>
+                      <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${selectedCategories.includes(categoryKey) ? 'bg-blue-500 border-blue-500' : 'border-gray-300'}`}>
+                        {selectedCategories.includes(categoryKey) && <Check className="w-4 h-4 text-white" />}
+                      </div>
+                    </div>
+                    <p className="text-gray-600 mb-4">{category.description}</p>
+                    <div className="text-sm text-gray-500">{category.params.length} parameters available</div>
+                  </div>
+                  {selectedCategories.includes(categoryKey) && (
+                    <div className="bg-white border border-gray-200 rounded-2xl p-6">
+                      <h4 className="text-lg font-semibold text-black mb-4 flex items-center">
+                        <div className={`w-3 h-3 ${category.color} rounded-full mr-2`}></div>
+                        {category.title} Parameters
+                      </h4>
+                      <div className="space-y-4">
+                        {category.params.map(param => {
+                          const currentValue = parameters[categoryKey][param.key];
+                          return (
+                            <div key={param.key} className="space-y-2">
+                              <div className="flex justify-between items-center">
+                                <label className="text-sm font-medium text-gray-700">{param.label}</label>
+                                <span className="text-sm text-gray-500">{currentValue}{param.unit || ''}</span>
+                              </div>
+                              {param.type === 'range' ? (
+                                <input type="range" min={param.min} max={param.max} step={param.step || 1} value={currentValue} onChange={(e) => updateParameter(categoryKey, param.key, parseFloat(e.target.value))} className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" />
+                              ) : (
+                                <select value={currentValue} onChange={(e) => updateParameter(categoryKey, param.key, e.target.value)} className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+                                  {param.options.map(option => <option key={option} value={option}>{option}</option>)}
+                                </select>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+            <div className="bg-gray-50 rounded-2xl p-8 mb-8">
+              <div className="text-center">
+                <h3 className="text-xl font-semibold text-black mb-4">Selection Summary</h3>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div><div className="text-2xl font-bold text-blue-600">{selectedCategories.length}</div><div className="text-sm text-gray-600">Categories</div></div>
+                  <div><div className="text-2xl font-bold text-blue-600">{selectedParamCount}</div><div className="text-sm text-gray-600">Parameters</div></div>
+                  <div><div className="text-2xl font-bold text-blue-600">{Math.floor(selectedParamCount * 2.5)}K</div><div className="text-sm text-gray-600">Est. Samples</div></div>
+                  <div><div className="text-2xl font-bold text-blue-600">{(selectedParamCount * 0.26).toFixed(1)}GB</div><div className="text-sm text-gray-600">Data Volume</div></div>
+                </div>
+              </div>
+            </div>
+            <div className="text-center">
+              <button onClick={generatePantsDataset} disabled={selectedCategories.length === 0} className={`px-12 py-4 rounded-full text-lg font-semibold transition-colors shadow-sm ${selectedCategories.length > 0 ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`}>Generate Dataset ({selectedParamCount} parameters)</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
-  if (currentPage === '3d-editor') {
-    const currentCamera = meshParams.cameras.find(cam => cam.id === meshParams.selectedCamera) || meshParams.cameras[0];
-    const currentLight = meshParams.lights.find(light => light.id === meshParams.selectedLight);
+  if (currentPage === '3d-editor') {
+    const currentCamera = meshParams.cameras.find(cam => cam.id === meshParams.selectedCamera) || meshParams.cameras[0];
+    const currentLight = meshParams.lights.find(light => light.id === meshParams.selectedLight);
 
-    return (
-      <div className="min-h-screen bg-white">
-        <header className="px-4 sm:px-6 py-6 sm:py-8 border-b border-gray-100">
-          <div className="max-w-7xl mx-auto flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <button onClick={() => setCurrentPage('marketplace')} className="text-gray-500 hover:text-black p-2 hover:bg-gray-50 rounded-full transition-colors"><ArrowLeft className="w-5 h-5" /></button>
-              <h1 className="text-xl sm:text-2xl font-semibold text-black">23 Bulbs</h1>
-              <span className="text-sm text-gray-500">• Enterprise 3D Demo</span>
-            </div>
-            <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
-              <span className="text-xs font-medium text-gray-600">JD</span>
-            </div>
-          </div>
-        </header>
-        <div className="flex h-[calc(100vh-88px)]">
-          <div className="flex-1 bg-gray-100 relative">
-            {/* View Mode Toggle */}
-            <div className="absolute top-4 left-4 z-10">
-              <div className="bg-white rounded-lg shadow-md p-2 flex space-x-2">
-                <button onClick={() => updateMeshParam('viewMode', '', 'orbit')} className={`px-3 py-1 text-xs rounded ${meshParams.viewMode === 'orbit' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'}`}>Orbit View</button>
-                <button onClick={() => updateMeshParam('viewMode', '', 'camera')} className={`px-3 py-1 text-xs rounded ${meshParams.viewMode === 'camera' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'}`}>Camera View</button>
-              </div>
-            </div>
-            
-            {/* 3D Scene */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="relative" style={{transform: meshParams.viewMode === 'orbit' ? `perspective(1000px) translateZ(${currentCamera.position.z * -30}px) rotateX(${currentCamera.rotation.x}deg) rotateY(${currentCamera.rotation.y}deg)` : `perspective(1000px) translateZ(-200px) rotateX(${-currentCamera.rotation.x}deg) rotateY(${-currentCamera.rotation.y + 180}deg) scale(1.5)`, transformStyle: 'preserve-3d'}}>
-                {/* The 3D Cube */}
-                <div className="w-32 h-32 relative" style={{transformStyle: 'preserve-3d', transform: `rotateX(${meshParams.animation.isPlaying ? Math.sin(meshParams.animation.currentFrame * 0.05) * 10 : 0}deg) rotateY(${meshParams.animation.isPlaying ? meshParams.animation.currentFrame * 2 : 0}deg)`}}>
-                  <div className="absolute w-32 h-32 border-2" style={{backgroundColor: meshParams.material.color, opacity: meshParams.material.wireframe ? 0.3 : meshParams.material.opacity, borderColor: meshParams.material.wireframe ? '#374151' : 'rgba(0,0,0,0.2)', transform: 'translateZ(64px)'}} />
-                  <div className="absolute w-32 h-32 border-2" style={{backgroundColor: meshParams.material.color, opacity: meshParams.material.wireframe ? 0.2 : meshParams.material.opacity * 0.8, borderColor: meshParams.material.wireframe ? '#374151' : 'rgba(0,0,0,0.2)', transform: 'translateZ(-64px) rotateY(180deg)'}} />
-                  <div className="absolute w-32 h-32 border-2" style={{backgroundColor: meshParams.material.color, opacity: meshParams.material.wireframe ? 0.25 : meshParams.material.opacity * 0.9, borderColor: meshParams.material.wireframe ? '#374151' : 'rgba(0,0,0,0.2)', transform: 'rotateY(90deg) translateZ(64px)'}} />
-                  <div className="absolute w-32 h-32 border-2" style={{backgroundColor: meshParams.material.color, opacity: meshParams.material.wireframe ? 0.2 : meshParams.material.opacity * 0.7, borderColor: meshParams.material.wireframe ? '#374151' : 'rgba(0,0,0,0.2)', transform: 'rotateY(-90deg) translateZ(64px)'}} />
-                  <div className="absolute w-32 h-32 border-2" style={{backgroundColor: meshParams.material.color, opacity: meshParams.material.wireframe ? 0.3 : meshParams.material.opacity * 0.95, borderColor: meshParams.material.wireframe ? '#374151' : 'rgba(0,0,0,0.2)', transform: 'rotateX(90deg) translateZ(64px)'}} />
-                  <div className="absolute w-32 h-32 border-2" style={{backgroundColor: meshParams.material.color, opacity: meshParams.material.wireframe ? 0.15 : meshParams.material.opacity * 0.6, borderColor: meshParams.material.wireframe ? '#374151' : 'rgba(0,0,0,0.2)', transform: 'rotateX(-90deg) translateZ(64px)'}} />
-                </div>
+    return (
+      <div className="min-h-screen bg-white font-sans">
+        {/* 3D Editor Header */}
+        <header className="px-4 sm:px-6 py-6 sm:py-8 border-b border-gray-100">
+          <div className="max-w-7xl mx-auto flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <button onClick={() => setCurrentPage('marketplace')} className="text-gray-500 hover:text-black p-2 hover:bg-gray-50 rounded-full transition-colors"><ArrowLeft className="w-5 h-5" /></button>
+              <h1 className="text-xl sm:text-2xl font-semibold text-black">23 Bulbs</h1>
+              <span className="text-sm text-gray-500">• Enterprise 3D Demo</span>
+            </div>
+            <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
+              <span className="text-xs font-medium text-gray-600">JD</span>
+            </div>
+          </div>
+        </header>
+        <div className="flex h-[calc(100vh-88px)]">
+          <div className="flex-1 bg-gray-100 relative">
+            {/* View Mode Toggle */}
+            <div className="absolute top-4 left-4 z-10">
+              <div className="bg-white rounded-lg shadow-md p-2 flex space-x-2">
+                <button onClick={() => updateMeshParam('viewMode', '', 'orbit')} className={`px-3 py-1 text-xs rounded ${meshParams.viewMode === 'orbit' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'}`}>Orbit View</button>
+                <button onClick={() => updateMeshParam('viewMode', '', 'camera')} className={`px-3 py-1 text-xs rounded ${meshParams.viewMode === 'camera' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'}`}>Camera View</button>
+              </div>
+            </div>
+            
+            {/* 3D Scene - Using CSS transform for a pseudo-3D effect */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="relative" style={{transform: meshParams.viewMode === 'orbit' ? `perspective(1000px) translateZ(${currentCamera.position.z * -30}px) rotateX(${currentCamera.rotation.x}deg) rotateY(${currentCamera.rotation.y}deg)` : `perspective(1000px) translateZ(-200px) rotateX(${-currentCamera.rotation.x}deg) rotateY(${-currentCamera.rotation.y + 180}deg) scale(1.5)`, transformStyle: 'preserve-3d'}}>
+                {/* The 3D Cube */}
+                <div className="w-32 h-32 relative" style={{transformStyle: 'preserve-3d', transform: `rotateX(${meshParams.animation.isPlaying ? Math.sin(meshParams.animation.currentFrame * 0.05) * 10 : 0}deg) rotateY(${meshParams.animation.isPlaying ? meshParams.animation.currentFrame * 2 : 0}deg)`}}>
+                  <div className="absolute w-32 h-32 border-2" style={{backgroundColor: meshParams.material.color, opacity: meshParams.material.wireframe ? 0.3 : meshParams.material.opacity, borderColor: meshParams.material.wireframe ? '#374151' : 'rgba(0,0,0,0.2)', transform: 'translateZ(64px)'}} />
+                  <div className="absolute w-32 h-32 border-2" style={{backgroundColor: meshParams.material.color, opacity: meshParams.material.wireframe ? 0.2 : meshParams.material.opacity * 0.8, borderColor: meshParams.material.wireframe ? '#374151' : 'rgba(0,0,0,0.2)', transform: 'translateZ(-64px) rotateY(180deg)'}} />
+                  <div className="absolute w-32 h-32 border-2" style={{backgroundColor: meshParams.material.color, opacity: meshParams.material.wireframe ? 0.25 : meshParams.material.opacity * 0.9, borderColor: meshParams.material.wireframe ? '#374151' : 'rgba(0,0,0,0.2)', transform: 'rotateY(90deg) translateZ(64px)'}} />
+                  <div className="absolute w-32 h-32 border-2" style={{backgroundColor: meshParams.material.color, opacity: meshParams.material.wireframe ? 0.2 : meshParams.material.opacity * 0.7, borderColor: meshParams.material.wireframe ? '#374151' : 'rgba(0,0,0,0.2)', transform: 'rotateY(-90deg) translateZ(64px)'}} />
+                  <div className="absolute w-32 h-32 border-2" style={{backgroundColor: meshParams.material.color, opacity: meshParams.material.wireframe ? 0.3 : meshParams.material.opacity * 0.95, borderColor: meshParams.material.wireframe ? '#374151' : 'rgba(0,0,0,0.2)', transform: 'rotateX(90deg) translateZ(64px)'}} />
+                  <div className="absolute w-32 h-32 border-2" style={{backgroundColor: meshParams.material.color, opacity: meshParams.material.wireframe ? 0.15 : meshParams.material.opacity * 0.6, borderColor: meshParams.material.wireframe ? '#374151' : 'rgba(0,0,0,0.2)', transform: 'rotateX(-90deg) translateZ(64px)'}} />
+                </div>
 
-                {/* Camera and Light Visualizations */}
-                {meshParams.viewMode === 'orbit' && (
-                  <>
-                    {meshParams.cameras.map(camera => (
-                      <div key={camera.id} className="absolute" style={{transform: `translate3d(${camera.position.x * 40}px, ${camera.position.y * -40}px, ${camera.position.z * 40}px) rotateX(${camera.rotation.x}deg) rotateY(${camera.rotation.y}deg)`, transformStyle: 'preserve-3d', opacity: camera.id === meshParams.selectedCamera ? 1 : 0.6}}>
-                        <div className={`w-8 h-6 ${camera.id === meshParams.selectedCamera ? 'bg-blue-600 border-blue-800' : 'bg-gray-500 border-gray-700'} border rounded`} />
-                        <div className="absolute text-xs font-bold bg-white px-1 rounded" style={{transform: 'translateZ(10px) translateX(-8px) translateY(-12px)', fontSize: '8px'}}>{camera.name}</div>
-                      </div>
-                    ))}
-                    
-                    {meshParams.lights.map(light => (
-                      <div key={light.id} className="absolute" style={{transform: `translate3d(${light.position.x * 40}px, ${light.position.y * -40}px, ${light.position.z * 40}px)`, transformStyle: 'preserve-3d', opacity: light.id === meshParams.selectedLight ? 1 : 0.5}}>
-                        <div className={`w-6 h-6 rounded-full border-2 ${light.id === meshParams.selectedLight ? 'bg-yellow-400 border-yellow-600' : 'bg-yellow-200 border-yellow-400'}`} />
-                        <div className="absolute text-xs font-bold bg-white px-1 rounded" style={{transform: 'translateZ(10px) translateX(-8px) translateY(-16px)', fontSize: '8px'}}>{light.name}</div>
-                      </div>
-                    ))}
+                {/* Camera and Light Visualizations */}
+                {meshParams.viewMode === 'orbit' && (
+                  <>
+                    {meshParams.cameras.map(camera => (
+                      <div key={camera.id} className="absolute" style={{transform: `translate3d(${camera.position.x * 40}px, ${camera.position.y * -40}px, ${camera.position.z * 40}px) rotateX(${camera.rotation.x}deg) rotateY(${camera.rotation.y}deg)`, transformStyle: 'preserve-3d', opacity: camera.id === meshParams.selectedCamera ? 1 : 0.6}}>
+                        <div className={`w-8 h-6 ${camera.id === meshParams.selectedCamera ? 'bg-blue-600 border-blue-800' : 'bg-gray-500 border-gray-700'} border rounded`} />
+                        <div className="absolute text-xs font-bold bg-white px-1 rounded" style={{transform: 'translateZ(10px) translateX(-8px) translateY(-12px)', fontSize: '8px'}}>{camera.name}</div>
+                      </div>
+                    ))}
+                    
+                    {meshParams.lights.map(light => (
+                      <div key={light.id} className="absolute" style={{transform: `translate3d(${light.position.x * 40}px, ${light.position.y * -40}px, ${light.position.z * 40}px)`, transformStyle: 'preserve-3d', opacity: light.id === meshParams.selectedLight ? 1 : 0.5}}>
+                        <div className={`w-6 h-6 rounded-full border-2 ${light.id === meshParams.selectedLight ? 'bg-yellow-400 border-yellow-600' : 'bg-yellow-200 border-yellow-400'}`} />
+                        <div className="absolute text-xs font-bold bg-white px-1 rounded" style={{transform: 'translateZ(10px) translateX(-8px) translateY(-16px)', fontSize: '8px'}}>{light.name}</div>
+                      </div>
+                    ))}
 
-                    {meshParams.animation.cameraKeyframes.map((keyframe, index) => (
-                      <div key={index} className="absolute" style={{transform: `translate3d(${keyframe.position.x * 40}px, ${keyframe.position.y * -40}px, ${keyframe.position.z * 40}px) rotateX(${keyframe.rotation.x}deg) rotateY(${keyframe.rotation.y}deg)`, transformStyle: 'preserve-3d', opacity: 0.6}}>
-                        <div className="w-6 h-4 bg-green-500 border border-green-700 rounded" />
-                        <div className="absolute text-xs text-green-700 font-bold bg-white px-1 rounded" style={{transform: 'translateZ(10px) translateX(-8px) translateY(-12px)', fontSize: '8px'}}>{keyframe.frame}</div>
-                      </div>
-                    ))}
-                  </>
-                )}
-              </div>
-            </div>
+                    {meshParams.animation.cameraKeyframes.map((keyframe, index) => (
+                      <div key={index} className="absolute" style={{transform: `translate3d(${keyframe.position.x * 40}px, ${keyframe.position.y * -40}px, ${keyframe.position.z * 40}px) rotateX(${keyframe.rotation.x}deg) rotateY(${keyframe.rotation.y}deg)`, transformStyle: 'preserve-3d', opacity: 0.6}}>
+                        <div className="w-6 h-4 bg-green-500 border border-green-700 rounded" />
+                        <div className="absolute text-xs text-green-700 font-bold bg-white px-1 rounded" style={{transform: 'translateZ(10px) translateX(-8px) translateY(-12px)', fontSize: '8px'}}>{keyframe.frame}</div>
+                      </div>
+                    ))}
+                  </>
+                )}
+              </div>
+            </div>
 
-            {/* Mouse Controls */}
-            {meshParams.viewMode === 'orbit' && (
-              <div className="absolute inset-0 cursor-grab active:cursor-grabbing" onMouseDown={(e) => {
-                const startX = e.clientX;
-                const startY = e.clientY;
-                const startRotX = currentCamera.rotation.x;
-                const startRotY = currentCamera.rotation.y;
-                const handleMouseMove = (moveEvent) => {
-                  const deltaX = moveEvent.clientX - startX;
-                  const deltaY = moveEvent.clientY - startY;
-                  updateMeshParam('cameras', 'rotation', {
-                    x: Math.max(-90, Math.min(90, startRotX - deltaY * 0.5)),
-                    y: startRotY + deltaX * 0.5
-                  }, currentCamera.id);
-                };
-                const handleMouseUp = () => {
-                  document.removeEventListener('mousemove', handleMouseMove);
-                  document.removeEventListener('mouseup', handleMouseUp);
-                };
-                document.addEventListener('mousemove', handleMouseMove);
-                document.addEventListener('mouseup', handleMouseUp);
-              }} onWheel={(e) => {
-                e.preventDefault();
-                const newZ = Math.max(1, Math.min(20, currentCamera.position.z + e.deltaY * 0.01));
-                updateMeshParam('cameras', 'position', { ...currentCamera.position, z: newZ }, currentCamera.id);
-              }} />
-            )}
-            
-            {/* Enhanced Timeline */}
-            <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4">
-              <div className="flex items-center space-x-4 mb-3">
-                <button onClick={() => updateMeshParam('animation', 'isPlaying', !meshParams.animation.isPlaying)} className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">{meshParams.animation.isPlaying ? 'Pause' : 'Play'}</button>
-                <button onClick={() => updateMeshParam('animation', 'currentFrame', 0)} className="bg-gray-200 text-gray-700 px-3 py-2 rounded-lg text-sm font-medium hover:bg-gray-300 transition-colors">Reset</button>
-                <div className="flex-1">
-                  <div className="flex items-center space-x-2 mb-1">
-                    <span className="text-xs text-gray-500">Frame:</span>
-                    <span className="text-xs font-mono text-gray-700">{Math.floor(meshParams.animation.currentFrame)} / {meshParams.animation.totalFrames}</span>
-                    <span className="text-xs text-gray-500 ml-4">Time:</span>
-                    <span className="text-xs font-mono text-gray-700">{(meshParams.animation.currentFrame / 24).toFixed(2)}s</span>
-                  </div>
-                  <div className="relative">
-                    <input type="range" min="0" max={meshParams.animation.totalFrames} value={meshParams.animation.currentFrame} onChange={(e) => updateMeshParam('animation', 'currentFrame', parseInt(e.target.value))} className="w-full h-3 bg-gray-200 rounded-lg appearance-none cursor-pointer" />
-                    <div className="absolute top-0 w-full h-3 pointer-events-none">
-                      {meshParams.animation.cameraKeyframes.map((keyframe, idx) => (
-                        <div key={idx} className="absolute w-1 h-3 bg-green-500 rounded-sm" style={{left: `${(keyframe.frame / meshParams.animation.totalFrames) * 100}%`}} />
-                      ))}
-                      {meshParams.animation.lightKeyframes.map((keyframe, idx) => (
-                        <div key={idx} className="absolute w-1 h-3 bg-yellow-500 rounded-sm" style={{left: `${(keyframe.frame / meshParams.animation.totalFrames) * 100}%`}} />
-                      ))}
-                      {meshParams.animation.materialKeyframes.map((keyframe, idx) => (
-                        <div key={idx} className="absolute w-1 h-3 bg-purple-500 rounded-sm" style={{left: `${(keyframe.frame / meshParams.animation.totalFrames) * 100}%`}} />
-                      ))}
-                    </div>
-                  </div>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <span className="text-xs text-gray-500">Speed:</span>
-                  <input type="range" min="0.1" max="3.0" step="0.1" value={meshParams.animation.speed} onChange={(e) => updateMeshParam('animation', 'speed', parseFloat(e.target.value))} className="w-16 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" />
-                  <span className="text-xs font-mono text-gray-700 w-8">{meshParams.animation.speed}x</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <span className="text-xs text-gray-500">Length:</span>
-                  <input type="number" min="60" max="600" value={meshParams.animation.totalFrames} onChange={(e) => updateMeshParam('animation', 'totalFrames', parseInt(e.target.value) || 120)} className="w-16 px-2 py-1 text-xs border border-gray-300 rounded" />
-                  <span className="text-xs text-gray-500">frames</span>
-                </div>
-              </div>
-              <div className="flex items-center space-x-4 text-xs">
-                <div className="flex items-center space-x-1">
-                  <div className="w-2 h-2 bg-green-500 rounded-sm"></div>
-                  <span className="text-gray-600">Camera</span>
-                </div>
-                <div className="flex items-center space-x-1">
-                  <div className="w-2 h-2 bg-yellow-500 rounded-sm"></div>
-                  <span className="text-gray-600">Light</span>
-                </div>
-                <div className="flex items-center space-x-1">
-                  <div className="w-2 h-2 bg-purple-500 rounded-sm"></div>
-                  <span className="text-gray-600">Material</span>
-                </div>
-              </div>
-            </div>
-          </div>
+            {/* Mouse Controls */}
+            {meshParams.viewMode === 'orbit' && (
+              <div className="absolute inset-0 cursor-grab active:cursor-grabbing" onMouseDown={(e) => {
+                const startX = e.clientX;
+                const startY = e.clientY;
+                const startRotX = currentCamera.rotation.x;
+                const startRotY = currentCamera.rotation.y;
+                const handleMouseMove = (moveEvent) => {
+                  const deltaX = moveEvent.clientX - startX;
+                  const deltaY = moveEvent.clientY - startY;
+                  updateMeshParam('cameras', 'rotation', {
+                    x: Math.max(-90, Math.min(90, startRotX - deltaY * 0.5)),
+                    y: startRotY + deltaX * 0.5
+                  }, currentCamera.id);
+                };
+                const handleMouseUp = () => {
+                  document.removeEventListener('mousemove', handleMouseMove);
+                  document.removeEventListener('mouseup', handleMouseUp);
+                };
+                document.addEventListener('mousemove', handleMouseMove);
+                document.addEventListener('mouseup', handleMouseUp);
+              }} onWheel={(e) => {
+                e.preventDefault();
+                const newZ = Math.max(1, Math.min(20, currentCamera.position.z + e.deltaY * 0.01));
+                updateMeshParam('cameras', 'position', { ...currentCamera.position, z: newZ }, currentCamera.id);
+              }} />
+            )}
+            
+            {/* Enhanced Timeline */}
+            <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4">
+              <div className="flex items-center space-x-4 mb-3">
+                <button onClick={() => updateMeshParam('animation', 'isPlaying', !meshParams.animation.isPlaying)} className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">{meshParams.animation.isPlaying ? 'Pause' : 'Play'}</button>
+                <button onClick={() => updateMeshParam('animation', 'currentFrame', 0)} className="bg-gray-200 text-gray-700 px-3 py-2 rounded-lg text-sm font-medium hover:bg-gray-300 transition-colors">Reset</button>
+                <div className="flex-1">
+                  <div className="flex items-center space-x-2 mb-1">
+                    <span className="text-xs text-gray-500">Frame:</span>
+                    <span className="text-xs font-mono text-gray-700">{Math.floor(meshParams.animation.currentFrame)} / {meshParams.animation.totalFrames}</span>
+                    <span className="text-xs text-gray-500 ml-4">Time:</span>
+                    <span className="text-xs font-mono text-gray-700">{(meshParams.animation.currentFrame / 24).toFixed(2)}s</span>
+                  </div>
+                  <div className="relative">
+                    <input type="range" min="0" max={meshParams.animation.totalFrames} value={meshParams.animation.currentFrame} onChange={(e) => updateMeshParam('animation', 'currentFrame', parseInt(e.target.value))} className="w-full h-3 bg-gray-200 rounded-lg appearance-none cursor-pointer" />
+                    <div className="absolute top-0 w-full h-3 pointer-events-none">
+                      {meshParams.animation.cameraKeyframes.map((keyframe, idx) => (
+                        <div key={idx} className="absolute w-1 h-3 bg-green-500 rounded-sm" style={{left: `${(keyframe.frame / meshParams.animation.totalFrames) * 100}%`}} />
+                      ))}
+                      {meshParams.animation.lightKeyframes.map((keyframe, idx) => (
+                        <div key={idx} className="absolute w-1 h-3 bg-yellow-500 rounded-sm" style={{left: `${(keyframe.frame / meshParams.animation.totalFrames) * 100}%`}} />
+                      ))}
+                      {meshParams.animation.materialKeyframes.map((keyframe, idx) => (
+                        <div key={idx} className="absolute w-1 h-3 bg-purple-500 rounded-sm" style={{left: `${(keyframe.frame / meshParams.animation.totalFrames) * 100}%`}} />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span className="text-xs text-gray-500">Speed:</span>
+                  <input type="range" min="0.1" max="3.0" step="0.1" value={meshParams.animation.speed} onChange={(e) => updateMeshParam('animation', 'speed', parseFloat(e.target.value))} className="w-16 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" />
+                  <span className="text-xs font-mono text-gray-700 w-8">{meshParams.animation.speed}x</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span className="text-xs text-gray-500">Length:</span>
+                  <input type="number" min="60" max="600" value={meshParams.animation.totalFrames} onChange={(e) => updateMeshParam('animation', 'totalFrames', parseInt(e.target.value) || 120)} className="w-16 px-2 py-1 text-xs border border-gray-300 rounded" />
+                  <span className="text-xs text-gray-500">frames</span>
+                </div>
+              </div>
+              <div className="flex items-center space-x-4 text-xs">
+                <div className="flex items-center space-x-1">
+                  <div className="w-2 h-2 bg-green-500 rounded-sm"></div>
+                  <span className="text-gray-600">Camera</span>
+                </div>
+                <div className="flex items-center space-x-1">
+                  <div className="w-2 h-2 bg-yellow-500 rounded-sm"></div>
+                  <span className="text-gray-600">Light</span>
+                </div>
+                <div className="flex items-center space-x-1">
+                  <div className="w-2 h-2 bg-purple-500 rounded-sm"></div>
+                  <span className="text-gray-600">Material</span>
+                </div>
+              </div>
+            </div>
+          </div>
 
-          {/* Enhanced Inspector Panel */}
-          <div className="w-80 bg-gray-50 border-l border-gray-200 overflow-y-auto">
-            <div className="p-4">
-              <h3 className="text-lg font-semibold text-black mb-4">Inspector</h3>
-              
-              {/* Camera Section */}
-              <div className="mb-6">
-                <div className="flex items-center justify-between mb-3">
-                  <h4 className="font-medium text-black flex items-center">
-                    <div className="w-3 h-3 bg-blue-500 rounded-full mr-2"></div>
-                    Cameras
-                  </h4>
-                  <button onClick={addCamera} className="bg-blue-600 text-white px-2 py-1 rounded text-xs hover:bg-blue-700">Add</button>
-                </div>
-                <div className="space-y-3">
-                  <select value={meshParams.selectedCamera} onChange={(e) => updateMeshParam('selectedCamera', '', e.target.value)} className="w-full px-2 py-1 text-xs border border-gray-300 rounded">
-                    {meshParams.cameras.map(camera => (
-                      <option key={camera.id} value={camera.id}>{camera.name} ({camera.type})</option>
-                    ))}
-                  </select>
-                  {currentCamera && (
-                    <div className="space-y-2">
-                      <div className="flex items-center space-x-2">
-                        <input type="text" value={currentCamera.name} onChange={(e) => updateMeshParam('cameras', 'name', e.target.value, currentCamera.id)} className="flex-1 px-2 py-1 text-xs border border-gray-300 rounded" />
-                        {meshParams.cameras.length > 1 && (
-                          <button onClick={() => deleteCamera(currentCamera.id)} className="bg-red-500 text-white px-2 py-1 rounded text-xs hover:bg-red-600">Del</button>
-                        )}
-                      </div>
-                      <select value={currentCamera.type} onChange={(e) => updateMeshParam('cameras', 'type', e.target.value, currentCamera.id)} className="w-full px-2 py-1 text-xs border border-gray-300 rounded">
-                        <option value="perspective">Perspective</option>
-                        <option value="orthographic">Orthographic</option>
-                        <option value="wide">Wide Angle</option>
-                        <option value="telephoto">Telephoto</option>
-                      </select>
-                      <div>
-                        <label className="text-xs font-medium text-gray-600 block mb-1">Position</label>
-                        <div className="grid grid-cols-3 gap-1">
-                          {['x', 'y', 'z'].map(axis => (
-                            <input key={axis} type="number" value={currentCamera.position[axis].toFixed(1)} onChange={(e) => updateMeshParam('cameras', 'position', {...currentCamera.position, [axis]: parseFloat(e.target.value) || 0}, currentCamera.id)} className="w-full px-2 py-1 text-xs border border-gray-300 rounded" step="0.1" />
-                          ))}
-                        </div>
-                      </div>
-                      <div>
-                        <label className="text-xs font-medium text-gray-600 block mb-1">FOV: {currentCamera.fov}°</label>
-                        <input type="range" min="10" max="120" value={currentCamera.fov} onChange={(e) => updateMeshParam('cameras', 'fov', parseFloat(e.target.value), currentCamera.id)} className="w-full h-1 bg-gray-200 rounded appearance-none cursor-pointer" />
-                      </div>
-                      <button onClick={() => {
-                        const newKeyframe = {frame: Math.floor(meshParams.animation.currentFrame), cameraId: currentCamera.id, position: {...currentCamera.position}, rotation: {...currentCamera.rotation}, fov: currentCamera.fov};
-                        const existingIndex = meshParams.animation.cameraKeyframes.findIndex(kf => kf.frame === Math.floor(meshParams.animation.currentFrame) && kf.cameraId === currentCamera.id);
-                        let newKeyframes;
-                        if (existingIndex >= 0) {
-                          newKeyframes = [...meshParams.animation.cameraKeyframes];
-                          newKeyframes[existingIndex] = newKeyframe;
-                        } else {
-                          newKeyframes = [...meshParams.animation.cameraKeyframes, newKeyframe].sort((a, b) => a.frame - b.frame);
-                        }
-                        updateMeshParam('animation', 'cameraKeyframes', newKeyframes);
-                      }} className="w-full bg-green-600 text-white py-1 px-2 rounded text-xs hover:bg-green-700">Set Keyframe</button>
-                    </div>
-                  )}
-                </div>
-              </div>
+          {/* Enhanced Inspector Panel */}
+          <div className="w-80 bg-gray-50 border-l border-gray-200 overflow-y-auto">
+            <div className="p-4">
+              <h3 className="text-lg font-semibold text-black mb-4">Inspector</h3>
+              
+              {/* Camera Section */}
+              <div className="mb-6">
+                <div className="flex items-center justify-between mb-3">
+                  <h4 className="font-medium text-black flex items-center">
+                    <div className="w-3 h-3 bg-blue-500 rounded-full mr-2"></div>
+                    Cameras
+                  </h4>
+                  <button onClick={addCamera} className="bg-blue-600 text-white px-2 py-1 rounded text-xs hover:bg-blue-700">Add</button>
+                </div>
+                <div className="space-y-3">
+                  <select value={meshParams.selectedCamera} onChange={(e) => updateMeshParam('selectedCamera', '', e.target.value)} className="w-full px-2 py-1 text-xs border border-gray-300 rounded">
+                    {meshParams.cameras.map(camera => (
+                      <option key={camera.id} value={camera.id}>{camera.name} ({camera.type})</option>
+                    ))}
+                  </select>
+                  {currentCamera && (
+                    <div className="space-y-2">
+                      <div className="flex items-center space-x-2">
+                        <input type="text" value={currentCamera.name} onChange={(e) => updateMeshParam('cameras', 'name', e.target.value, currentCamera.id)} className="flex-1 px-2 py-1 text-xs border border-gray-300 rounded" />
+                        {meshParams.cameras.length > 1 && (
+                          <button onClick={() => deleteCamera(currentCamera.id)} className="bg-red-500 text-white px-2 py-1 rounded text-xs hover:bg-red-600">Del</button>
+                        )}
+                      </div>
+                      <select value={currentCamera.type} onChange={(e) => updateMeshParam('cameras', 'type', e.target.value, currentCamera.id)} className="w-full px-2 py-1 text-xs border border-gray-300 rounded">
+                        <option value="perspective">Perspective</option>
+                        <option value="orthographic">Orthographic</option>
+                        <option value="wide">Wide Angle</option>
+                        <option value="telephoto">Telephoto</option>
+                      </select>
+                      <div>
+                        <label className="text-xs font-medium text-gray-600 block mb-1">Position</label>
+                        <div className="grid grid-cols-3 gap-1">
+                          {['x', 'y', 'z'].map(axis => (
+                            <input key={axis} type="number" value={currentCamera.position[axis].toFixed(1)} onChange={(e) => updateMeshParam('cameras', 'position', {...currentCamera.position, [axis]: parseFloat(e.target.value) || 0}, currentCamera.id)} className="w-full px-2 py-1 text-xs border border-gray-300 rounded" step="0.1" />
+                          ))}
+                        </div>
+                      </div>
+                      <div>
+                        <label className="text-xs font-medium text-gray-600 block mb-1">FOV: {currentCamera.fov}°</label>
+                        <input type="range" min="10" max="120" value={currentCamera.fov} onChange={(e) => updateMeshParam('cameras', 'fov', parseFloat(e.target.value), currentCamera.id)} className="w-full h-1 bg-gray-200 rounded appearance-none cursor-pointer" />
+                      </div>
+                      <button onClick={() => {
+                        const newKeyframe = {frame: Math.floor(meshParams.animation.currentFrame), cameraId: currentCamera.id, position: {...currentCamera.position}, rotation: {...currentCamera.rotation}, fov: currentCamera.fov};
+                        const existingIndex = meshParams.animation.cameraKeyframes.findIndex(kf => kf.frame === Math.floor(meshParams.animation.currentFrame) && kf.cameraId === currentCamera.id);
+                        let newKeyframes;
+                        if (existingIndex >= 0) {
+                          newKeyframes = [...meshParams.animation.cameraKeyframes];
+                          newKeyframes[existingIndex] = newKeyframe;
+                        } else {
+                          newKeyframes = [...meshParams.animation.cameraKeyframes, newKeyframe].sort((a, b) => a.frame - b.frame);
+                        }
+                        updateMeshParam('animation', 'cameraKeyframes', newKeyframes);
+                      }} className="w-full bg-green-600 text-white py-1 px-2 rounded text-xs hover:bg-green-700">Set Keyframe</button>
+                    </div>
+                  )}
+                </div>
+              </div>
 
-              {/* Light Section */}
-              <div className="mb-6">
-                <div className="flex items-center justify-between mb-3">
-                  <h4 className="font-medium text-black flex items-center">
-                    <div className="w-3 h-3 bg-yellow-500 rounded-full mr-2"></div>
-                    Lights
-                  </h4>
-                  <button onClick={addLight} className="bg-yellow-600 text-white px-2 py-1 rounded text-xs hover:bg-yellow-700">Add</button>
-                </div>
-                <div className="space-y-3">
-                  <select value={meshParams.selectedLight} onChange={(e) => updateMeshParam('selectedLight', '', e.target.value)} className="w-full px-2 py-1 text-xs border border-gray-300 rounded">
-                    {meshParams.lights.map(light => (
-                      <option key={light.id} value={light.id}>{light.name} ({light.type})</option>
-                    ))}
-                  </select>
-                  {currentLight && (
-                    <div className="space-y-2">
-                      <div className="flex items-center space-x-2">
-                        <input type="text" value={currentLight.name} onChange={(e) => updateMeshParam('lights', 'name', e.target.value, currentLight.id)} className="flex-1 px-2 py-1 text-xs border border-gray-300 rounded" />
-                        {meshParams.lights.length > 1 && (
-                          <button onClick={() => deleteLight(currentLight.id)} className="bg-red-500 text-white px-2 py-1 rounded text-xs hover:bg-red-600">Del</button>
-                        )}
-                      </div>
-                      <select value={currentLight.type} onChange={(e) => updateMeshParam('lights', 'type', e.target.value, currentLight.id)} className="w-full px-2 py-1 text-xs border border-gray-300 rounded">
-                        <option value="directional">Directional</option>
-                        <option value="point">Point Light</option>
-                        <option value="spot">Spot Light</option>
-                        <option value="area">Area Light</option>
-                        <option value="hdri">HDRI</option>
-                      </select>
-                      <div>
-                        <label className="text-xs font-medium text-gray-600 block mb-1">Intensity: {currentLight.intensity}</label>
-                        <input type="range" min="0" max="3" step="0.1" value={currentLight.intensity} onChange={(e) => updateMeshParam('lights', 'intensity', parseFloat(e.target.value), currentLight.id)} className="w-full h-1 bg-gray-200 rounded appearance-none cursor-pointer" />
-                      </div>
-                      <div>
-                        <label className="text-xs font-medium text-gray-600 block mb-1">Color</label>
-                        <input type="color" value={currentLight.color} onChange={(e) => updateMeshParam('lights', 'color', e.target.value, currentLight.id)} className="w-full h-6 rounded border cursor-pointer" />
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <input type="checkbox" checked={currentLight.castShadows} onChange={(e) => updateMeshParam('lights', 'castShadows', e.target.checked, currentLight.id)} className="rounded" />
-                        <label className="text-xs font-medium text-gray-600">Cast Shadows</label>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
+              {/* Light Section */}
+              <div className="mb-6">
+                <div className="flex items-center justify-between mb-3">
+                  <h4 className="font-medium text-black flex items-center">
+                    <div className="w-3 h-3 bg-yellow-500 rounded-full mr-2"></div>
+                    Lights
+                  </h4>
+                  <button onClick={addLight} className="bg-yellow-600 text-white px-2 py-1 rounded text-xs hover:bg-yellow-700">Add</button>
+                </div>
+                <div className="space-y-3">
+                  <select value={meshParams.selectedLight} onChange={(e) => updateMeshParam('selectedLight', '', e.target.value)} className="w-full px-2 py-1 text-xs border border-gray-300 rounded">
+                    {meshParams.lights.map(light => (
+                      <option key={light.id} value={light.id}>{light.name} ({light.type})</option>
+                    ))}
+                  </select>
+                  {currentLight && (
+                    <div className="space-y-2">
+                      <div className="flex items-center space-x-2">
+                        <input type="text" value={currentLight.name} onChange={(e) => updateMeshParam('lights', 'name', e.target.value, currentLight.id)} className="flex-1 px-2 py-1 text-xs border border-gray-300 rounded" />
+                        {meshParams.lights.length > 1 && (
+                          <button onClick={() => deleteLight(currentLight.id)} className="bg-red-500 text-white px-2 py-1 rounded text-xs hover:bg-red-600">Del</button>
+                        )}
+                      </div>
+                      <select value={currentLight.type} onChange={(e) => updateMeshParam('lights', 'type', e.target.value, currentLight.id)} className="w-full px-2 py-1 text-xs border border-gray-300 rounded">
+                        <option value="directional">Directional</option>
+                        <option value="point">Point Light</option>
+                        <option value="spot">Spot Light</option>
+                        <option value="area">Area Light</option>
+                        <option value="hdri">HDRI</option>
+                      </select>
+                      <div>
+                        <label className="text-xs font-medium text-gray-600 block mb-1">Intensity: {currentLight.intensity}</label>
+                        <input type="range" min="0" max="3" step="0.1" value={currentLight.intensity} onChange={(e) => updateMeshParam('lights', 'intensity', parseFloat(e.target.value), currentLight.id)} className="w-full h-1 bg-gray-200 rounded appearance-none cursor-pointer" />
+                      </div>
+                      <div>
+                        <label className="text-xs font-medium text-gray-600 block mb-1">Color</label>
+                        <input type="color" value={currentLight.color} onChange={(e) => updateMeshParam('lights', 'color', e.target.value, currentLight.id)} className="w-full h-6 rounded border cursor-pointer" />
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <input type="checkbox" checked={currentLight.castShadows} onChange={(e) => updateMeshParam('lights', 'castShadows', e.target.checked, currentLight.id)} className="rounded" />
+                        <label className="text-xs font-medium text-gray-600">Cast Shadows</label>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
 
-              {/* Enhanced Material Section */}
-              <div className="mb-6">
-                <h4 className="font-medium text-black mb-3 flex items-center">
-                  <div className="w-3 h-3 bg-purple-500 rounded-full mr-2"></div>
-                  Material
-                </h4>
-                <div className="space-y-3">
-                  <div>
-                    <label className="text-xs font-medium text-gray-600 block mb-1">Base Color</label>
-                    <input type="color" value={meshParams.material.color} onChange={(e) => updateMeshParam('material', 'color', e.target.value)} className="w-full h-6 rounded border cursor-pointer" />
-                  </div>
-                  <div>
-                    <label className="text-xs font-medium text-gray-600 block mb-1">Roughness: {meshParams.material.roughness}</label>
-                    <input type="range" min="0" max="1" step="0.01" value={meshParams.material.roughness} onChange={(e) => updateMeshParam('material', 'roughness', parseFloat(e.target.value))} className="w-full h-1 bg-gray-200 rounded appearance-none cursor-pointer" />
-                  </div>
-                  <div>
-                    <label className="text-xs font-medium text-gray-600 block mb-1">Metalness: {meshParams.material.metalness}</label>
-                    <input type="range" min="0" max="1" step="0.01" value={meshParams.material.metalness} onChange={(e) => updateMeshParam('material', 'metalness', parseFloat(e.target.value))} className="w-full h-1 bg-gray-200 rounded appearance-none cursor-pointer" />
-                  </div>
-                  <div>
-                    <label className="text-xs font-medium text-gray-600 block mb-1">Transmission: {meshParams.material.transmission}</label>
-                    <input type="range" min="0" max="1" step="0.01" value={meshParams.material.transmission} onChange={(e) => updateMeshParam('material', 'transmission', parseFloat(e.target.value))} className="w-full h-1 bg-gray-200 rounded appearance-none cursor-pointer" />
-                  </div>
-                  <div>
-                    <label className="text-xs font-medium text-gray-600 block mb-1">IOR: {meshParams.material.ior}</label>
-                    <input type="range" min="1" max="3" step="0.01" value={meshParams.material.ior} onChange={(e) => updateMeshParam('material', 'ior', parseFloat(e.target.value))} className="w-full h-1 bg-gray-200 rounded appearance-none cursor-pointer" />
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <input type="checkbox" checked={meshParams.material.wireframe} onChange={(e) => updateMeshParam('material', 'wireframe', e.target.checked)} className="rounded" />
-                    <label className="text-xs font-medium text-gray-600">Wireframe</label>
-                  </div>
-                </div>
-              </div>
+              {/* Enhanced Material Section */}
+              <div className="mb-6">
+                <h4 className="font-medium text-black mb-3 flex items-center">
+                  <div className="w-3 h-3 bg-purple-500 rounded-full mr-2"></div>
+                  Material
+                </h4>
+                <div className="space-y-3">
+                  <div>
+                    <label className="text-xs font-medium text-gray-600 block mb-1">Base Color</label>
+                    <input type="color" value={meshParams.material.color} onChange={(e) => updateMeshParam('material', 'color', e.target.value)} className="w-full h-6 rounded border cursor-pointer" />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-gray-600 block mb-1">Roughness: {meshParams.material.roughness}</label>
+                    <input type="range" min="0" max="1" step="0.01" value={meshParams.material.roughness} onChange={(e) => updateMeshParam('material', 'roughness', parseFloat(e.target.value))} className="w-full h-1 bg-gray-200 rounded appearance-none cursor-pointer" />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-gray-600 block mb-1">Metalness: {meshParams.material.metalness}</label>
+                    <input type="range" min="0" max="1" step="0.01" value={meshParams.material.metalness} onChange={(e) => updateMeshParam('material', 'metalness', parseFloat(e.target.value))} className="w-full h-1 bg-gray-200 rounded appearance-none cursor-pointer" />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-gray-600 block mb-1">Transmission: {meshParams.material.transmission}</label>
+                    <input type="range" min="0" max="1" step="0.01" value={meshParams.material.transmission} onChange={(e) => updateMeshParam('material', 'transmission', parseFloat(e.target.value))} className="w-full h-1 bg-gray-200 rounded appearance-none cursor-pointer" />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-gray-600 block mb-1">IOR: {meshParams.material.ior}</label>
+                    <input type="range" min="1" max="3" step="0.01" value={meshParams.material.ior} onChange={(e) => updateMeshParam('material', 'ior', parseFloat(e.target.value))} className="w-full h-1 bg-gray-200 rounded appearance-none cursor-pointer" />
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <input type="checkbox" checked={meshParams.material.wireframe} onChange={(e) => updateMeshParam('material', 'wireframe', e.target.checked)} className="rounded" />
+                    <label className="text-xs font-medium text-gray-600">Wireframe</label>
+                  </div>
+                </div>
+              </div>
 
-              {/* Enhanced Physics Section */}
-              <div className="mb-6">
-                <h4 className="font-medium text-black mb-3 flex items-center">
-                  <div className="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
-                  Physics
-                </h4>
-                <div className="space-y-3">
-                  <div>
-                    <label className="text-xs font-medium text-gray-600 block mb-1">Gravity: {meshParams.physics.gravity} m/s²</label>
-                    <input type="range" min="0" max="20" step="0.1" value={meshParams.physics.gravity} onChange={(e) => updateMeshParam('physics', 'gravity', parseFloat(e.target.value))} className="w-full h-1 bg-gray-200 rounded appearance-none cursor-pointer" />
-                  </div>
-                  <div>
-                    <label className="text-xs font-medium text-gray-600 block mb-1">Wind Strength: {meshParams.physics.windStrength} m/s</label>
-                    <input type="range" min="0" max="3" step="0.1" value={meshParams.physics.windStrength} onChange={(e) => updateMeshParam('physics', 'windStrength', parseFloat(e.target.value))} className="w-full h-1 bg-gray-200 rounded appearance-none cursor-pointer" />
-                  </div>
-                  <div>
-                    <label className="text-xs font-medium text-gray-600 block mb-1">Wind Direction: {meshParams.physics.windDirection}°</label>
-                    <input type="range" min="0" max="360" value={meshParams.physics.windDirection} onChange={(e) => updateMeshParam('physics', 'windDirection', parseFloat(e.target.value))} className="w-full h-1 bg-gray-200 rounded appearance-none cursor-pointer" />
-                  </div>
-                  <div>
-                    <label className="text-xs font-medium text-gray-600 block mb-1">Cloth Stiffness: {meshParams.physics.clothStiffness}</label>
-                    <input type="range" min="0" max="1" step="0.01" value={meshParams.physics.clothStiffness} onChange={(e) => updateMeshParam('physics', 'clothStiffness', parseFloat(e.target.value))} className="w-full h-1 bg-gray-200 rounded appearance-none cursor-pointer" />
-                  </div>
-                  <div>
-                    <label className="text-xs font-medium text-gray-600 block mb-1">Friction: {meshParams.physics.friction}</label>
-                    <input type="range" min="0" max="1" step="0.01" value={meshParams.physics.friction} onChange={(e) => updateMeshParam('physics', 'friction', parseFloat(e.target.value))} className="w-full h-1 bg-gray-200 rounded appearance-none cursor-pointer" />
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <input type="checkbox" checked={meshParams.physics.selfCollision} onChange={(e) => updateMeshParam('physics', 'selfCollision', e.target.checked)} className="rounded" />
-                    <label className="text-xs font-medium text-gray-600">Self Collision</label>
-                  </div>
-                </div>
-              </div>
-              
-              <button onClick={generateDataset} className="w-full bg-blue-600 text-white py-2 rounded font-medium hover:bg-blue-700 transition-colors text-sm">Generate Dataset</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+              {/* Enhanced Physics Section */}
+              <div className="mb-6">
+                <h4 className="font-medium text-black mb-3 flex items-center">
+                  <div className="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
+                  Physics
+                </h4>
+                <div className="space-y-3">
+                  <div>
+                    <label className="text-xs font-medium text-gray-600 block mb-1">Gravity: {meshParams.physics.gravity} m/s²</label>
+                    <input type="range" min="0" max="20" step="0.1" value={meshParams.physics.gravity} onChange={(e) => updateMeshParam('physics', 'gravity', parseFloat(e.target.value))} className="w-full h-1 bg-gray-200 rounded appearance-none cursor-pointer" />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-gray-600 block mb-1">Wind Strength: {meshParams.physics.windStrength} m/s</label>
+                    <input type="range" min="0" max="3" step="0.1" value={meshParams.physics.windStrength} onChange={(e) => updateMeshParam('physics', 'windStrength', parseFloat(e.target.value))} className="w-full h-1 bg-gray-200 rounded appearance-none cursor-pointer" />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-gray-600 block mb-1">Wind Direction: {meshParams.physics.windDirection}°</label>
+                    <input type="range" min="0" max="360" value={meshParams.physics.windDirection} onChange={(e) => updateMeshParam('physics', 'windDirection', parseFloat(e.target.value))} className="w-full h-1 bg-gray-200 rounded appearance-none cursor-pointer" />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-gray-600 block mb-1">Cloth Stiffness: {meshParams.physics.clothStiffness}</label>
+                    <input type="range" min="0" max="1" step="0.01" value={meshParams.physics.clothStiffness} onChange={(e) => updateMeshParam('physics', 'clothStiffness', parseFloat(e.target.value))} className="w-full h-1 bg-gray-200 rounded appearance-none cursor-pointer" />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-gray-600 block mb-1">Friction: {meshParams.physics.friction}</label>
+                    <input type="range" min="0" max="1" step="0.01" value={meshParams.physics.friction} onChange={(e) => updateMeshParam('physics', 'friction', parseFloat(e.target.value))} className="w-full h-1 bg-gray-200 rounded appearance-none cursor-pointer" />
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <input type="checkbox" checked={meshParams.physics.selfCollision} onChange={(e) => updateMeshParam('physics', 'selfCollision', e.target.checked)} className="rounded" />
+                    <label className="text-xs font-medium text-gray-600">Self Collision</label>
+                  </div>
+                </div>
+              </div>
+              
+              <button onClick={generateDataset} className="w-full bg-blue-600 text-white py-2 rounded font-medium hover:bg-blue-700 transition-colors text-sm">Generate Dataset</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
-  if (currentPage === 'api-checkout') {
-    return (
-      <div className="min-h-screen bg-white">
-        <header className="px-4 sm:px-6 py-6 sm:py-8 border-b border-gray-100">
-          <div className="max-w-4xl mx-auto flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <button onClick={() => setCurrentPage('marketplace')} className="text-gray-500 hover:text-black p-2 hover:bg-gray-50 rounded-full transition-colors"><ArrowLeft className="w-5 h-5" /></button>
-              <h1 className="text-xl sm:text-2xl font-semibold text-black">23 Bulbs</h1>
-            </div>
-          </div>
-        </header>
-        <main className="px-6 py-16">
-          <div className="max-w-2xl mx-auto">
-            <div className="text-center mb-12">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Key className="w-8 h-8 text-green-600" />
-              </div>
-              <h2 className="text-3xl font-bold text-black mb-4">API Access Generated</h2>
-              <p className="text-lg text-gray-600">Your dataset configuration is ready!</p>
-            </div>
-            <div className="bg-blue-50 border border-blue-200 rounded-2xl p-8 mb-8">
-              <h3 className="text-xl font-semibold text-black mb-6 flex items-center">
-                <Key className="w-5 h-5 mr-2" />
-                Your API Key
-              </h3>
-              <div className="bg-white border border-gray-200 rounded-xl p-4 mb-6">
-                <div className="flex items-center justify-between">
-                  <div className="flex-1 mr-4">
-                    <code className="text-sm font-mono text-gray-800 break-all">{apiKey}</code>
-                  </div>
-                  <button onClick={copyApiKey} className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">
-                    <Copy className="w-4 h-4" />
-                    <span>{copied ? 'Copied!' : 'Copy'}</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-            <button onClick={() => setCurrentPage('marketplace')} className="w-full bg-blue-600 text-white py-3 rounded-full font-medium hover:bg-blue-700 transition-colors">Create Another Dataset</button>
-          </div>
-        </main>
-      </div>
-    );
-  }
+  if (currentPage === 'api-checkout') {
+    return (
+      <div className="min-h-screen bg-white font-sans">
+        {/* API Checkout Header */}
+        <header className="px-4 sm:px-6 py-6 sm:py-8 border-b border-gray-100">
+          <div className="max-w-4xl mx-auto flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <button onClick={() => setCurrentPage('marketplace')} className="text-gray-500 hover:text-black p-2 hover:bg-gray-50 rounded-full transition-colors"><ArrowLeft className="w-5 h-5" /></button>
+              <h1 className="text-xl sm:text-2xl font-semibold text-black">23 Bulbs</h1>
+            </div>
+          </div>
+        </header>
+        {/* API Checkout Content */}
+        <main className="px-6 py-16">
+          <div className="max-w-2xl mx-auto">
+            <div className="text-center mb-12">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Key className="w-8 h-8 text-green-600" />
+              </div>
+              <h2 className="text-3xl font-bold text-black mb-4">API Access Generated</h2>
+              <p className="text-lg text-gray-600">Your dataset configuration is ready!</p>
+            </div>
+            <div className="bg-blue-50 border border-blue-200 rounded-2xl p-8 mb-8">
+              <h3 className="text-xl font-semibold text-black mb-6 flex items-center">
+                <Key className="w-5 h-5 mr-2" />
+                Your API Key
+              </h3>
+              <div className="bg-white border border-gray-200 rounded-xl p-4 mb-6">
+                <div className="flex items-center justify-between">
+                  <div className="flex-1 mr-4">
+                    <code className="text-sm font-mono text-gray-800 break-all">{apiKey}</code>
+                  </div>
+                  <button onClick={copyApiKey} className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">
+                    <Copy className="w-4 h-4" />
+                    <span>{copied ? 'Copied!' : 'Copy'}</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <button onClick={() => setCurrentPage('marketplace')} className="w-full bg-blue-600 text-white py-3 rounded-full font-medium hover:bg-blue-700 transition-colors">Create Another Dataset</button>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
-  if (currentPage === 'technology') {
-    return (
-      <div className="min-h-screen bg-white">
-        <header className="px-4 sm:px-6 py-6 sm:py-8 border-b border-gray-100">
-          <div className="max-w-6xl mx-auto flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <button onClick={() => setCurrentPage('landing')} className="text-gray-500 hover:text-black p-2 hover:bg-gray-50 rounded-full transition-colors"><ArrowLeft className="w-5 h-5" /></button>
-              <h1 className="text-xl sm:text-2xl font-semibold text-black">23 Bulbs</h1>
-            </div>
-          </div>
-        </header>
-        <main className="px-6 py-16">
-          <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-20">
-              <h2 className="text-4xl font-bold text-black mb-4 tracking-tight">Our Technology</h2>
-              <p className="text-xl text-gray-600">Physics-aware data generation pipeline</p>
-            </div>
-            <div className="grid md:grid-cols-2 gap-8 mb-24">
-              <div className="rounded-3xl p-10 bg-gray-100">
-                <h3 className="text-2xl font-bold mb-10 text-black">FEATURES</h3>
-                <div className="space-y-8">
-                  <div>
-                    <h4 className="font-semibold text-lg mb-3 text-black">Physics-Accurate Simulation Engine</h4>
-                    <p className="text-gray-600 leading-relaxed">Real-time cloth and motion simulation, customizable through 20+ parameters.</p>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-lg mb-3 text-black">On-Demand API</h4>
-                    <p className="text-gray-600 leading-relaxed">Self-serve platform for enterprises to request high-fidelity video training data.</p>
-                  </div>
-                </div>
-              </div>
-              <div className="rounded-3xl p-10 bg-gray-200">
-                <h3 className="text-2xl font-bold mb-10 text-black">BENEFITS</h3>
-                <div className="space-y-8">
-                  <div>
-                    <h4 className="font-semibold text-lg mb-3 text-black">Faster, Cheaper AI Training</h4>
-                    <p className="text-gray-600 leading-relaxed">Reduce training time from 500M to just 500 frames per use case.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="text-center">
-              <div className="inline-block rounded-3xl py-12 px-16 bg-blue-600">
-                <p className="text-4xl font-bold mb-3 text-white">1000x Reduction</p>
-                <p className="text-xl text-white opacity-90">500M frames → 500 frames per use case</p>
-              </div>
-            </div>
-          </div>
-        </main>
-      </div>
-    );
-  }
+  if (currentPage === 'technology') {
+    return (
+      <div className="min-h-screen bg-white font-sans">
+        {/* Technology Page Header */}
+        <header className="px-4 sm:px-6 py-6 sm:py-8 border-b border-gray-100">
+          <div className="max-w-6xl mx-auto flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <button onClick={() => setCurrentPage('landing')} className="text-gray-500 hover:text-black p-2 hover:bg-gray-50 rounded-full transition-colors"><ArrowLeft className="w-5 h-5" /></button>
+              <h1 className="text-xl sm:text-2xl font-semibold text-black">23 Bulbs</h1>
+            </div>
+          </div>
+        </header>
+        {/* Technology Page Content */}
+        <main className="px-6 py-16">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-20">
+              <h2 className="text-4xl font-bold text-black mb-4 tracking-tight">Our Technology</h2>
+              <p className="text-xl text-gray-600">Physics-aware data generation pipeline</p>
+            </div>
+            <div className="grid md:grid-cols-2 gap-8 mb-24">
+              <div className="rounded-3xl p-10 bg-gray-100">
+                <h3 className="text-2xl font-bold mb-10 text-black">FEATURES</h3>
+                <div className="space-y-8">
+                  <div>
+                    <h4 className="font-semibold text-lg mb-3 text-black">Physics-Accurate Simulation Engine</h4>
+                    <p className="text-gray-600 leading-relaxed">Real-time cloth and motion simulation, customizable through 20+ parameters.</p>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-lg mb-3 text-black">On-Demand API</h4>
+                    <p className="text-gray-600 leading-relaxed">Self-serve platform for enterprises to request high-fidelity video training data.</p>
+                  </div>
+                </div>
+              </div>
+              <div className="rounded-3xl p-10 bg-gray-200">
+                <h3 className="text-2xl font-bold mb-10 text-black">BENEFITS</h3>
+                <div className="space-y-8">
+                  <div>
+                    <h4 className="font-semibold text-lg mb-3 text-black">Faster, Cheaper AI Training</h4>
+                    <p className="text-gray-600 leading-relaxed">Reduce training time from 500M to just 500 frames per use case.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="text-center">
+              <div className="inline-block rounded-3xl py-12 px-16 bg-blue-600">
+                <p className="text-4xl font-bold mb-3 text-white">1000x Reduction</p>
+                <p className="text-xl text-white opacity-90">500M frames &rarr; 500 frames per use case</p>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
-  if (currentPage === 'signin') {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="w-full max-w-md px-6">
-          <div className="text-center mb-8">
-            <h1 className="text-2xl font-semibold text-black mb-2">23 Bulbs</h1>
-            <h2 className="text-3xl font-bold text-black mb-2">Welcome back</h2>
-            <p className="text-gray-600">Sign in to your account</p>
-          </div>
-          <div className="space-y-4">
-            <button onClick={() => setCurrentPage('marketplace')} className="w-full bg-blue-600 text-white py-3 rounded-full font-medium hover:bg-blue-700 transition-colors">Sign In</button>
-            <button onClick={() => setCurrentPage('landing')} className="w-full text-gray-600 hover:text-black py-2 text-sm font-medium">Back to Home</button>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  if (currentPage === 'signin') {
+    return (
+      <div className="min-h-screen bg-white font-sans flex items-center justify-center">
+        <div className="w-full max-w-md px-6">
+          <div className="text-center mb-8">
+            <h1 className="text-2xl font-semibold text-black mb-2">23 Bulbs</h1>
+            <h2 className="text-3xl font-bold text-black mb-2">Welcome back</h2>
+            <p className="text-gray-600">Sign in to your account</p>
+          </div>
+          <div className="space-y-4">
+            <button onClick={() => setCurrentPage('marketplace')} className="w-full bg-blue-600 text-white py-3 rounded-full font-medium hover:bg-blue-700 transition-colors">Sign In</button>
+            <button onClick={() => setCurrentPage('landing')} className="w-full text-gray-600 hover:text-black py-2 text-sm font-medium">Back to Home</button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
-  if (currentPage === 'signup') {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="w-full max-w-md px-6">
-          <div className="text-center mb-8">
-            <h1 className="text-2xl font-semibold text-black mb-2">23 Bulbs</h1>
-            <h2 className="text-3xl font-bold text-black mb-2">Create account</h2>
-            <p className="text-gray-600">Start generating physics-aware datasets</p>
-          </div>
-          <div className="space-y-4">
-            <button onClick={() => setCurrentPage('marketplace')} className="w-full bg-blue-600 text-white py-3 rounded-full font-medium hover:bg-blue-700 transition-colors">Create Account</button>
-            <button onClick={() => setCurrentPage('landing')} className="w-full text-gray-600 hover:text-black py-2 text-sm font-medium">Back to Home</button>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  if (currentPage === 'signup') {
+    return (
+      <div className="min-h-screen bg-white font-sans flex items-center justify-center">
+        <div className="w-full max-w-md px-6">
+          <div className="text-center mb-8">
+            <h1 className="text-2xl font-semibold text-black mb-2">23 Bulbs</h1>
+            <h2 className="text-3xl font-bold text-black mb-2">Create account</h2>
+            <p className="text-gray-600">Start generating physics-aware datasets</p>
+          </div>
+          <div className="space-y-4">
+            <button onClick={() => setCurrentPage('marketplace')} className="w-full bg-blue-600 text-white py-3 rounded-full font-medium hover:bg-blue-700 transition-colors">Create Account</button>
+            <button onClick={() => setCurrentPage('landing')} className="w-full text-gray-600 hover:text-black py-2 text-sm font-medium">Back to Home</button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
-  return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-      <div className="text-center">
-        <h1 className="text-2xl font-semibold text-gray-800 mb-4">23 Bulbs Dataset Platform</h1>
-        <button onClick={() => setCurrentPage('landing')} className="bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition-colors">Back to Landing</button>
-      </div>
-    </div>
-  );
+  // Fallback page if an invalid route is somehow triggered.
+  return (
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center font-sans">
+      <div className="text-center">
+        <h1 className="text-2xl font-semibold text-gray-800 mb-4">23 Bulbs Dataset Platform</h1>
+        <button onClick={() => setCurrentPage('landing')} className="bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition-colors">Back to Landing</button>
+      </div>
+    </div>
+  );
 }
