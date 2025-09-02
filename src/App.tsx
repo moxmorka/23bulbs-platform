@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowRight, ArrowLeft, Check, Key, Copy } from 'lucide-react';
 
 // Main component for the 23 Bulbs enterprise platform.
@@ -94,23 +94,16 @@ export default function App() {
     } else if (category === 'lights') {
       setMeshParams(prev => ({
         ...prev,
-        lights: prev.lights.map(light => {
-          if (light.id === id) {
-            const updatedLight = { ...light, [param]: typeof value === 'object' ? { ...light[param], ...value } : value };
-            return updatedLight;
-          }
-          return light;
-        })
+        lights: prev.lights.map(light => 
+          light.id === id ? { ...light, [param]: typeof value === 'object' ? { ...light[param], ...value } : value } : light
+        )
       }));
     } else if (category === 'physics') {
       setMeshParams(prev => ({ ...prev, physics: { ...prev.physics, [param]: value } }));
     } else if (category === 'animation') {
       setMeshParams(prev => ({ ...prev, animation: { ...prev.animation, [param]: value } }));
     } else {
-      setMeshParams(prev => {
-        const newMaterialState = { ...prev.material, [param]: value };
-        return { ...prev, material: newMaterialState };
-      });
+      setMeshParams(prev => ({ ...prev, [category]: { ...prev[category], [param]: value } }));
     }
   };
 
@@ -149,7 +142,6 @@ export default function App() {
     if (meshParams.lights.length <= 1) return;
     setMeshParams(prev => {
       const newLights = prev.lights.filter(light => light.id !== lightId);
-      
       return {
         ...prev,
         lights: newLights,
@@ -163,37 +155,24 @@ export default function App() {
     setMessage('Generating scene parameters with LLM...');
     try {
       const apiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=';
-      const systemPrompt = `You are a cinematic 3D animator. A user will describe a scene and a type of animation. Your task is to generate a JSON object that defines camera and light setups and their keyframes to match the user's request.
+      const systemPrompt = `You are an expert 3D lighting and material artist. A user will describe a scene in a single phrase. Your task is to generate a JSON object that updates the scene's lighting and material properties to match the user's description.
 
 The JSON object must have the following structure and data types:
 {
-  "cameras": [
-    {
-      "id": string,
-      "name": string,
-      "type": "perspective",
-      "position": {"x": number, "y": number, "z": number},
-      "rotation": {"x": number, "y": number, "z": number},
-      "fov": number, // A number between 10 and 120
-      "keyframes": [
-        {"frame": number, "position": {"x": number, "y": number, "z": number}},
-        // More keyframes can be added to animate the camera's movement.
-      ]
-    }
-  ],
-  "lights": [
-    {
-      "id": string,
-      "name": string,
-      "type": "directional",
-      "position": {"x": number, "y": number, "z": number},
-      "intensity": number, // A number between 0.1 and 3.0
-      "color": string // A hex color string like "#RRGGBB"
-    }
-  ]
+  "light": {
+    "intensity": number, // A number between 0.1 and 3.0
+    "color": string // A hex color string like "#RRGGBB"
+  },
+  "material": {
+    "color": string, // A hex color string like "#RRGGBB"
+    "roughness": number, // A number between 0.0 and 1.0
+    "metalness": number, // A number between 0.0 and 1.0
+    "transmission": number, // A number between 0.0 and 1.0
+    "ior": number // A number between 1.0 and 3.0
+  }
 }
-You can generate multiple cameras and lights, each with a unique ID and name.
-Use your expertise to interpret the user's prompt and set the values appropriately. For example, a "dramatic cinematic fly-around" would involve multiple camera keyframes to define a path, while a "single top-down shot" would only require one camera with a fixed position and no keyframes.
+
+Use common sense and your expertise to interpret the user's prompt and set the values appropriately. For example, a "dramatic sunset" should have low intensity light, a warm orange/red color, and a low roughness material to reflect the light well.
 Do not include any other text or markdown in your response, just the raw JSON object.`;
 
       const payload = {
@@ -214,13 +193,7 @@ Do not include any other text or markdown in your response, just the raw JSON ob
       });
       
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ message: 'Could not parse error response.' }));
-        console.error('API Error Response:', errorData);
-        if (response.status === 403) {
-          throw new Error('API key is invalid or not configured. Please contact support.');
-        } else {
-          throw new Error(`API error: ${response.status} - ${response.statusText || 'An unknown error occurred.'}`);
-        }
+        throw new Error(`API error: ${response.statusText}`);
       }
       
       const result = await response.json();
@@ -228,18 +201,16 @@ Do not include any other text or markdown in your response, just the raw JSON ob
       
       setMeshParams(prev => ({
         ...prev,
-        cameras: generated.cameras,
-        lights: generated.lights,
-        selectedCamera: generated.cameras[0].id,
-        selectedLight: generated.lights[0].id
+        lights: prev.lights.map(light => light.id === 'key' ? { ...light, ...generated.light } : light),
+        material: { ...prev.material, ...generated.material }
       }));
       setMessage('Parameters generated successfully!');
     } catch (error) {
-      console.error('Caught error in LLM generation:', error);
+      console.error(error);
       setMessage(`Error: ${error.message}`);
     } finally {
       setIsLoading(false);
-      setTimeout(() => setMessage(''), 5000); // Increased timeout to see message
+      setTimeout(() => setMessage(''), 3000);
     }
   };
 
@@ -285,7 +256,6 @@ Do not include any other text or markdown in your response, just the raw JSON ob
     }
     return () => clearInterval(interval);
   }, [meshParams.animation.isPlaying, meshParams.animation.speed]);
-  
 
   // Main page routing logic based on the currentPage state.
   // The structure uses a single return statement for the entire component,
@@ -535,8 +505,8 @@ Do not include any other text or markdown in your response, just the raw JSON ob
                 </div>
               </div>
               
-              {/* The 3D CSS Cube visualizer */}
-              <div className="absolute inset-0 flex items-center justify-center">
+              {/* 3D Scene */}
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                 <div className="relative" style={{transform: meshParams.viewMode === 'orbit' ? `perspective(1000px) translateZ(${currentCamera.position.z * -30}px) rotateX(${currentCamera.rotation.x}deg) rotateY(${currentCamera.rotation.y}deg)` : `perspective(1000px) translateZ(-200px) rotateX(${-currentCamera.rotation.x}deg) rotateY(${-currentCamera.rotation.y + 180}deg) scale(1.5)`, transformStyle: 'preserve-3d'}}>
                   {/* The 3D Cube */}
                   <div className="w-32 h-32 relative" style={{transformStyle: 'preserve-3d', transform: `rotateX(${meshParams.animation.isPlaying ? Math.sin(meshParams.animation.currentFrame * 0.05) * 10 : 0}deg) rotateY(${meshParams.animation.isPlaying ? meshParams.animation.currentFrame * 2 : 0}deg)`}}>
@@ -547,9 +517,24 @@ Do not include any other text or markdown in your response, just the raw JSON ob
                     <div className="absolute w-32 h-32 border-2 border-gray-700" style={{backgroundColor: meshParams.material.color, opacity: meshParams.material.wireframe ? 0.3 : meshParams.material.opacity * 0.95, transform: 'rotateX(90deg) translateZ(64px)'}} />
                     <div className="absolute w-32 h-32 border-2 border-gray-700" style={{backgroundColor: meshParams.material.color, opacity: meshParams.material.wireframe ? 0.15 : meshParams.material.opacity * 0.6, transform: 'rotateX(-90deg) translateZ(64px)'}} />
                   </div>
+
+                  {/* Camera and Light Visualizations */}
+                  {meshParams.viewMode === 'orbit' && (
+                    <>
+                      {/* Render only the currently selected camera */}
+                      <div className="absolute whitespace-nowrap -ml-4" style={{transform: `translate3d(${currentCamera.position.x * 40}px, ${currentCamera.position.y * -40}px, ${currentCamera.position.z * 40}px) rotateX(${currentCamera.rotation.x}deg) rotateY(${currentCamera.rotation.y}deg)`, transformStyle: 'preserve-3d', opacity: 1}}>
+                        <div className={`bg-blue-600 text-white text-xs font-semibold px-2 py-1 rounded-full relative`} style={{transform: 'translateZ(10px) translateX(-50%) translateY(-100%)'}}>{currentCamera.name}</div>
+                      </div>
+                      
+                      {/* Render only the currently selected light */}
+                      <div className="absolute whitespace-nowrap -ml-4" style={{transform: `translate3d(${currentLight.position.x * 40}px, ${currentLight.position.y * -40}px, ${currentLight.position.z * 40}px)`, transformStyle: 'preserve-3d', opacity: 1}}>
+                        <div className={`bg-gray-700 text-white text-xs font-semibold px-2 py-1 rounded-full relative`} style={{transform: 'translateZ(10px) translateX(-50%) translateY(-100%)'}}>{currentLight.name}</div>
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
-              
+
               {/* Mouse Controls */}
               {meshParams.viewMode === 'orbit' && (
                 <div className="absolute inset-0 cursor-grab active:cursor-grabbing" onMouseDown={(e) => {
@@ -635,7 +620,7 @@ Do not include any other text or markdown in your response, just the raw JSON ob
             </div>
 
             {/* Enhanced Inspector Panel */}
-            <div className="w-80 bg-white border-l border-gray-200 overflow-y-auto">
+            <div className="w-80 bg-gray-50 border-l border-gray-200 overflow-y-auto">
               <div className="p-4">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Inspector</h3>
                 
@@ -647,7 +632,7 @@ Do not include any other text or markdown in your response, just the raw JSON ob
                   <div className="space-y-2">
                     <textarea 
                       className="w-full text-sm p-2 rounded-md border border-gray-300 bg-white"
-                      placeholder="e.g., 'A dramatic cinematic fly-around with two spotlights'"
+                      placeholder="e.g., 'a vibrant cyberpunk scene with a glossy red material'"
                       value={prompt}
                       onChange={(e) => setPrompt(e.target.value)}
                       rows="3"
@@ -676,8 +661,8 @@ Do not include any other text or markdown in your response, just the raw JSON ob
                   </div>
                   <div className="space-y-3">
                     <select value={meshParams.selectedCamera} onChange={(e) => updateMeshParam('selectedCamera', '', e.target.value)} className="w-full px-2 py-1 text-xs border border-gray-300 rounded">
-                      {meshParams.cameras.map((camera, index) => (
-                        <option key={camera.id} value={camera.id}>{`Camera ${index + 1}`}</option>
+                      {meshParams.cameras.map(camera => (
+                        <option key={camera.id} value={camera.id}>{camera.name} ({camera.type})</option>
                       ))}
                     </select>
                     {currentCamera && (
@@ -694,7 +679,6 @@ Do not include any other text or markdown in your response, just the raw JSON ob
                           <option value="wide">Wide Angle</option>
                           <option value="telephoto">Telephoto</option>
                         </select>
-                        {/* Position Controls */}
                         <div>
                           <label className="text-xs font-medium text-gray-600 block mb-1">Position</label>
                           <div className="grid grid-cols-3 gap-1">
@@ -703,7 +687,6 @@ Do not include any other text or markdown in your response, just the raw JSON ob
                             ))}
                           </div>
                         </div>
-                        {/* Rotation Controls */}
                         <div>
                           <label className="text-xs font-medium text-gray-600 block mb-1">Rotation</label>
                           <div className="grid grid-cols-3 gap-1">
@@ -744,8 +727,8 @@ Do not include any other text or markdown in your response, just the raw JSON ob
                   </div>
                   <div className="space-y-3">
                     <select value={meshParams.selectedLight} onChange={(e) => updateMeshParam('selectedLight', '', e.target.value)} className="w-full px-2 py-1 text-xs border border-gray-300 rounded">
-                      {meshParams.lights.map((light, index) => (
-                        <option key={light.id} value={light.id}>{`Light ${index + 1}`}</option>
+                      {meshParams.lights.map(light => (
+                        <option key={light.id} value={light.id}>{light.name} ({light.type})</option>
                       ))}
                     </select>
                     {currentLight && (
@@ -763,7 +746,6 @@ Do not include any other text or markdown in your response, just the raw JSON ob
                           <option value="area">Area Light</option>
                           <option value="hdri">HDRI</option>
                         </select>
-                        {/* Position Controls */}
                         <div>
                           <label className="text-xs font-medium text-gray-600 block mb-1">Position</label>
                           <div className="grid grid-cols-3 gap-1">
@@ -959,7 +941,7 @@ Do not include any other text or markdown in your response, just the raw JSON ob
               <div className="text-center">
                 <div className="inline-block rounded-3xl py-12 px-16 bg-blue-600">
                   <p className="text-4xl font-bold mb-3 text-white">1000x Reduction</p>
-                  <p className="text-xl text-white opacity-90">500M frames &rarr; 500 frames per use case</p>
+                  <p className="text-xl text-white opacity-90">500M frames → 500 frames per use case</p>
                 </div>
               </div>
             </div>
