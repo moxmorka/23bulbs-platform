@@ -13,25 +13,30 @@ const DemoIcon = ({ id }) => {
     'red': '#EF4444',
     'green': '#16A34A',
   };
+
   return (
     <svg className="w-32 h-32" viewBox="0 0 1200 1200" xmlns="http://www.w3.org/2000/svg">
       <path d={iconMap[id]} fill={colors[id]} />
     </svg>
   );
 };
+
 export default function App() {
   const [currentPage, setCurrentPage] = useState('landing');
   const [apiKey, setApiKey] = useState('');
   const [copied, setCopied] = useState(false);
   const [currentDemoScene, setCurrentDemoScene] = useState(null);
+
   const startDemo = () => {
     setCurrentPage('demo-select');
   };
+
   const selectScene = (id) => {
     const scene = demoScenes.find(s => s.id === id);
     setCurrentDemoScene(scene);
     setCurrentPage('pitch-demo');
   };
+
   const demoScenes = [
     {
       id: 'blue',
@@ -55,6 +60,7 @@ export default function App() {
       light: { intensity: 2.0, color: '#dcfce7' },
     },
   ];
+
   useEffect(() => {
     let intervalId;
     if (currentPage === 'pitch-demo') {
@@ -74,7 +80,7 @@ export default function App() {
     let rotationInterval;
     if (currentPage === 'pitch-demo' && currentDemoScene) {
       const initialRotationY = currentDemoScene.cube.rotationY;
-      let currentRotationY = initialDemoScene.cube.rotationY;
+      let currentRotationY = currentDemoScene.cube.rotationY;
       rotationInterval = setInterval(() => {
         currentRotationY += currentDemoScene.cube.rotationSpeed;
         const newRotationY = currentRotationY;
