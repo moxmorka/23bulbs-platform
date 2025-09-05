@@ -1,94 +1,235 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, ArrowLeft, Key, Copy } from 'lucide-react';
+import { ArrowRight, ArrowLeft, Check, Key, Copy } from 'lucide-react';
 
-const DemoIcon = ({ id }) => {
-  const iconMap = {
-    'blue': `M536.4 273.6c8.3984 8.3984 20.398 13.199 31.199 13.199 10.801 0 22.801-4.8008 31.199-13.199l168-166.8c18-18 18-45.602 0-63.602s-45.602-18-63.602 0l-166.8 166.8c-16.797 18-16.797 45.602 0 63.602z M403.2 406.8c-18-18-45.602-18-63.602 0l-63.598 63.598c-18 18-18 45.602 0 63.602 8.3984 8.3984 20.398 13.199 31.199 13.199s22.801-4.8008 31.199-13.199l63.602-63.602c19.199-18 19.199-46.797 1.1992-63.598z M80.398 667.2l-37.199 37.199c-18 18-18 45.602 0 63.602 8.4023 7.1992 20.402 12 31.199 12 12 0 22.801-4.8008 31.199-13.199l37.199-37.199c18-18 18-45.602 0-63.602-16.797-16.801-45.598-16.801-62.398 1.1992z M403.2 667.2c-18-18-45.602-18-63.602 0l-166.8 166.8c-18 18-18 45.602 0 63.602 8.3984 8.3984 20.398 13.199 31.199 13.199 12 0 22.801-4.8008 31.199-13.199l166.8-166.8c19.199-18 19.199-46.801 1.1992-63.602z M600 406.8l-63.602 63.602c-18 18-18 45.602 0 63.602 8.3984 8.3984 20.398 13.199 31.199 13.199 10.801 0 22.801-4.8008 31.199-13.199l63.602-63.602c18-18 18-45.602 0-63.602-16.797-18-44.398-18-62.398 0z M828 286.8c12 0 22.801-4.8008 31.199-13.199l37.199-37.199c18-18 18-45.602 0-63.602s-45.602-18-63.602 0l-37.199 37.199c-18 18-18 45.602 0 63.602 9.6016 8.3984 21.602 13.199 32.402 13.199z M663.6 926.4c-18-18-45.602-18-63.602 0l-166.8 166.8c-18 18-18 45.602 0 63.602 8.3984 8.3984 20.398 13.199 31.199 13.199 10.801 0 22.801-4.8008 31.199-13.199l166.8-166.8c18-18 18-45.602 1.2031-63.602z M828 806.4c12 0 22.801-4.8008 31.199-13.199l63.602-63.602c18-18 18-45.602 0-63.602s-45.602-18-63.602 0l-63.602 63.602c-18 18-18 45.602 0 63.602 9.6016 8.4023 21.602 13.199 32.402 13.199z M1088.4 546c12 0 22.801-4.8008 31.199-13.199l37.199-37.199c18-18 18-45.602 0-63.602s-45.602-18-63.602 0l-37.199 37.199c-18 18-18 45.602 0 63.602 9.6055 9.5977 21.605 13.199 32.402 13.199z M796.8 532.8c8.3984 8.3984 20.398 13.199 31.199 13.199s22.801-4.8008 31.199-13.199l166.8-166.8c18-18 18-45.602 0-63.602s-45.602-18-63.602 0l-165.6 168c-18 16.801-18 45.602 0 62.402z M600 793.2l63.602-63.602c18-18 18-45.602 0-63.602s-45.602-18-63.602 0l-63.602 63.602c-18 18-18 45.602 0 63.602 8.3984 8.3984 20.398 13.199 31.199 13.199 10.801 0 24.004-4.7969 32.402-13.199z M339.6 926.4l-37.199 37.199c-18 18-18 45.602 0 63.602 8.3984 8.3984 20.398 13.199 31.199 13.199 12 0 22.801-4.8008 31.199-13.199l37.199-37.199c18-18 18-45.602 0-63.602-16.801-16.797-44.398-16.797-62.398 0z M990 536.4c-18-18-45.602-18-63.602 0s-18 45.602 0 63.602l166.8 166.8c8.3984 8.3984 20.398 13.199 31.199 13.199s22.801-4.8008 31.199-13.199c18-18 18-45.602 0-63.602z M729.6 403.2c8.3984 8.3984 20.398 13.199 31.199 13.199 12 0 22.801-4.8008 31.199-13.199 18-18 18-45.602 0-63.602l-62.398-63.598c-18-18-45.602-18-63.602 0s-18 45.602 0 63.602z M470.4 142.8c8.3984 8.3984 20.398 13.199 31.199 13.199 10.801 0 22.801-4.8008 31.199-13.199 18-18 18-45.602 0-63.602l-37.199-37.199c-18-18-45.602-18-63.602 0s-18 45.602 0 63.602z M470.4 403.2c8.3984 8.3984 20.398 13.199 31.199 13.199 10.801 0 22.801-4.8008 31.199-13.199 18-18 18-45.602 0-63.602l-166.8-166.8c-18-18-45.602-18-63.602 0s-18 45.602 0 63.602z M762 676.8c12 0 22.801-4.8008 31.199-13.199 18-18 18-45.602 0-63.602l-63.602-63.602c-18-18-45.602-18-63.602 0s-18 45.602 0 63.602l63.602 63.602c9.6016 8.3984 20.402 13.199 32.402 13.199z M990 796.8c-18-18-45.602-18-63.602 0s-18 45.602 0 63.602l37.199 37.199c8.3984 8.3984 20.398 13.199 31.199 13.199s22.801-4.8008 31.199-13.199c18-18 18-45.602 0-63.602z M210 663.6c8.3984 8.3984 20.398 13.199 31.199 13.199s22.801-4.8008 31.199-13.199c18-18 18-45.602 0-63.602l-165.6-166.8c-18-18-45.602-18-63.602 0s-18 45.602 0 63.602z M406.8 860.4l63.602 63.602c8.3984 8.3984 20.398 13.199 31.199 13.199 10.801 0 22.801-4.8008 31.199-13.199 18-18 18-45.602 0-63.602l-63.602-63.602c-18-18-45.602-18-63.602 0-16.797 18.004-16.797 45.602 1.2031 63.602z M729.6 1057.2c-18-18-45.602-18-63.602 0s-18 45.602 0 63.602l37.199 37.199c8.3984 8.3984 20.398 13.199 31.199 13.199 10.801 0 22.801-4.8008 31.199-13.199 18-18 18-45.602 0-63.602z M729.6 796.8c-18-18-45.602-18-63.602 0s-18 45.602 0 63.602l166.8 166.8c8.3984 8.3984 20.398 13.199 31.199 13.199s22.801-4.8008 31.199-13.199c18-18 18-45.602 0-63.602z M470.4 663.6c8.3984 8.3984 20.398 13.199 31.199 13.199 10.801 0 22.801-4.8008 31.199-13.199 18-18 18-45.602 0-63.602l-63.602-63.602c-18-18-45.602-18-63.602 0s-18 45.602 0 63.602z M210 403.2c8.3984 8.3984 20.398 13.199 31.199 13.199s22.801-4.8008 31.199-13.199c18-18 18-45.602 0-63.602l-37.199-37.199c-18-18-45.602-18-63.602 0s-18 45.602 0 63.602z`,
-    'red': `m629.28 315c-144.16 0-261.01 116.86-261.01 261.01s116.86 261.01 261.01 261.01 261.01-116.86 261.01-261.01-116.86-261.01-261.01-261.01zm0 467.71c-114.16 0-206.7-92.543-206.7-206.7s92.543-206.7 206.7-206.7 206.7 92.543 206.7 206.7-92.543 206.7-206.7 206.7zm159.71-206.71c0 91.141-73.934 165.07-165.07 165.07l-0.003907-330.14c91.141 0 165.07 73.941 165.07 165.07zm-134.2-331.4c0 10.246-8.3047 18.551-18.551 18.551h-13.922c-10.246 0-18.551-8.3047-18.551-18.551v-148.41c0-10.246 8.3047-18.551 18.551-18.551h13.906c10.246 0 18.551 8.3047 18.551 18.551l0.003906 148.41zm-243.4 75.25c7.2461 7.2461 7.2461 18.996 0 26.23l-9.8398 9.8398c-7.2461 7.2461-18.996 7.2461-26.23 0l-104.94-104.94c-7.2461-7.2461-7.2461-18.996 0-26.23l9.8398-9.8398c7.2461-7.2461 18.996-7.2461 26.23 0zm-118.89 225.3c10.246 0 18.551 8.3047 18.551 18.551v13.906c0 10.246-8.3047 18.551-18.551 18.551l-148.4 0.003906c-10.246 0-18.551-8.3047-18.551-18.551v-13.906c0-10.246 8.3047-18.551 18.551-18.551zm75.238 243.38c7.2461-7.2461 18.996-7.2461 26.23 0l9.8398 9.8398c7.2461 7.2461 7.2461 18.996 0 26.23l-104.94 104.94c-7.2461 7.2461-18.996 7.2461-26.23 0l-9.8398-9.8398c-7.2461-7.2461-7.2461-18.996 0-26.23zm225.31 118.9c0-10.246 8.3047-18.551 18.551-18.551h13.906c10.246 0 18.551 8.3047 18.551 18.551v148.4c0 10.246-8.3047 18.551-18.551 18.551h-13.906c-10.246 0-18.551-8.3047-18.551-18.551zm243.39-75.242c-7.2461-7.2461-7.2461-18.996 0-26.23l9.8398-9.8398c7.2461-7.2461 18.996-7.2461 26.23 0l104.94 104.94c7.2461 7.2461 7.2461 18.996 0 26.23l-9.8398 9.8398c-7.2461 7.2461-18.996 7.2461-26.23 0zm118.89-225.3c-10.246 0-18.551-8.3047-18.551-18.551v-13.906c0-10.246 8.3047-18.551 18.551-18.551h148.4c10.246 0 18.551 8.3047 18.551 18.551v13.906c0 10.246-8.3047 18.551-18.551 18.551zm-75.238-243.38c-7.2461 7.2461-18.996 7.2461-26.23 0l-9.8398-9.8398c-7.2461-7.2461-7.2461-18.996 0-26.23l104.94-104.94c7.2461-7.2461 18.996-7.2461 26.23 0l9.8398 9.8398c7.2461 7.2461 7.2461 18.996 0 26.23z`,
-    'green': `m3.6055 601.8 234.23-234.23 72.07 75.676-158.56 158.56 158.56 154.95-72.07 75.676zm753.15 288.29 75.676 75.676-230.63 230.63-234.23-230.63 75.676-75.676 158.56 158.56zm-389.19-652.25l234.23-234.23 230.63 234.23-75.676 72.07-154.95-158.56-158.56 158.56zm598.2 129.73l230.63 234.23-230.63 230.63-75.676-75.676 158.56-154.95-158.56-158.56z M266.67 601.8l129.73-133.33 39.641 43.242-86.488 90.09 86.488 86.488-39.641 43.242zm421.62 162.16l43.242 43.242-129.73 129.73-133.33-129.73 43.242-43.242 90.09 90.09zm-219.82-367.57l133.33-129.73 129.73 129.73-43.242 39.641-86.488-86.488-90.09 86.488zm338.74 72.07l129.73 133.33-129.73 129.73-43.242-43.242 90.09-86.488-90.09-90.09z M468.47 601.8l54.055-50.449 14.414 14.414-36.035 36.035 36.035 32.434-14.414 18.02-54.055-50.449zm165.77 61.262l18.02 18.02-50.449 50.449-50.449-50.449 14.414-18.02 36.035 36.035 32.434-36.035zm-82.883-140.54l50.449-54.055 50.449 54.055-18.02 14.414-32.434-36.035-36.035 36.035-14.414-14.414zm129.73 28.828l50.449 50.449-50.449 50.449-18.02-18.02 36.035-32.434-36.035-36.035 18.02-14.414z`,
-  };
-
-  const colors = {
-    'blue': '#3B82F6',
-    'red': '#EF4444',
-    'green': '#16A34A',
-  };
-
-  return (
-    <svg className="w-32 h-32" viewBox="0 0 1200 1200" xmlns="http://www.w3.org/2000/svg">
-      <path d={iconMap[id]} fill={colors[id]} />
-    </svg>
-  );
-};
+// Main component for the 23 Bulbs enterprise platform.
+// It manages the state for different pages and component parameters.
 export default function App() {
+  // State to manage the current page being displayed.
   const [currentPage, setCurrentPage] = useState('landing');
+  // State for the generated API key and copy functionality.
   const [apiKey, setApiKey] = useState('');
   const [copied, setCopied] = useState(false);
-  const [currentDemoScene, setCurrentDemoScene] = useState(null);
-  const startDemo = () => {
-    setCurrentPage('demo-select');
-  };
-  const selectScene = (id) => {
-    const scene = demoScenes.find(s => s.id === id);
-    setCurrentDemoScene(scene);
-    setCurrentPage('pitch-demo');
-  };
-  const demoScenes = [
-    {
-      id: 'blue',
-      name: 'Dynamic Fabric Simulation',
-      description: 'Generates high-fidelity data for computer vision models that analyze object behavior under complex physical conditions.',
-      cube: { color: '#3B82F6', roughness: 0.3, metalness: 0.8, rotationX: -15, rotationY: 30, rotationSpeed: 0.5 },
-      light: { intensity: 1.5, color: '#fef3c7' },
-    },
-    {
-      id: 'red',
-      name: 'High-Contrast Lighting',
-      description: 'Provides annotated datasets to train models for detection and recognition in challenging lighting environments.',
-      cube: { color: '#EF4444', roughness: 0.9, metalness: 0.1, rotationX: 10, rotationY: -45, rotationSpeed: -0.3 },
-      light: { intensity: 0.8, color: '#fca5a5' },
-    },
-    {
-      id: 'green',
-      name: 'Complex Material Textures',
-      description: 'Creates rich datasets for models that need to accurately classify and segment different surface properties.',
-      cube: { color: '#16A34A', roughness: 0.1, metalness: 0.0, rotationX: 20, rotationY: 10, rotationSpeed: 0.2 },
-      light: { intensity: 2.0, color: '#dcfce7' },
-    },
-  ];
-  useEffect(() => {
-    let intervalId;
-    if (currentPage === 'pitch-demo') {
-      const sceneDuration = 5000;
-      intervalId = setInterval(() => {
-        setCurrentDemoScene(prevScene => {
-          const currentIndex = demoScenes.findIndex(s => s.id === prevScene.id);
-          const nextIndex = (currentIndex + 1) % demoScenes.length;
-          return demoScenes[nextIndex];
-        });
-      }, sceneDuration);
-    }
-    return () => clearInterval(intervalId);
-  }, [currentPage]);
+  // State to track which parameter categories are selected for dataset generation.
+  const [selectedCategories, setSelectedCategories] = useState(['lighting', 'materials', 'camera', 'physics']);
+  
+  // State for the default parameters on the generation page.
+  const [parameters, setParameters] = useState({
+    lighting: { lightAngle: 45, numLights: 3, intensity: 0.8, colorTemp: 5500, hdri: 'studio' },
+    materials: { fabricType: 'cotton', roughness: 0.4, metallic: 0.1, subsurface: 0.3, normalStrength: 0.5 },
+    camera: { angles: 36, resolution: '8K', focalLength: 50, dof: 0.2, motionBlur: 0.1 },
+    physics: { windStrength: 0.6, gravity: 9.8, windDirection: 180, airDensity: 1.0, collisionMargin: 0.01, bounce: 0.3 }
+  });
 
-  useEffect(() => {
-    let rotationInterval;
-    if (currentPage === 'pitch-demo' && currentDemoScene) {
-      const initialRotationY = currentDemoScene.cube.rotationY;
-      let currentRotationY = initialRotationY;
-      rotationInterval = setInterval(() => {
-        currentRotationY += currentDemoScene.cube.rotationSpeed;
-        const newRotationY = currentRotationY;
-        const cube = document.querySelector('.cube-3d');
-        if (cube) {
-          cube.style.transform = `rotateX(${currentDemoScene.cube.rotationX}deg) rotateY(${newRotationY}deg)`;
-        }
-      }, 20);
+  // State for the interactive 3D editor's mesh, camera, light, and physics properties.
+  const [meshParams, setMeshParams] = useState({
+    material: { 
+      color: '#475569', wireframe: false, opacity: 1.0, metalness: 0.3, roughness: 0.4,
+      transmission: 0.0, ior: 1.5
+    },
+    cameras: [
+      { id: 'main', name: 'Main Camera', type: 'perspective', position: { x: 0, y: 0, z: 5 }, rotation: { x: -15, y: 30, z: 0 }, fov: 50 },
+      { id: 'side', name: 'Side Camera', type: 'perspective', position: { x: 8, y: 0, z: 0 }, rotation: { x: 0, y: 90, z: 0 }, fov: 45 },
+      { id: 'top', name: 'Top Camera', type: 'orthographic', position: { x: 0, y: 8, z: 0 }, rotation: { x: -90, y: 0, z: 0 }, fov: 60 }
+    ],
+    lights: [
+      { id: 'key', name: 'Key Light', type: 'directional', position: { x: 5, y: 5, z: 5 }, intensity: 1.0, color: '#ffffff', castShadows: true },
+      { id: 'fill', name: 'Fill Light', type: 'directional', position: { x: -3, y: 2, z: 4 }, intensity: 0.6, color: '#ffffff', castShadows: false },
+      { id: 'rim', name: 'Rim Light', type: 'directional', position: { x: 0, y: 3, z: -5 }, intensity: 0.8, color: '#cceeff', castShadows: false }
+    ],
+    physics: {
+      gravity: 9.8, windStrength: 0.6, windDirection: 180, clothStiffness: 0.8, friction: 0.4, selfCollision: true
+    },
+    viewMode: 'orbit',
+    selectedCamera: 'main',
+    selectedLight: 'key',
+    animation: {
+      isPlaying: false, currentFrame: 0, totalFrames: 120, speed: 1.0,
+      cameraKeyframes: [
+        { frame: 0, cameraId: 'main', position: { x: 0, y: 0, z: 5 }, rotation: { x: -15, y: 30, z: 0 }, fov: 50 },
+        { frame: 40, cameraId: 'main', position: { x: 3, y: 2, z: 4 }, rotation: { x: -10, y: 45, z: 0 }, fov: 60 },
+        { frame: 80, cameraId: 'main', position: { x: -2, y: 1, z: 6 }, rotation: { x: -20, y: 60, z: 0 }, fov: 45 }
+      ],
+      lightKeyframes: [],
+      materialKeyframes: []
     }
-    return () => clearInterval(rotationInterval);
-  }, [currentPage, currentDemoScene]);
+  });
+
+  const [prompt, setPrompt] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [message, setMessage] = useState('');
+
+  // Hardcoded data for the marketplace page.
+  const marketplaceDatasets = [
+    { id: 'pants', name: 'Pants Demo', description: 'Interactive Demo • 50 samples', background: 'bg-gray-800', features: ['8K • 60fps • 36 cameras', 'Wind physics simulation', '35+ adjustable parameters'], isDemo: true, badge: 'Demo' },
+    { id: 'enterprise-3d', name: 'Launch Demo 2 Enterprise', description: 'Enterprise 3D Demo • Real-time', background: 'bg-slate-700', features: ['Real-time 3D simulation', 'Interactive mesh editor', 'Physics parameter control'], isDemo: true, badge: 'Enterprise Demo' },
+    { id: 'dresses', name: 'Dresses & Skirts', description: 'Enterprise • 100K+ samples', background: 'bg-gray-700', features: ['Flowing fabric dynamics', 'Complex draping physics', 'Multiple fabric types'], isDemo: false, badge: 'Enterprise' },
+    { id: 'jackets', name: 'Jackets & Coats', description: 'Enterprise • 150K+ samples', background: 'bg-slate-800', features: ['Heavy fabric simulation', 'Collar & sleeve dynamics', 'Button & zipper physics'], isDemo: false, badge: 'Enterprise' },
+    { id: 'sportswear', name: 'Athletic Wear', description: 'Enterprise • 80K+ samples', background: 'bg-gray-600', features: ['Stretch fabric dynamics', 'Moisture simulation', 'Performance materials'], isDemo: false, badge: 'Enterprise' },
+    { id: 'furniture', name: 'Furniture & Upholstery', description: 'Enterprise • 120K+ samples', background: 'bg-slate-600', features: ['Cushion deformation', 'Leather & fabric textures', 'Structural physics'], isDemo: false, badge: 'Enterprise' },
+    { id: 'curtains', name: 'Curtains & Drapes', description: 'Enterprise • 90K+ samples', background: 'bg-gray-900', features: ['Wind interaction', 'Hanging dynamics', 'Light filtering effects'], isDemo: false, badge: 'Enterprise' },
+    { id: 'automotive', name: 'Automotive Interiors', description: 'Enterprise • 200K+ samples', background: 'bg-black', features: ['Seat deformation', 'Dashboard materials', 'Safety simulation'], isDemo: false, badge: 'Enterprise' },
+    { id: 'medical', name: 'Medical Textiles', description: 'Enterprise • 60K+ samples', background: 'bg-slate-900', features: ['Surgical drapes', 'Patient positioning', 'Sterile environments'], isDemo: false, badge: 'Enterprise' }
+  ];
+
+  // Function to update parameters on the generation page.
+  const updateParameter = (category, key, value) => {
+    setParameters(prev => ({ ...prev, [category]: { ...prev[category], [key]: value } }));
+  };
+
+  // Function to update parameters in the 3D editor.
+  const updateMeshParam = (category, param, value, id) => {
+    if (category === 'viewMode') {
+      setMeshParams(prev => ({ ...prev, viewMode: value }));
+    } else if (category === 'selectedCamera') {
+      setMeshParams(prev => ({ ...prev, selectedCamera: value }));
+    } else if (category === 'selectedLight') {
+      setMeshParams(prev => ({ ...prev, selectedLight: value }));
+    } else if (category === 'cameras') {
+      setMeshParams(prev => ({
+        ...prev,
+        cameras: prev.cameras.map(cam => 
+          cam.id === id ? { ...cam, [param]: typeof value === 'object' ? { ...cam[param], ...value } : value } : cam
+        )
+      }));
+    } else if (category === 'lights') {
+      setMeshParams(prev => ({
+        ...prev,
+        lights: prev.lights.map(light => 
+          light.id === id ? { ...light, [param]: typeof value === 'object' ? { ...light[param], ...value } : value } : light
+        )
+      }));
+    } else if (category === 'physics') {
+      setMeshParams(prev => ({ ...prev, physics: { ...prev.physics, [param]: value } }));
+    } else if (category === 'animation') {
+      setMeshParams(prev => ({ ...prev, animation: { ...prev.animation, [param]: value } }));
+    } else {
+      setMeshParams(prev => ({ ...prev, [category]: { ...prev[category], [param]: value } }));
+    }
+  };
+
+  // Functions to add, delete, and manage cameras and lights.
+  const addCamera = () => {
+    const newId = 'cam_' + Math.random().toString(36).substring(2, 8);
+    const newCamera = {
+      id: newId, name: `Camera ${meshParams.cameras.length + 1}`, type: 'perspective',
+      position: { x: 5, y: 2, z: 3 }, rotation: { x: -10, y: 45, z: 0 }, fov: 50
+    };
+    setMeshParams(prev => ({ ...prev, cameras: [...prev.cameras, newCamera], selectedCamera: newId }));
+  };
+
+  const addLight = () => {
+    const newId = 'light_' + Math.random().toString(36).substring(2, 8);
+    const newLight = {
+      id: newId, name: `Light ${meshParams.lights.length + 1}`, type: 'directional',
+      position: { x: 3, y: 3, z: 3 }, intensity: 1.0, color: '#ffffff', castShadows: false
+    };
+    setMeshParams(prev => ({ ...prev, lights: [...prev.lights, newLight], selectedLight: newId }));
+  };
+
+  const deleteCamera = (cameraId) => {
+    if (meshParams.cameras.length <= 1) return;
+    setMeshParams(prev => {
+      const newCameras = prev.cameras.filter(cam => cam.id !== cameraId);
+      return {
+        ...prev,
+        cameras: newCameras,
+        selectedCamera: prev.selectedCamera === cameraId ? newCameras[0].id : prev.selectedCamera
+      };
+    });
+  };
+
+  const deleteLight = (lightId) => {
+    if (meshParams.lights.length <= 1) return;
+    setMeshParams(prev => {
+      const newLights = prev.lights.filter(light => light.id !== lightId);
+      return {
+        ...prev,
+        lights: newLights,
+        selectedLight: prev.selectedLight === lightId ? newLights[0].id : prev.selectedLight
+      };
+    });
+  };
+
+  const generateWithLlm = async () => {
+    setIsLoading(true);
+    setMessage('Generating scene parameters with LLM...');
+    try {
+      const apiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=';
+      const systemPrompt = `You are an expert 3D lighting and material artist. A user will describe a scene in a single phrase. Your task is to generate a JSON object that updates the scene's lighting and material properties to match the user's description.
+
+The JSON object must have the following structure and data types:
+{
+  "light": {
+    "intensity": number, // A number between 0.1 and 3.0
+    "color": string // A hex color string like "#RRGGBB"
+  },
+  "material": {
+    "color": string, // A hex color string like "#RRGGBB"
+    "roughness": number, // A number between 0.0 and 1.0
+    "metalness": number, // A number between 0.0 and 1.0
+    "transmission": number, // A number between 0.0 and 1.0
+    "ior": number // A number between 1.0 and 3.0
+  }
+}
+
+Use common sense and your expertise to interpret the user's prompt and set the values appropriately. For example, a "dramatic sunset" should have low intensity light, a warm orange/red color, and a low roughness material to reflect the light well.
+Do not include any other text or markdown in your response, just the raw JSON object.`;
+
+      const payload = {
+        contents: [{ parts: [{ text: prompt }] }],
+        tools: [{ "google_search": {} }],
+        systemInstruction: {
+          parts: [{ text: systemPrompt }]
+        },
+        generationConfig: {
+          responseMimeType: "application/json"
+        }
+      };
+
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      
+      if (!response.ok) {
+        throw new Error(`API error: ${response.statusText}`);
+      }
+      
+      const result = await response.json();
+      const generated = JSON.parse(result.candidates[0].content.parts[0].text);
+      
+      setMeshParams(prev => ({
+        ...prev,
+        lights: prev.lights.map(light => light.id === 'key' ? { ...light, ...generated.light } : light),
+        material: { ...prev.material, ...generated.material }
+      }));
+      setMessage('Parameters generated successfully!');
+    } catch (error) {
+      console.error(error);
+      setMessage(`Error: ${error.message}`);
+    } finally {
+      setIsLoading(false);
+      setTimeout(() => setMessage(''), 3000);
+    }
+  };
+
+  // Functions for dataset generation and API key management.
+  const generatePantsDataset = () => {
+    const newApiKey = '23b_demo_' + Math.random().toString(36).substring(2, 15);
+    setApiKey(newApiKey);
+    setCurrentPage('api-checkout');
+  };
+
+  const generateDataset = () => {
+    const newApiKey = '23b_ent_' + Math.random().toString(36).substring(2, 15);
+    setApiKey(newApiKey);
+    setCurrentPage('api-checkout');
+  };
 
   const copyApiKey = () => {
+    // Note: document.execCommand('copy') is used for clipboard access
+    // because navigator.clipboard.writeText may be restricted in some environments.
     const tempInput = document.createElement('input');
     tempInput.value = apiKey;
     document.body.appendChild(tempInput);
@@ -98,194 +239,774 @@ export default function App() {
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
-  
-  const handleGenerateApiKey = () => {
-    const newApiKey = '23b_' + Math.random().toString(36).substring(2, 15);
-    setApiKey(newApiKey);
-    setCurrentPage('api-checkout');
-  };
 
+  // Effect hook to handle animation playback.
+  useEffect(() => {
+    let interval;
+    if (meshParams.animation.isPlaying) {
+      interval = setInterval(() => {
+        setMeshParams(prev => ({
+          ...prev,
+          animation: {
+            ...prev.animation,
+            currentFrame: (prev.animation.currentFrame + prev.animation.speed) % prev.animation.totalFrames
+          }
+        }));
+      }, 50);
+    }
+    return () => clearInterval(interval);
+  }, [meshParams.animation.isPlaying, meshParams.animation.speed]);
+
+  // Main page routing logic based on the currentPage state.
+  // The structure uses a single return statement for the entire component,
+  // with conditional rendering inside, which is a common and correct pattern.
   switch (currentPage) {
     case 'landing':
       return (
-        <div className="min-h-screen bg-white text-gray-900 font-sans flex flex-col justify-between">
-          <header className="px-4 sm:px-6 py-6">
-            <div className="max-w-7xl mx-auto flex items-center justify-between">
-              <h1 className="text-2xl font-bold">23 Bulbs</h1>
-              <button onClick={() => setCurrentPage('signin')} className="bg-gray-900 text-white px-6 py-2.5 rounded-full text-sm font-medium hover:bg-gray-800 transition-colors">Sign In</button>
+        <div className="min-h-screen bg-white font-sans">
+          {/* Landing Page Header */}
+          <header className="px-4 sm:px-6 py-6 sm:py-8">
+            <div className="max-w-6xl mx-auto flex items-center justify-between">
+              <h1 className="text-xl sm:text-2xl font-semibold text-gray-900">23 Bulbs</h1>
+              <button onClick={() => setCurrentPage('signin')} className="bg-gray-900 text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-medium hover:bg-gray-800 transition-colors">Sign In</button>
             </div>
           </header>
-          <main className="flex-grow flex items-center justify-center text-center px-4 sm:px-6">
-            <div className="max-w-4xl mx-auto">
-              <h2 className="text-5xl sm:text-7xl font-extrabold mb-6 leading-tight tracking-tighter">Physics-Aware Datasets for Enterprise GenAI</h2>
-              <p className="text-xl text-gray-600 max-w-2xl mx-auto">Power the next generation of AI with real-world fidelity. Our breakthrough platform delivers physics-accurate training data that unlocks GenAI for enterprise use.</p>
-              <button onClick={startDemo} className="mt-12 bg-blue-600 text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-blue-500 transition-all duration-300 inline-flex items-center justify-center space-x-2 shadow-lg"><span>See the Demo</span><ArrowRight className="w-5 h-5" /></button>
+          {/* Landing Page Content */}
+          <main className="px-4 sm:px-6 pt-12 sm:pt-24 pb-16 sm:pb-32">
+            <div className="max-w-4xl mx-auto text-center">
+              <h2 className="text-4xl sm:text-6xl font-bold text-gray-900 mb-6 sm:mb-8 leading-tight tracking-tight">Physics-Aware Datasets<br />for Enterprise GenAI</h2>
+              <p className="text-lg sm:text-xl text-gray-600 mb-12 sm:mb-16 max-w-2xl mx-auto leading-relaxed px-4">Power the next generation of AI with real-world fidelity. Our breakthrough real-time simulation engine delivers physics-accurate training data that unlocks GenAI for enterprise use.</p>
+              <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4 px-4">
+                <button onClick={() => setCurrentPage('signup')} className="bg-blue-600 text-white w-full sm:w-52 py-3.5 rounded-full text-base font-semibold hover:bg-blue-700 transition-all duration-200 inline-flex items-center justify-center space-x-2 shadow-sm"><span>Sign Up</span><ArrowRight className="w-4 h-4" /></button>
+                <button onClick={() => setCurrentPage('marketplace')} className="bg-gray-900 text-white w-full sm:w-52 py-3.5 rounded-full text-base font-semibold hover:bg-gray-800 transition-all duration-200 shadow-sm">Browse Datasets</button>
+                <button onClick={() => setCurrentPage('technology')} className="bg-gray-100 text-gray-900 w-full sm:w-52 py-3.5 rounded-full text-base font-semibold hover:bg-gray-200 transition-all duration-200 shadow-sm">Technology</button>
+              </div>
             </div>
           </main>
-          <footer className="py-4 text-center text-gray-600 text-xs">
-            © 2023-2025 23 Bulbs. All rights reserved.
-          </footer>
         </div>
       );
-    case 'demo-select':
+    case 'marketplace':
       return (
-        <div className="min-h-screen bg-white text-gray-900 font-sans flex flex-col">
-          <header className="px-4 sm:px-6 py-6 border-b border-gray-200 bg-white">
-            <div className="max-w-7xl mx-auto flex items-center justify-between">
+        <div className="min-h-screen bg-white font-sans">
+          {/* Marketplace Header */}
+          <header className="px-4 sm:px-6 py-6 sm:py-8 border-b border-gray-100">
+            <div className="max-w-6xl mx-auto flex items-center justify-between">
               <div className="flex items-center space-x-4">
-                <button onClick={() => setCurrentPage('landing')} className="text-gray-600 hover:text-gray-900 p-2 hover:bg-gray-100 rounded-full transition-colors"><ArrowLeft className="w-5 h-5" /></button>
-                <h1 className="text-2xl font-bold">Choose a Demo Scene</h1>
+                <button onClick={() => setCurrentPage('landing')} className="text-gray-500 hover:text-gray-900 p-2 hover:bg-gray-50 rounded-full transition-colors"><ArrowLeft className="w-5 h-5" /></button>
+                <h1 className="text-xl sm:text-2xl font-semibold text-gray-900">23 Bulbs</h1>
               </div>
-              <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
-                <span className="text-xs font-medium text-gray-600">JD</span>
-              </div>
+              <button onClick={() => setCurrentPage('signin')} className="bg-gray-900 text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-medium hover:bg-gray-800 transition-colors">Sign In</button>
             </div>
           </header>
-          <main className="flex-grow p-6 flex items-center justify-center">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {demoScenes.map(scene => (
-                <div key={scene.id} onClick={() => selectScene(scene.id)} className="bg-gray-100 rounded-2xl p-6 cursor-pointer hover:shadow-lg transition-shadow duration-300 flex flex-col justify-between h-full">
-                  <div className="h-48 flex items-center justify-center mb-4">
-                    <DemoIcon id={scene.id} />
+          {/* Marketplace Content */}
+          <main className="px-6 py-16">
+            <div className="max-w-6xl mx-auto">
+              <div className="text-center mb-16">
+                <h2 className="text-4xl font-bold text-gray-900 mb-4 tracking-tight">Pre-Built Datasets</h2>
+                <p className="text-xl text-gray-600 max-w-2xl mx-auto">Enterprise-grade physics-aware datasets that unlock GenAI for real-world applications. Reduce training time from 500M to 500 frames per use case.</p>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {marketplaceDatasets.map(dataset => (
+                  <div key={dataset.id} className="bg-white border border-gray-200 rounded-2xl overflow-hidden hover:shadow-lg transition-all">
+                    <div className={`h-48 ${dataset.background} relative`}>
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="w-16 h-16 bg-white bg-opacity-10 rounded-xl flex items-center justify-center">
+                          <div className="w-8 h-8 bg-white bg-opacity-90 rounded-sm"></div>
+                        </div>
+                      </div>
+                      <div className="absolute top-4 left-4">
+                        <span className={`px-3 py-1 ${dataset.isDemo ? 'bg-blue-600' : 'bg-gray-900'} bg-opacity-80 text-white text-xs font-medium rounded-full`}>{dataset.badge}</span>
+                      </div>
+                    </div>
+                    <div className="p-6">
+                      <h3 className="text-xl font-bold text-gray-900 mb-2">{dataset.name}</h3>
+                      <p className="text-gray-600 mb-4">{dataset.description}</p>
+                      <ul className="space-y-2 mb-6">
+                        {dataset.features.map((feature, idx) => (
+                          <li key={idx} className="text-sm text-gray-600 flex items-center"><Check className="w-4 h-4 text-gray-600 mr-2 flex-shrink-0" />{feature}</li>
+                        ))}
+                      </ul>
+                      <div className="text-center">
+                        {dataset.isDemo ? (
+                          <>
+                            <p className="text-lg font-semibold text-blue-600 mb-4">{dataset.id === 'enterprise-3d' ? 'Try Enterprise 3D Demo' : 'Try Interactive Demo'}</p>
+                            <button onClick={() => setCurrentPage(dataset.id === 'enterprise-3d' ? '3d-editor' : 'generation')} className="w-full bg-blue-600 text-white py-3 rounded-full font-medium hover:bg-blue-700 transition-colors">{dataset.id === 'enterprise-3d' ? 'Launch Demo 2 Enterprise' : 'Launch Demo'}</button>
+                          </>
+                        ) : (
+                          <>
+                            <p className="text-lg font-semibold text-gray-900 mb-4">Enterprise License</p>
+                            <button className="w-full bg-gray-900 text-white py-3 rounded-full font-medium hover:bg-gray-800 transition-colors">Contact Sales</button>
+                          </>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-xl font-bold mb-1">{scene.name}</h3>
-                    <p className="text-gray-600 text-sm">{scene.description}</p>
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </main>
         </div>
       );
-    case 'pitch-demo':
-      const currentScene = currentDemoScene || demoScenes[0];
-      const currentSceneStyle = {
-        '--cube-color': currentScene.cube.color,
-        '--cube-roughness': currentScene.cube.roughness,
-        '--cube-metalness': currentScene.cube.metalness,
-        '--cube-rotation-x': `${currentScene.cube.rotationX}deg`,
-        '--light-color': currentScene.light.color,
-        '--light-intensity': currentScene.light.intensity,
+    case 'generation':
+      const categoryConfig = {
+        lighting: { title: 'Lighting', color: 'bg-gray-600', description: 'Light angles, intensity, color temperature', params: [
+          { key: 'lightAngle', label: 'Light Angle', type: 'range', min: 0, max: 90, unit: '°' },
+          { key: 'numLights', label: 'Number of Lights', type: 'range', min: 1, max: 8, unit: '' },
+          { key: 'intensity', label: 'Light Intensity', type: 'range', min: 0.1, max: 2.0, step: 0.1, unit: '' },
+          { key: 'colorTemp', label: 'Color Temperature', type: 'range', min: 2700, max: 8000, unit: 'K' },
+          { key: 'hdri', label: 'HDRI Environment', type: 'select', options: ['studio', 'outdoor', 'indoor', 'sunset'] }
+        ]},
+        materials: { title: 'Materials & Textures', color: 'bg-gray-600', description: 'Fabric types, surface properties, textures', params: [
+          { key: 'fabricType', label: 'Fabric Type', type: 'select', options: ['cotton', 'silk', 'denim', 'leather', 'synthetic'] },
+          { key: 'roughness', label: 'Surface Roughness', type: 'range', min: 0, max: 1, step: 0.01, unit: '' },
+          { key: 'metallic', label: 'Metallic', type: 'range', min: 0, max: 1, step: 0.01, unit: '' },
+          { key: 'subsurface', label: 'Subsurface Scattering', type: 'range', min: 0, max: 1, step: 0.01, unit: '' },
+          { key: 'normalStrength', label: 'Normal Map Strength', type: 'range', min: 0, max: 2, step: 0.01, unit: '' }
+        ]},
+        camera: { title: 'Camera Setup', color: 'bg-gray-600', description: 'Angles, resolution, focal length, effects', params: [
+          { key: 'angles', label: 'Camera Angles', type: 'range', min: 8, max: 64, unit: '' },
+          { key: 'resolution', label: 'Resolution', type: 'select', options: ['4K', '8K', '12K'] },
+          { key: 'focalLength', label: 'Focal Length', type: 'range', min: 24, max: 200, unit: 'mm' },
+          { key: 'dof', label: 'Depth of Field', type: 'range', min: 0, max: 1, step: 0.01, unit: '' },
+          { key: 'motionBlur', label: 'Motion Blur', type: 'range', min: 0, max: 1, step: 0.01, unit: '' }
+        ]},
+        physics: { title: 'Physics Forces', color: 'bg-gray-600', description: 'Wind, gravity, air density, collisions', params: [
+          { key: 'windStrength', label: 'Wind Strength', type: 'range', min: 0, max: 2, step: 0.1, unit: 'm/s' },
+          { key: 'gravity', label: 'Gravity Strength', type: 'range', min: 0, max: 20, step: 0.1, unit: 'm/s²' },
+          { key: 'windDirection', label: 'Wind Direction', type: 'range', min: 0, max: 360, unit: '°' },
+          { key: 'airDensity', label: 'Air Density', type: 'range', min: 0.5, max: 2.0, step: 0.1, unit: 'kg/m³' },
+          { key: 'collisionMargin', label: 'Collision Margin', type: 'range', min: 0.001, max: 0.1, step: 0.001, unit: 'm' }
+        ]}
       };
 
+      const toggleCategory = (categoryKey) => {
+        if (selectedCategories.includes(categoryKey)) {
+          setSelectedCategories(prev => prev.filter(cat => cat !== categoryKey));
+        } else {
+          setSelectedCategories(prev => [...prev, categoryKey]);
+        }
+      };
+
+      const selectedParamCount = selectedCategories.reduce((total, cat) => total + categoryConfig[cat].params.length, 0);
+
       return (
-        <div className="min-h-screen bg-white text-gray-900 font-sans flex flex-col">
-          <header className="px-4 sm:px-6 py-6 border-b border-gray-200 bg-white">
+        <div className="min-h-screen bg-white font-sans">
+          {/* Generation Page Header */}
+          <header className="px-4 sm:px-6 py-6 sm:py-8 border-b border-gray-100">
             <div className="max-w-7xl mx-auto flex items-center justify-between">
               <div className="flex items-center space-x-4">
-                <button onClick={() => setCurrentPage('demo-select')} className="text-gray-600 hover:text-gray-900 p-2 hover:bg-gray-100 rounded-full transition-colors"><ArrowLeft className="w-5 h-5" /></button>
-                <h1 className="text-2xl font-bold">{currentScene.name}</h1>
+                <button onClick={() => setCurrentPage('marketplace')} className="text-gray-500 hover:text-gray-900 p-2 hover:bg-gray-50 rounded-full transition-colors"><ArrowLeft className="w-5 h-5" /></button>
+                <h1 className="text-xl sm:text-2xl font-semibold text-gray-900">23 Bulbs</h1>
+                <span className="text-sm text-gray-500">• Configure Parameters</span>
               </div>
               <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
                 <span className="text-xs font-medium text-gray-600">JD</span>
               </div>
             </div>
           </header>
-          <main className="flex-grow flex flex-col lg:flex-row p-6 space-y-6 lg:space-y-0 lg:space-x-6">
-            <div className="flex-1 bg-gray-100 rounded-3xl overflow-hidden relative shadow-lg">
-              {/* 3D Scene Container */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="relative w-64 h-64 perspective-[1000px]">
-                  <div className="cube-3d w-full h-full relative" style={currentSceneStyle}>
-                    {/* CSS 3D Cube Faces */}
-                    <div className="cube-face cube-front bg-[var(--cube-color)] border-2 border-gray-400"></div>
-                    <div className="cube-face cube-back bg-[var(--cube-color)] border-2 border-gray-400"></div>
-                    <div className="cube-face cube-right bg-[var(--cube-color)] border-2 border-gray-400"></div>
-                    <div className="cube-face cube-left bg-[var(--cube-color)] border-2 border-gray-400"></div>
-                    <div className="cube-face cube-top bg-[var(--cube-color)] border-2 border-gray-400"></div>
-                    <div className="cube-face cube-bottom bg-[var(--cube-color)] border-2 border-gray-400"></div>
+          {/* Generation Page Content */}
+          <div className="px-6 py-12">
+            <div className="max-w-4xl mx-auto">
+              <div className="text-center mb-12">
+                <h2 className="text-3xl font-bold text-gray-900 mb-4">Choose Parameter Categories</h2>
+                <p className="text-lg text-gray-600">Select which aspects of the simulation you'd like to customize</p>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                {Object.entries(categoryConfig).map(([categoryKey, category]) => (
+                  <div key={categoryKey} className="space-y-6">
+                    <div onClick={() => toggleCategory(categoryKey)} className={`border-2 rounded-2xl p-6 cursor-pointer transition-all hover:shadow-lg ${selectedCategories.includes(categoryKey) ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'}`}>
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="flex items-center space-x-3">
+                          <div className={`w-4 h-4 ${selectedCategories.includes(categoryKey) ? 'bg-blue-500' : 'bg-gray-300'} rounded-full`}></div>
+                          <h3 className="text-xl font-semibold text-gray-900">{category.title}</h3>
+                        </div>
+                        <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${selectedCategories.includes(categoryKey) ? 'bg-blue-500 border-blue-500' : 'border-gray-300'}`}>
+                          {selectedCategories.includes(categoryKey) && <Check className="w-4 h-4 text-white" />}
+                        </div>
+                      </div>
+                      <p className="text-gray-600 mb-4">{category.description}</p>
+                      <div className="text-sm text-gray-500">{category.params.length} parameters available</div>
+                    </div>
+                    {selectedCategories.includes(categoryKey) && (
+                      <div className="bg-white border border-gray-200 rounded-2xl p-6">
+                        <h4 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                          <div className={`w-3 h-3 ${selectedCategories.includes(categoryKey) ? 'bg-blue-500' : 'bg-gray-300'} rounded-full mr-2`}></div>
+                          {category.title} Parameters
+                        </h4>
+                        <div className="space-y-4">
+                          {category.params.map(param => {
+                            const currentValue = parameters[categoryKey][param.key];
+                            return (
+                              <div key={param.key} className="space-y-2">
+                                <div className="flex justify-between items-center">
+                                  <label className="text-sm font-medium text-gray-700">{param.label}</label>
+                                  <span className="text-sm text-gray-500">{currentValue}{param.unit || ''}</span>
+                                </div>
+                                {param.type === 'range' ? (
+                                  <input type="range" min={param.min} max={param.max} step={param.step || 1} value={currentValue} onChange={(e) => updateParameter(categoryKey, param.key, parseFloat(e.target.value))} className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" />
+                                ) : (
+                                  <select value={currentValue} onChange={(e) => updateParameter(categoryKey, param.key, e.target.value)} className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+                                    {param.options.map(option => <option key={option} value={option}>{option}</option>)}
+                                  </select>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+              <div className="bg-gray-50 rounded-2xl p-8 mb-8">
+                <div className="text-center">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-4">Selection Summary</h3>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div><div className="text-2xl font-bold text-blue-600">{selectedCategories.length}</div><div className="text-sm text-gray-600">Categories</div></div>
+                    <div><div className="text-2xl font-bold text-blue-600">{selectedParamCount}</div><div className="text-sm text-gray-600">Parameters</div></div>
+                    <div><div className="text-2xl font-bold text-blue-600">{Math.floor(selectedParamCount * 2.5)}K</div><div className="text-sm text-gray-600">Est. Samples</div></div>
+                    <div><div className="text-2xl font-bold text-blue-600">{(selectedParamCount * 0.26).toFixed(1)}GB</div><div className="text-sm text-gray-600">Data Volume</div></div>
                   </div>
                 </div>
               </div>
-              {/* Gradient overlay for dramatic effect */}
-              <div className="absolute inset-0 bg-gradient-to-t from-white/80 to-transparent"></div>
+              <div className="text-center">
+                <button onClick={generatePantsDataset} disabled={selectedCategories.length === 0} className={`px-12 py-4 rounded-full text-lg font-semibold transition-colors shadow-sm ${selectedCategories.length > 0 ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`}>Generate Dataset ({selectedParamCount} parameters)</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    case '3d-editor':
+      const currentCamera = meshParams.cameras.find(cam => cam.id === meshParams.selectedCamera) || meshParams.cameras[0];
+      const currentLight = meshParams.lights.find(light => light.id === meshParams.selectedLight);
+      
+      return (
+        <div className="min-h-screen bg-gray-100 font-sans text-gray-900">
+          {/* 3D Editor Header */}
+          <header className="px-4 sm:px-6 py-6 sm:py-8 bg-white border-b border-gray-200">
+            <div className="max-w-7xl mx-auto flex items-center justify-between">
+              <div className="flex items-center space-x-4">
+                <button onClick={() => setCurrentPage('marketplace')} className="text-gray-500 hover:text-gray-900 p-2 hover:bg-gray-100 rounded-full transition-colors"><ArrowLeft className="w-5 h-5" /></button>
+                <h1 className="text-xl sm:text-2xl font-semibold text-gray-900">23 Bulbs</h1>
+                <span className="text-sm text-gray-500">• Enterprise 3D Demo</span>
+              </div>
+              <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
+                <span className="text-xs font-medium text-gray-600">JD</span>
+              </div>
+            </div>
+          </header>
+          <div className="flex h-[calc(100vh-88px)]">
+            <div className="flex-1 bg-gray-100 relative overflow-hidden">
+              {/* View Mode Toggle */}
+              <div className="absolute top-4 left-4 z-10">
+                <div className="bg-white rounded-lg shadow-md p-1 flex space-x-1 border border-gray-200">
+                  <button onClick={() => updateMeshParam('viewMode', '', 'orbit')} className={`px-3 py-1 text-xs font-medium rounded-md transition-colors ${meshParams.viewMode === 'orbit' ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-100'}`}>Orbit View</button>
+                  <button onClick={() => updateMeshParam('viewMode', '', 'camera')} className={`px-3 py-1 text-xs font-medium rounded-md transition-colors ${meshParams.viewMode === 'camera' ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-100'}`}>Camera View</button>
+                </div>
+              </div>
+              
+              {/* 3D Scene */}
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <div className="relative" style={{transform: meshParams.viewMode === 'orbit' ? `perspective(1000px) translateZ(${currentCamera.position.z * -30}px) rotateX(${currentCamera.rotation.x}deg) rotateY(${currentCamera.rotation.y}deg)` : `perspective(1000px) translateZ(-200px) rotateX(${-currentCamera.rotation.x}deg) rotateY(${-currentCamera.rotation.y + 180}deg) scale(1.5)`, transformStyle: 'preserve-3d'}}>
+                  {/* The 3D Cube */}
+                  <div className="w-32 h-32 relative" style={{transformStyle: 'preserve-3d', transform: `rotateX(${meshParams.animation.isPlaying ? Math.sin(meshParams.animation.currentFrame * 0.05) * 10 : 0}deg) rotateY(${meshParams.animation.isPlaying ? meshParams.animation.currentFrame * 2 : 0}deg)`}}>
+                    <div className="absolute w-32 h-32 border-2 border-gray-700" style={{backgroundColor: meshParams.material.color, opacity: meshParams.material.wireframe ? 0.3 : meshParams.material.opacity, transform: 'translateZ(64px)'}} />
+                    <div className="absolute w-32 h-32 border-2 border-gray-700" style={{backgroundColor: meshParams.material.color, opacity: meshParams.material.wireframe ? 0.2 : meshParams.material.opacity * 0.8, transform: 'translateZ(-64px) rotateY(180deg)'}} />
+                    <div className="absolute w-32 h-32 border-2 border-gray-700" style={{backgroundColor: meshParams.material.color, opacity: meshParams.material.wireframe ? 0.25 : meshParams.material.opacity * 0.9, transform: 'rotateY(90deg) translateZ(64px)'}} />
+                    <div className="absolute w-32 h-32 border-2 border-gray-700" style={{backgroundColor: meshParams.material.color, opacity: meshParams.material.wireframe ? 0.2 : meshParams.material.opacity * 0.7, transform: 'rotateY(-90deg) translateZ(64px)'}} />
+                    <div className="absolute w-32 h-32 border-2 border-gray-700" style={{backgroundColor: meshParams.material.color, opacity: meshParams.material.wireframe ? 0.3 : meshParams.material.opacity * 0.95, transform: 'rotateX(90deg) translateZ(64px)'}} />
+                    <div className="absolute w-32 h-32 border-2 border-gray-700" style={{backgroundColor: meshParams.material.color, opacity: meshParams.material.wireframe ? 0.15 : meshParams.material.opacity * 0.6, transform: 'rotateX(-90deg) translateZ(64px)'}} />
+                  </div>
+
+                  {/* Camera and Light Visualizations */}
+                  {meshParams.viewMode === 'orbit' && (
+                    <>
+                      {/* Render only the currently selected camera */}
+                      <div className="absolute whitespace-nowrap -ml-4" style={{transform: `translate3d(${currentCamera.position.x * 40}px, ${currentCamera.position.y * -40}px, ${currentCamera.position.z * 40}px) rotateX(${currentCamera.rotation.x}deg) rotateY(${currentCamera.rotation.y}deg)`, transformStyle: 'preserve-3d', opacity: 1}}>
+                        <div className={`bg-blue-600 text-white text-xs font-semibold px-2 py-1 rounded-full relative`} style={{transform: 'translateZ(10px) translateX(-50%) translateY(-100%)'}}>{currentCamera.name}</div>
+                      </div>
+                      
+                      {/* Render only the currently selected light */}
+                      <div className="absolute whitespace-nowrap -ml-4" style={{transform: `translate3d(${currentLight.position.x * 40}px, ${currentLight.position.y * -40}px, ${currentLight.position.z * 40}px)`, transformStyle: 'preserve-3d', opacity: 1}}>
+                        <div className={`bg-gray-700 text-white text-xs font-semibold px-2 py-1 rounded-full relative`} style={{transform: 'translateZ(10px) translateX(-50%) translateY(-100%)'}}>{currentLight.name}</div>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+
+              {/* Mouse Controls */}
+              {meshParams.viewMode === 'orbit' && (
+                <div className="absolute inset-0 cursor-grab active:cursor-grabbing" onMouseDown={(e) => {
+                  const startX = e.clientX;
+                  const startY = e.clientY;
+                  const startRotX = currentCamera.rotation.x;
+                  const startRotY = currentCamera.rotation.y;
+                  const handleMouseMove = (moveEvent) => {
+                    const deltaX = moveEvent.clientX - startX;
+                    const deltaY = moveEvent.clientY - startY;
+                    updateMeshParam('cameras', 'rotation', {
+                      x: Math.max(-90, Math.min(90, startRotX - deltaY * 0.5)),
+                      y: startRotY + deltaX * 0.5
+                    }, currentCamera.id);
+                  };
+                  const handleMouseUp = () => {
+                    document.removeEventListener('mousemove', handleMouseMove);
+                    document.removeEventListener('mouseup', handleMouseUp);
+                  };
+                  document.addEventListener('mousemove', handleMouseMove);
+                  document.addEventListener('mouseup', handleMouseUp);
+                }} onWheel={(e) => {
+                  e.preventDefault();
+                  const newZ = Math.max(1, Math.min(20, currentCamera.position.z + e.deltaY * 0.01));
+                  updateMeshParam('cameras', 'position', { ...currentCamera.position, z: newZ }, currentCamera.id);
+                }} />
+              )}
+              
+              {/* Enhanced Timeline */}
+              <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4">
+                <div className="flex items-center space-x-4 mb-3">
+                  <button onClick={() => updateMeshParam('animation', 'isPlaying', !meshParams.animation.isPlaying)} className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">{meshParams.animation.isPlaying ? 'Pause' : 'Play'}</button>
+                  <button onClick={() => updateMeshParam('animation', 'currentFrame', 0)} className="bg-gray-200 text-gray-700 px-3 py-2 rounded-lg text-sm font-medium hover:bg-gray-300 transition-colors">Reset</button>
+                  <div className="flex-1">
+                    <div className="flex items-center space-x-2 mb-1">
+                      <span className="text-xs text-gray-500">Frame:</span>
+                      <span className="text-xs font-mono text-gray-700">{Math.floor(meshParams.animation.currentFrame)} / {meshParams.animation.totalFrames}</span>
+                      <span className="text-xs text-gray-500 ml-4">Time:</span>
+                      <span className="text-xs font-mono text-gray-700">{(meshParams.animation.currentFrame / 24).toFixed(2)}s</span>
+                    </div>
+                    <div className="relative h-4 bg-gray-200 rounded-full cursor-pointer overflow-hidden">
+                      <div className="h-full bg-blue-500 rounded-full" style={{width: `${(meshParams.animation.currentFrame / meshParams.animation.totalFrames) * 100}%`}}></div>
+                      <input type="range" min="0" max={meshParams.animation.totalFrames} value={meshParams.animation.currentFrame} onChange={(e) => updateMeshParam('animation', 'currentFrame', parseInt(e.target.value))} className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer" />
+                      
+                      {/* Keyframe markers */}
+                      {meshParams.animation.cameraKeyframes.map((keyframe, idx) => (
+                        <div key={idx} className="absolute w-1 h-full -ml-0.5 bg-blue-600" style={{left: `${(keyframe.frame / meshParams.animation.totalFrames) * 100}%`}} />
+                      ))}
+                      {meshParams.animation.lightKeyframes.map((keyframe, idx) => (
+                        <div key={idx} className="absolute w-1 h-full -ml-0.5 bg-gray-600" style={{left: `${(keyframe.frame / meshParams.animation.totalFrames) * 100}%`}} />
+                      ))}
+                      {meshParams.animation.materialKeyframes.map((keyframe, idx) => (
+                        <div key={idx} className="absolute w-1 h-full -ml-0.5 bg-gray-600" style={{left: `${(keyframe.frame / meshParams.animation.totalFrames) * 100}%`}} />
+                      ))}
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-xs text-gray-500">Speed:</span>
+                    <input type="range" min="0.1" max="3.0" step="0.1" value={meshParams.animation.speed} onChange={(e) => updateMeshParam('animation', 'speed', parseFloat(e.target.value))} className="w-16 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" />
+                    <span className="text-xs font-mono text-gray-700 w-8">{meshParams.animation.speed}x</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-xs text-gray-500">Length:</span>
+                    <input type="number" min="60" max="600" value={meshParams.animation.totalFrames} onChange={(e) => updateMeshParam('animation', 'totalFrames', parseInt(e.target.value) || 120)} className="w-16 px-2 py-1 text-xs border border-gray-300 rounded" />
+                    <span className="text-xs text-gray-500">frames</span>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-4 text-xs">
+                  <div className="flex items-center space-x-1">
+                    <div className="w-2 h-2 bg-blue-500 rounded-sm"></div>
+                    <span className="text-gray-600">Camera</span>
+                  </div>
+                  <div className="flex items-center space-x-1">
+                    <div className="w-2 h-2 bg-gray-600 rounded-sm"></div>
+                    <span className="text-gray-600">Light</span>
+                  </div>
+                  <div className="flex items-center space-x-1">
+                    <div className="w-2 h-2 bg-gray-600 rounded-sm"></div>
+                    <span className="text-gray-600">Material</span>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            {/* Read-only Demo description */}
-            <div className="w-full lg:w-96 bg-white rounded-3xl p-8 flex flex-col justify-between shadow-lg border border-gray-200">
-              <div className="space-y-8">
-                <div>
-                  <h3 className="text-3xl font-bold mb-2">{currentScene.name}</h3>
-                  <p className="text-gray-600">{currentScene.description}</p>
-                </div>
-              </div>
-              <div className="mt-8 pt-8 border-t border-gray-200">
-                <h4 className="text-lg font-bold mb-4">API Access</h4>
-                <div className="bg-gray-100 border border-gray-200 rounded-xl p-4 flex items-center">
-                  <div className="flex-1 mr-4">
-                    <code className="text-sm font-mono text-gray-800 break-all">{apiKey || 'Your API key will appear here...'}</code>
+            {/* Enhanced Inspector Panel */}
+            <div className="w-80 bg-gray-50 border-l border-gray-200 overflow-y-auto">
+              <div className="p-4">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Inspector</h3>
+                
+                {/* LLM Generation Section */}
+                <div className="mb-6 space-y-2 p-4 bg-gray-100 rounded-lg border border-gray-200">
+                  <h4 className="text-sm font-semibold text-gray-900 flex items-center">
+                    Generate with LLM ✨
+                  </h4>
+                  <div className="space-y-2">
+                    <textarea 
+                      className="w-full text-sm p-2 rounded-md border border-gray-300 bg-white"
+                      placeholder="e.g., 'a vibrant cyberpunk scene with a glossy red material'"
+                      value={prompt}
+                      onChange={(e) => setPrompt(e.target.value)}
+                      rows="3"
+                    ></textarea>
+                    <button 
+                      onClick={generateWithLlm}
+                      disabled={isLoading}
+                      className="w-full bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+                    >
+                      {isLoading ? 'Generating...' : 'Generate with LLM'}
+                    </button>
+                    {message && (
+                      <p className="text-xs text-gray-600 text-center">{message}</p>
+                    )}
                   </div>
-                  <button onClick={copyApiKey} className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-500 transition-colors">
-                    <Copy className="w-4 h-4" />
-                    <span>{copied ? 'Copied!' : 'Copy'}</span>
-                  </button>
                 </div>
-                <p className="text-xs text-gray-500 mt-2">Use this key to integrate our physics-aware datasets into your AI training pipeline.</p>
-                <button onClick={handleGenerateApiKey} className="w-full mt-4 bg-gray-900 text-white py-2 rounded-full font-semibold hover:bg-gray-800 transition-colors">Generate New API Key</button>
+
+                {/* Camera Section */}
+                <div className="mb-6">
+                  <div className="flex items-center justify-between mb-3">
+                    <h4 className="font-medium text-gray-900 flex items-center">
+                      <div className="w-3 h-3 bg-blue-500 rounded-full mr-2"></div>
+                      Cameras
+                    </h4>
+                    <button onClick={addCamera} className="bg-blue-600 text-white px-2 py-1 rounded text-xs hover:bg-blue-700">Add</button>
+                  </div>
+                  <div className="space-y-3">
+                    <select value={meshParams.selectedCamera} onChange={(e) => updateMeshParam('selectedCamera', '', e.target.value)} className="w-full px-2 py-1 text-xs border border-gray-300 rounded">
+                      {meshParams.cameras.map(camera => (
+                        <option key={camera.id} value={camera.id}>{camera.name} ({camera.type})</option>
+                      ))}
+                    </select>
+                    {currentCamera && (
+                      <div className="space-y-2">
+                        <div className="flex items-center space-x-2">
+                          <input type="text" value={currentCamera.name} onChange={(e) => updateMeshParam('cameras', 'name', e.target.value, currentCamera.id)} className="flex-1 px-2 py-1 text-xs border border-gray-300 rounded" />
+                          {meshParams.cameras.length > 1 && (
+                            <button onClick={() => deleteCamera(currentCamera.id)} className="bg-red-500 text-white px-2 py-1 rounded text-xs hover:bg-red-600">Del</button>
+                          )}
+                        </div>
+                        <select value={currentCamera.type} onChange={(e) => updateMeshParam('cameras', 'type', e.target.value, currentCamera.id)} className="w-full px-2 py-1 text-xs border border-gray-300 rounded">
+                          <option value="perspective">Perspective</option>
+                          <option value="orthographic">Orthographic</option>
+                          <option value="wide">Wide Angle</option>
+                          <option value="telephoto">Telephoto</option>
+                        </select>
+                        <div>
+                          <label className="text-xs font-medium text-gray-600 block mb-1">Position</label>
+                          <div className="grid grid-cols-3 gap-1">
+                            {['x', 'y', 'z'].map(axis => (
+                              <input key={axis} type="number" value={currentCamera.position[axis].toFixed(1)} onChange={(e) => updateMeshParam('cameras', 'position', {...currentCamera.position, [axis]: parseFloat(e.target.value) || 0}, currentCamera.id)} className="w-full px-2 py-1 text-xs border border-gray-300 rounded" step="0.1" />
+                            ))}
+                          </div>
+                        </div>
+                        <div>
+                          <label className="text-xs font-medium text-gray-600 block mb-1">Rotation</label>
+                          <div className="grid grid-cols-3 gap-1">
+                            {['x', 'y', 'z'].map(axis => (
+                              <input key={axis} type="number" value={currentCamera.rotation[axis].toFixed(1)} onChange={(e) => updateMeshParam('cameras', 'rotation', {...currentCamera.rotation, [axis]: parseFloat(e.target.value) || 0}, currentCamera.id)} className="w-full px-2 py-1 text-xs border border-gray-300 rounded" step="0.1" />
+                            ))}
+                          </div>
+                        </div>
+                        <div>
+                          <label className="text-xs font-medium text-gray-600 block mb-1">FOV: {currentCamera.fov}°</label>
+                          <input type="range" min="10" max="120" value={currentCamera.fov} onChange={(e) => updateMeshParam('cameras', 'fov', parseFloat(e.target.value), currentCamera.id)} className="w-full h-1 bg-gray-200 rounded appearance-none cursor-pointer" />
+                        </div>
+                        <button onClick={() => {
+                          const newKeyframe = {frame: Math.floor(meshParams.animation.currentFrame), cameraId: currentCamera.id, position: {...currentCamera.position}, rotation: {...currentCamera.rotation}, fov: currentCamera.fov};
+                          const existingIndex = meshParams.animation.cameraKeyframes.findIndex(kf => kf.frame === Math.floor(meshParams.animation.currentFrame) && kf.cameraId === currentCamera.id);
+                          let newKeyframes;
+                          if (existingIndex >= 0) {
+                            newKeyframes = [...meshParams.animation.cameraKeyframes];
+                            newKeyframes[existingIndex] = newKeyframe;
+                          } else {
+                            newKeyframes = [...meshParams.animation.cameraKeyframes, newKeyframe].sort((a, b) => a.frame - b.frame);
+                          }
+                          updateMeshParam('animation', 'cameraKeyframes', newKeyframes);
+                        }} className="w-full bg-blue-600 text-white py-1 px-2 rounded text-xs hover:bg-blue-700">Set Keyframe</button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Light Section */}
+                <div className="mb-6">
+                  <div className="flex items-center justify-between mb-3">
+                    <h4 className="font-medium text-gray-900 flex items-center">
+                      <div className="w-3 h-3 bg-gray-600 rounded-full mr-2"></div>
+                      Lights
+                    </h4>
+                    <button onClick={addLight} className="bg-blue-600 text-white px-2 py-1 rounded text-xs hover:bg-blue-700">Add</button>
+                  </div>
+                  <div className="space-y-3">
+                    <select value={meshParams.selectedLight} onChange={(e) => updateMeshParam('selectedLight', '', e.target.value)} className="w-full px-2 py-1 text-xs border border-gray-300 rounded">
+                      {meshParams.lights.map(light => (
+                        <option key={light.id} value={light.id}>{light.name} ({light.type})</option>
+                      ))}
+                    </select>
+                    {currentLight && (
+                      <div className="space-y-2">
+                        <div className="flex items-center space-x-2">
+                          <input type="text" value={currentLight.name} onChange={(e) => updateMeshParam('lights', 'name', e.target.value, currentLight.id)} className="flex-1 px-2 py-1 text-xs border border-gray-300 rounded" />
+                          {meshParams.lights.length > 1 && (
+                            <button onClick={() => deleteLight(currentLight.id)} className="bg-red-500 text-white px-2 py-1 rounded text-xs hover:bg-red-600">Del</button>
+                          )}
+                        </div>
+                        <select value={currentLight.type} onChange={(e) => updateMeshParam('lights', 'type', e.target.value, currentLight.id)} className="w-full px-2 py-1 text-xs border border-gray-300 rounded">
+                          <option value="directional">Directional</option>
+                          <option value="point">Point Light</option>
+                          <option value="spot">Spot Light</option>
+                          <option value="area">Area Light</option>
+                          <option value="hdri">HDRI</option>
+                        </select>
+                        <div>
+                          <label className="text-xs font-medium text-gray-600 block mb-1">Position</label>
+                          <div className="grid grid-cols-3 gap-1">
+                            {['x', 'y', 'z'].map(axis => (
+                              <input key={axis} type="number" value={currentLight.position[axis].toFixed(1)} onChange={(e) => updateMeshParam('lights', 'position', {...currentLight.position, [axis]: parseFloat(e.target.value) || 0}, currentLight.id)} className="w-full px-2 py-1 text-xs border border-gray-300 rounded" step="0.1" />
+                            ))}
+                          </div>
+                        </div>
+                        <div>
+                          <label className="text-xs font-medium text-gray-600 block mb-1">Intensity: {currentLight.intensity}</label>
+                          <input type="range" min="0" max="3" step="0.1" value={currentLight.intensity} onChange={(e) => updateMeshParam('lights', 'intensity', parseFloat(e.target.value), currentLight.id)} className="w-full h-1 bg-gray-200 rounded appearance-none cursor-pointer" />
+                        </div>
+                        <div>
+                          <label className="text-xs font-medium text-gray-600 block mb-1">Color</label>
+                          <input type="color" value={currentLight.color} onChange={(e) => updateMeshParam('lights', 'color', e.target.value, currentLight.id)} className="w-full h-6 rounded border cursor-pointer" />
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <input type="checkbox" checked={currentLight.castShadows} onChange={(e) => updateMeshParam('lights', 'castShadows', e.target.checked, currentLight.id)} className="rounded" />
+                          <label className="text-xs font-medium text-gray-600">Cast Shadows</label>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Enhanced Material Section */}
+                <div className="mb-6">
+                  <div className="flex items-center justify-between mb-3">
+                    <h4 className="font-medium text-gray-900 flex items-center">
+                      <div className="w-3 h-3 bg-gray-600 rounded-full mr-2"></div>
+                      Material
+                    </h4>
+                    <button onClick={() => updateMeshParam('animation', 'materialKeyframes', [...meshParams.animation.materialKeyframes, { frame: Math.floor(meshParams.animation.currentFrame), material: { ...meshParams.material } }])} className="bg-blue-600 text-white px-2 py-1 rounded text-xs hover:bg-blue-700">Set Keyframe</button>
+                  </div>
+                  <div className="space-y-3">
+                    <div>
+                      <label className="text-xs font-medium text-gray-600 block mb-1">Base Color</label>
+                      <input type="color" value={meshParams.material.color} onChange={(e) => updateMeshParam('material', 'color', e.target.value)} className="w-full h-6 rounded border cursor-pointer" />
+                    </div>
+                    <div>
+                      <label className="text-xs font-medium text-gray-600 block mb-1">Roughness: {meshParams.material.roughness}</label>
+                      <input type="range" min="0" max="1" step="0.01" value={meshParams.material.roughness} onChange={(e) => updateMeshParam('material', 'roughness', parseFloat(e.target.value))} className="w-full h-1 bg-gray-200 rounded appearance-none cursor-pointer" />
+                    </div>
+                    <div>
+                      <label className="text-xs font-medium text-gray-600 block mb-1">Metalness: {meshParams.material.metalness}</label>
+                      <input type="range" min="0" max="1" step="0.01" value={meshParams.material.metalness} onChange={(e) => updateMeshParam('material', 'metalness', parseFloat(e.target.value))} className="w-full h-1 bg-gray-200 rounded appearance-none cursor-pointer" />
+                    </div>
+                    <div>
+                      <label className="text-xs font-medium text-gray-600 block mb-1">Transmission: {meshParams.material.transmission}</label>
+                      <input type="range" min="0" max="1" step="0.01" value={meshParams.material.transmission} onChange={(e) => updateMeshParam('material', 'transmission', parseFloat(e.target.value))} className="w-full h-1 bg-gray-200 rounded appearance-none cursor-pointer" />
+                    </div>
+                    <div>
+                      <label className="text-xs font-medium text-gray-600 block mb-1">IOR: {meshParams.material.ior}</label>
+                      <input type="range" min="1" max="3" step="0.01" value={meshParams.material.ior} onChange={(e) => updateMeshParam('material', 'ior', parseFloat(e.target.value))} className="w-full h-1 bg-gray-200 rounded appearance-none cursor-pointer" />
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <input type="checkbox" checked={meshParams.material.wireframe} onChange={(e) => updateMeshParam('material', 'wireframe', e.target.checked)} className="rounded" />
+                      <label className="text-xs font-medium text-gray-600">Wireframe</label>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Enhanced Physics Section */}
+                <div className="mb-6">
+                  <div className="flex items-center justify-between mb-3">
+                    <h4 className="font-medium text-gray-900 flex items-center">
+                      <div className="w-3 h-3 bg-gray-600 rounded-full mr-2"></div>
+                      Physics
+                    </h4>
+                    <button onClick={() => updateMeshParam('animation', 'physicsKeyframes', [...meshParams.animation.physicsKeyframes, { frame: Math.floor(meshParams.animation.currentFrame), physics: { ...meshParams.physics } }])} className="bg-blue-600 text-white px-2 py-1 rounded text-xs hover:bg-blue-700">Set Keyframe</button>
+                  </div>
+                  <div className="space-y-3">
+                    <div>
+                      <label className="text-xs font-medium text-gray-600 block mb-1">Gravity: {meshParams.physics.gravity} m/s²</label>
+                      <input type="range" min="0" max="20" step="0.1" value={meshParams.physics.gravity} onChange={(e) => updateMeshParam('physics', 'gravity', parseFloat(e.target.value))} className="w-full h-1 bg-gray-200 rounded appearance-none cursor-pointer" />
+                    </div>
+                    <div>
+                      <label className="text-xs font-medium text-gray-600 block mb-1">Wind Strength: {meshParams.physics.windStrength} m/s</label>
+                      <input type="range" min="0" max="3" step="0.1" value={meshParams.physics.windStrength} onChange={(e) => updateMeshParam('physics', 'windStrength', parseFloat(e.target.value))} className="w-full h-1 bg-gray-200 rounded appearance-none cursor-pointer" />
+                    </div>
+                    <div>
+                      <label className="text-xs font-medium text-gray-600 block mb-1">Wind Direction: {meshParams.physics.windDirection}°</label>
+                      <input type="range" min="0" max="360" value={meshParams.physics.windDirection} onChange={(e) => updateMeshParam('physics', 'windDirection', parseFloat(e.target.value))} className="w-full h-1 bg-gray-200 rounded appearance-none cursor-pointer" />
+                    </div>
+                    <div>
+                      <label className="text-xs font-medium text-gray-600 block mb-1">Cloth Stiffness: {meshParams.physics.clothStiffness}</label>
+                      <input type="range" min="0" max="1" step="0.01" value={meshParams.physics.clothStiffness} onChange={(e) => updateMeshParam('physics', 'clothStiffness', parseFloat(e.target.value))} className="w-full h-1 bg-gray-200 rounded appearance-none cursor-pointer" />
+                    </div>
+                    <div>
+                      <label className="text-xs font-medium text-gray-600 block mb-1">Friction: {meshParams.physics.friction}</label>
+                      <input type="range" min="0" max="1" step="0.01" value={meshParams.physics.friction} onChange={(e) => updateMeshParam('physics', 'friction', parseFloat(e.target.value))} className="w-full h-1 bg-gray-200 rounded appearance-none cursor-pointer" />
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <input type="checkbox" checked={meshParams.physics.selfCollision} onChange={(e) => updateMeshParam('physics', 'selfCollision', e.target.checked)} className="rounded" />
+                      <label className="text-xs font-medium text-gray-600">Self Collision</label>
+                    </div>
+                  </div>
+                </div>
+                
+                <button onClick={generateDataset} className="w-full bg-blue-600 text-white py-2 rounded font-medium hover:bg-blue-700 transition-colors text-sm">Generate Dataset</button>
               </div>
             </div>
-          </main>
-          <style>{`
-            .cube-3d {
-              transform: rotateX(var(--cube-rotation-x)) rotateY(var(--cube-rotation-y));
-              transform-style: preserve-3d;
-              transition: transform 0.5s ease-out;
-            }
-            .cube-face {
-              position: absolute;
-              width: 100%;
-              height: 100%;
-              opacity: 0.9;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              font-size: 1.5rem;
-              color: white;
-              transition: background-color 0.5s, transform 0.5s;
-              border-radius: 8px;
-            }
-            .cube-front  { transform: rotateY(0deg) translateZ(34px); }
-            .cube-back   { transform: rotateX(180deg) rotateY(0deg) translateZ(34px); }
-            .cube-right  { transform: rotateY(90deg) translateZ(34px); }
-            .cube-left   { transform: rotateY(-90deg) translateZ(34px); }
-            .cube-top    { transform: rotateX(90deg) translateZ(34px); }
-            .cube-bottom { transform: rotateX(-90deg) translateZ(34px); }
-            @keyframes spin {
-              from { transform: rotateX(var(--cube-rotation-x)) rotateY(var(--cube-rotation-y)); }
-              to { transform: rotateX(calc(var(--cube-rotation-x) + 360deg)) rotateY(calc(var(--cube-rotation-y) + 360deg)); }
-            }
-          `}</style>
+          </div>
         </div>
       );
     case 'api-checkout':
       return (
-        <div className="min-h-screen bg-white text-gray-900 font-sans flex items-center justify-center">
-          <div className="max-w-xl mx-auto p-8 bg-white rounded-3xl shadow-lg border border-gray-200 text-center">
-            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Key className="w-8 h-8 text-gray-600" />
-            </div>
-            <h2 className="text-3xl font-bold mb-4">API Access Generated</h2>
-            <p className="text-gray-600">Your dataset configuration is ready!</p>
-            <div className="mt-8 bg-gray-100 border border-gray-200 rounded-xl p-4 flex items-center">
-              <div className="flex-1 mr-4">
-                <code className="text-sm font-mono text-gray-800 break-all">{apiKey}</code>
+        <div className="min-h-screen bg-white font-sans">
+          {/* API Checkout Header */}
+          <header className="px-4 sm:px-6 py-6 sm:py-8 border-b border-gray-100">
+            <div className="max-w-4xl mx-auto flex items-center justify-between">
+              <div className="flex items-center space-x-4">
+                <button onClick={() => setCurrentPage('marketplace')} className="text-gray-500 hover:text-gray-900 p-2 hover:bg-gray-50 rounded-full transition-colors"><ArrowLeft className="w-5 h-5" /></button>
+                <h1 className="text-xl sm:text-2xl font-semibold text-gray-900">23 Bulbs</h1>
               </div>
-              <button onClick={copyApiKey} className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-500 transition-colors">
-                <Copy className="w-4 h-4" />
-                <span>{copied ? 'Copied!' : 'Copy'}</span>
-              </button>
             </div>
-            <button onClick={() => setCurrentPage('landing')} className="w-full mt-8 bg-blue-600 text-white py-3 rounded-full font-semibold hover:bg-gray-800 transition-colors">Return to Home</button>
+          </header>
+          {/* API Checkout Content */}
+          <main className="px-6 py-16">
+            <div className="max-w-2xl mx-auto">
+              <div className="text-center mb-12">
+                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <Key className="w-8 h-8 text-gray-600" />
+                </div>
+                <h2 className="text-3xl font-bold text-gray-900 mb-4">API Access Generated</h2>
+                <p className="text-lg text-gray-600">Your dataset configuration is ready!</p>
+              </div>
+              <div className="bg-gray-100 border border-gray-200 rounded-2xl p-8 mb-8">
+                <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+                  <Key className="w-5 h-5 mr-2" />
+                  Your API Key
+                </h3>
+                <div className="bg-white border border-gray-200 rounded-xl p-4 mb-6">
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1 mr-4">
+                      <code className="text-sm font-mono text-gray-800 break-all">{apiKey}</code>
+                    </div>
+                    <button onClick={copyApiKey} className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">
+                      <Copy className="w-4 h-4" />
+                      <span>{copied ? 'Copied!' : 'Copy'}</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <button onClick={() => setCurrentPage('marketplace')} className="w-full bg-blue-600 text-white py-3 rounded-full font-medium hover:bg-blue-700 transition-colors">Create Another Dataset</button>
+            </div>
+          </main>
+        </div>
+      );
+    case 'technology':
+      return (
+        <div className="min-h-screen bg-white font-sans">
+          {/* Technology Page Header */}
+          <header className="px-4 sm:px-6 py-6 sm:py-8 border-b border-gray-100">
+            <div className="max-w-6xl mx-auto flex items-center justify-between">
+              <div className="flex items-center space-x-4">
+                <button onClick={() => setCurrentPage('landing')} className="text-gray-500 hover:text-gray-900 p-2 hover:bg-gray-50 rounded-full transition-colors"><ArrowLeft className="w-5 h-5" /></button>
+                <h1 className="text-xl sm:text-2xl font-semibold text-gray-900">23 Bulbs</h1>
+              </div>
+            </div>
+          </header>
+          {/* Technology Page Content */}
+          <main className="px-6 py-16">
+            <div className="max-w-7xl mx-auto">
+              <div className="text-center mb-20">
+                <h2 className="text-4xl font-bold text-gray-900 mb-4 tracking-tight">Our Technology</h2>
+                <p className="text-xl text-gray-600">Physics-aware data generation pipeline</p>
+              </div>
+              <div className="grid md:grid-cols-2 gap-8 mb-24">
+                <div className="rounded-3xl p-10 bg-gray-100">
+                  <h3 className="text-2xl font-bold mb-10 text-gray-900">FEATURES</h3>
+                  <div className="space-y-8">
+                    <div>
+                      <h4 className="font-semibold text-lg mb-3 text-gray-900">Physics-Accurate Simulation Engine</h4>
+                      <p className="text-gray-600 leading-relaxed">Real-time cloth and motion simulation, customizable through 20+ parameters.</p>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-lg mb-3 text-gray-900">On-Demand API</h4>
+                      <p className="text-gray-600 leading-relaxed">Self-serve platform for enterprises to request high-fidelity video training data.</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="rounded-3xl p-10 bg-gray-200">
+                  <h3 className="text-2xl font-bold mb-10 text-gray-900">BENEFITS</h3>
+                  <div className="space-y-8">
+                    <div>
+                      <h4 className="font-semibold text-lg mb-3 text-gray-900">Faster, Cheaper AI Training</h4>
+                      <p className="text-gray-600 leading-relaxed">Reduce training time from 500M to just 500 frames per use case.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="text-center">
+                <div className="inline-block rounded-3xl py-12 px-16 bg-blue-600">
+                  <p className="text-4xl font-bold mb-3 text-white">1000x Reduction</p>
+                  <p className="text-xl text-white opacity-90">500M frames → 500 frames per use case</p>
+                </div>
+              </div>
+            </div>
+          </main>
+        </div>
+      );
+    case 'signin':
+      return (
+        <div className="min-h-screen bg-white font-sans flex items-center justify-center">
+          <div className="w-full max-w-md px-6">
+            <div className="text-center mb-8">
+              <h1 className="text-2xl font-semibold text-gray-900 mb-2">23 Bulbs</h1>
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">Welcome back</h2>
+              <p className="text-gray-600">Sign in to your account</p>
+            </div>
+            <form className="space-y-4">
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+                <input type="email" id="email" className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="you@example.com" />
+              </div>
+              <div>
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
+                <input type="password" id="password" className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" />
+              </div>
+              <button type="submit" className="w-full bg-blue-600 text-white py-2 px-4 rounded-full font-medium hover:bg-blue-700 transition-colors">Sign In</button>
+            </form>
+            <button onClick={() => setCurrentPage('landing')} className="w-full text-gray-600 hover:text-gray-900 py-2 mt-4 text-sm font-medium">Back to Home</button>
+          </div>
+        </div>
+      );
+    case 'signup':
+      return (
+        <div className="min-h-screen bg-white font-sans flex items-center justify-center">
+          <div className="w-full max-w-md px-6">
+            <div className="text-center mb-8">
+              <h1 className="text-2xl font-semibold text-gray-900 mb-2">23 Bulbs</h1>
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">Create account</h2>
+              <p className="text-gray-600">Start generating physics-aware datasets</p>
+            </div>
+            <form className="space-y-4 bg-white p-6 rounded-lg shadow-md border border-gray-200">
+              <div>
+                <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
+                <input type="text" id="name" className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="Your Name" />
+              </div>
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+                <input type="email" id="email" className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="you@example.com" />
+              </div>
+              <div>
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
+                <input type="password" id="password" className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" />
+              </div>
+              <button type="submit" className="w-full bg-blue-600 text-white py-2 px-4 rounded-full font-medium hover:bg-blue-700 transition-colors">Create Account</button>
+            </form>
+            <button onClick={() => setCurrentPage('landing')} className="w-full text-gray-600 hover:text-gray-900 py-2 mt-4 text-sm font-medium">Back to Home</button>
           </div>
         </div>
       );
     default:
+      // Fallback page if an invalid route is somehow triggered.
       return (
-        <div className="min-h-screen bg-white flex items-center justify-center font-sans text-gray-900">
+        <div className="min-h-screen bg-gray-100 flex items-center justify-center font-sans">
           <div className="text-center">
-            <h1 className="text-4xl font-semibold text-gray-900 mb-4">Page Not Found</h1>
-            <button onClick={() => setCurrentPage('landing')} className="bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-500 transition-colors">Return to Landing</button>
+            <h1 className="text-2xl font-semibold text-gray-900 mb-4">23 Bulbs Dataset Platform</h1>
+            <button onClick={() => setCurrentPage('landing')} className="bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition-colors">Back to Landing</button>
           </div>
         </div>
       );
